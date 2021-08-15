@@ -1,5 +1,6 @@
 ﻿using Paradox_Editor;
 using System;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,7 +59,8 @@ namespace Paradox_Editor
 
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Point p = e.MouseDevice.GetPosition(mapCanvas);
+            
+            Point p = e.MouseDevice.GetPosition(mapBackground);
 
             var m = mapBackground.RenderTransform.Value;
 
