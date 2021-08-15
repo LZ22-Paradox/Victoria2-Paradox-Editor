@@ -1,0 +1,21 @@
+﻿										T̳̿͟͞o̳̿͟͞ ̳̿͟͞D̳̿͟͞o̳̿͟͞ - ̳̿͟͞I̳̿͟͞d̳̿͟͞e̳̿͟͞a̳̿͟͞s̳̿͟͞ ̳̿͟͞t̳̿͟͞o̳̿͟͞ ̳̿͟͞A̳̿͟͞d̳̿͟͞d̳̿͟͞
+[] Environment = WPF with .NET 5.0 core
+
+* Make horizontal scroll TRUELY smooth (doesnt use JUSt mouse delta, does something else)
+* Setup ICommand (Events cause memory leaks)
+* Impliment map editing/viewing
+	- Select Master Folder
+		o Upload Map File
+		o Upload Province Data
+			= Click ICommands
+				0 If there is no province data, clicking on a certain id should be able to GENERATE province data?
+					= Making custom maps should be made easier.
+* Display the name and ID of a province while hovering over it
+
+U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
+U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
+
+
+
+
+G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
