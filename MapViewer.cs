@@ -1,5 +1,6 @@
 ﻿using Paradox_Editor;
 using System;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,19 +12,12 @@ namespace Paradox_Editor
 
     public partial class MainWindow : Window
     {
-        Point? lastCenterPositionOnTarget;
-        Point? lastMousePositionOnTarget;
-        Point? lastDragPoint;
+        private Point origin;
+        private Point start;
 
-        private Point origin;  // Original Offset of image
-        private Point start;   // Original Position of the mouse
         public void MapViewer()
         {
             InitializeComponent();
-            mainWindowGrid.MouseWheel += MainWindow_MouseWheel;
-            mapBackground.MouseLeftButtonDown += map_MouseLeftButtonDown;
-            mapBackground.MouseLeftButtonUp += map_MouseLeftButtonUp;
-            mapBackground.MouseMove += map_MouseMove;
         }
 
         private void map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -58,7 +52,8 @@ namespace Paradox_Editor
 
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Point p = e.MouseDevice.GetPosition(mapCanvas);
+            
+            Point p = e.MouseDevice.GetPosition(backg);
 
             var m = mapBackground.RenderTransform.Value;
 
@@ -87,6 +82,8 @@ namespace Paradox_Editor
             {
                 if (e.Delta > 0) //adjusting scaling factor
                 {
+                    Debug.WriteLine("X:" + p.X);
+                    Debug.WriteLine("Y:" + p.Y);
                     m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
                 }
                 //a translate may need to be included in order to get scale in order to match
