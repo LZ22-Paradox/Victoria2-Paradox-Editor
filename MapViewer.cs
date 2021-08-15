@@ -12,7 +12,6 @@ namespace Paradox_Editor
 
     public partial class MainWindow : Window
     {
-        private Point origin;
         private Point start;
 
         public void MapViewer()
@@ -23,12 +22,9 @@ namespace Paradox_Editor
         private void map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (mapBackground.IsMouseCaptured) return;
-            mapBackground.CaptureMouse();
             mapBackground.Cursor = Cursors.ScrollAll;
-            start = e.GetPosition(mapCanvas);
-
-            origin.X = mapBackground.RenderTransform.Value.OffsetX;
-            origin.Y = mapBackground.RenderTransform.Value.OffsetY;
+            mapBackground.CaptureMouse();
+            start = e.MouseDevice.GetPosition(mapCanvas);
         }
 
         private void map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -40,12 +36,14 @@ namespace Paradox_Editor
         private void map_MouseMove(object sender, MouseEventArgs e) //THE MOUSE UP-DOWN MOVEMENT IS INVERTED WHEN CONVERTING MAPS (FlipTranslate is -1 when flipped)
         {
             if (!mapBackground.IsMouseCaptured) return;
-            Point p = e.MouseDevice.GetPosition(mapBackground);
 
-            System.Windows.Media.Matrix m = mapBackground.RenderTransform.Value;
+            var end = e.MouseDevice.GetPosition(mapCanvas);
+            var m = mapBackground.RenderTransform.Value;
 
-            m.OffsetX = origin.X + (p.X - start.X);
-            m.OffsetY = origin.Y + (p.Y - start.Y);
+            m.OffsetX = m.OffsetX - (start.X - end.X);
+            m.OffsetY = m.OffsetY - (start.Y - end.Y);
+
+            start = e.MouseDevice.GetPosition(mapCanvas);
 
             mapBackground.RenderTransform = new MatrixTransform(m);
         }
@@ -53,8 +51,7 @@ namespace Paradox_Editor
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             
-            Point p = e.MouseDevice.GetPosition(backg);
-
+            Point p = e.MouseDevice.GetPosition(mapBackground);
             var m = mapBackground.RenderTransform.Value;
 
             //make a translation matrix that matches the translation STATE of the image, apply current scaling
