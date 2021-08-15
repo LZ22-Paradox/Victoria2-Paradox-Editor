@@ -1,6 +1,10 @@
 ﻿										T̳̿͟͞o̳̿͟͞ ̳̿͟͞D̳̿͟͞o̳̿͟͞ - ̳̿͟͞I̳̿͟͞d̳̿͟͞e̳̿͟͞a̳̿͟͞s̳̿͟͞ ̳̿͟͞t̳̿͟͞o̳̿͟͞ ̳̿͟͞A̳̿͟͞d̳̿͟͞d̳̿͟͞
 [] Environment = WPF with .NET 5.0 core
 
+Must Do:
+1. Allow grey area to be interacted with much like the actual map
+2. Impliment basic province loading (click a province, get the file)
+
 * Make horizontal scroll TRUELY smooth (doesnt use JUSt mouse delta, does something else)
 * Setup ICommand (Events cause memory leaks)
 * Impliment map editing/viewing
@@ -19,3 +23,6 @@ U Make a super program. An application combining my Flag Converter, Map Editor &
 
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
+
+//ZacharyPatten\\
+   //ZBAGI\\

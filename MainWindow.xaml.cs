@@ -45,8 +45,6 @@ namespace Paradox_Editor
 
         public ObservableCollection<ProvinceFile> FilePaths { get; set; } = new ObservableCollection<ProvinceFile>(); //Connected to the XAML
 
-
-
         [System.ComponentModel.Bindable(true)]
 
         private void SelectMasterFolder_Click(object _, EventArgs e)

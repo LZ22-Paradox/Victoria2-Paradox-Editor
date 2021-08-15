@@ -79,8 +79,6 @@ namespace Paradox_Editor
             {
                 if (e.Delta > 0) //adjusting scaling factor
                 {
-                    Debug.WriteLine("X:" + p.X);
-                    Debug.WriteLine("Y:" + p.Y);
                     m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
                 }
                 //a translate may need to be included in order to get scale in order to match
@@ -93,6 +91,7 @@ namespace Paradox_Editor
                 }
 
                 //ZacharyPatten#7432
+                //ZBAGI#7539
                 mapBackground.RenderTransform = new MatrixTransform(m);
 
             }
