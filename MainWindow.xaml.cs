@@ -39,7 +39,7 @@ namespace Paradox_Editor
             FlipTranslate = 1;
         }
 
-
+        //This is a test change that will not last very long
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public double FlipTranslate { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
