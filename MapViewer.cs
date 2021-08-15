@@ -54,7 +54,6 @@ namespace Paradox_Editor
             m.OffsetY = origin.Y + (p.Y - start.Y);
 
             mapBackground.RenderTransform = new MatrixTransform(m);
-            //This is a new change
         }
 
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
