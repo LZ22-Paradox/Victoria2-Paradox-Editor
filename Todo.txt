@@ -5,6 +5,7 @@ Must Do:
 1. Allow grey area to be interacted with much like the actual map
 2. Impliment basic province loading (click a province, get the file)
 
+* Make map mode icons dynamic depending on the game selected
 * Make horizontal scroll TRUELY smooth (doesnt use JUSt mouse delta, does something else)
 * Setup ICommand (Events cause memory leaks)
 * Impliment map editing/viewing

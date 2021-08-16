@@ -1,11 +1,16 @@
 ﻿using Paradox_Editor;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Point = System.Windows.Point;
 
 namespace Paradox_Editor
 {
@@ -100,16 +105,21 @@ namespace Paradox_Editor
 
 
         //The following buttons are events for the top two zoom in and out buttons. They aren't worth much, but should be replaced with key commands.
-        private void btnZoomin_Click(object sender, RoutedEventArgs e)
+
+
+        private void mapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
-            mapBackground.Height *= 1.1;
-            mapBackground.Width *= 1.1;
+            string bitmapPath = @"/Preloaded_GFX/VIC2/mapmode_PoliticalOn.png";
+            BitmapImage bitmapImage = new BitmapImage(new Uri(bitmapPath, UriKind.Relative));
+            mapmodeButton_Political.Source = bitmapImage;
+
         }
 
-        private void btnZoomout_Click(object sender, RoutedEventArgs e)
+        private void mapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
-            mapBackground.Height /= 1.1;
-            mapBackground.Width /= 1.1;
+            string bitmapPath = @"/Preloaded_GFX/VIC2/mapmode_ProvincesOn.png";
+            BitmapImage bitmapImage = new BitmapImage(new Uri(bitmapPath, UriKind.Relative));
+            mapmodeButton_Provinces.Source = bitmapImage;
         }
 
     }

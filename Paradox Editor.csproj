@@ -13,6 +13,14 @@
 
   <ItemGroup>
     <None Remove="blank_world_map.png" />
+    <None Remove="Preloaded_GFX\EU4\mapmode_ProvincesOff.png" />
+    <None Remove="Preloaded_GFX\EU4\mapmode_ProvincesOn.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_PoliticalOff.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_PoliticalOn.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_ProvincesOff.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_ProvincesOn.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_TerrainOff.png" />
+    <None Remove="Preloaded_GFX\VIC2\mapmode_TerrainOn.png" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
     <None Remove="vic2_provinces.bmp" />
@@ -34,6 +42,14 @@
 
   <ItemGroup>
     <Resource Include="blank_world_map.png" />
+    <Resource Include="Preloaded_GFX\EU4\mapmode_ProvincesOff.png" />
+    <Resource Include="Preloaded_GFX\EU4\mapmode_ProvincesOn.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_PoliticalOff.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_PoliticalOn.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_ProvincesOff.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_ProvincesOn.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_TerrainOff.png" />
+    <Resource Include="Preloaded_GFX\VIC2\mapmode_TerrainOn.png" />
     <Resource Include="vic2_provinces.bmp" />
   </ItemGroup>
 
