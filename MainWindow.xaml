@@ -28,12 +28,17 @@
         <Button x:Name="button" Content="Load Filepath" HorizontalAlignment="Left" VerticalAlignment="Top"
         Width="86" Height="27" Click="SelectMasterFolder_Click" Margin="98,0,0,0"/>
 
-        <Canvas Grid.Column="1" Background="Black" Height="25" Width="150" Margin="0,-640,40,0">
+        <Canvas Grid.Column="1" Background="#FF494949" Height="50" Width="200" Margin="0,590,-705,0" Panel.ZIndex="2">
             <Button Height="25" Width="30" Click="mapmodeButton_Political_Click" Margin="5,0,0,0" Panel.ZIndex="1" Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}">
                 <Image x:Name="mapmodeButton_Political" Source="/Preloaded_GFX/VIC2/mapmode_PoliticalOff.png" Stretch="Fill"/>
             </Button>
-            <Button Height="25" Width="30" Click="mapmodeButton_Provinces_Click" Margin="35,0,0,0" Panel.ZIndex="1" Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}">
+
+            <Button Height="25" Width="30" Click="mapmodeButton_Provinces_Click" Margin="35,0,0,0" Panel.ZIndex="1" Grid.Column="1" BorderBrush="{x:Null}" Background="{x:Null}">
                 <Image x:Name="mapmodeButton_Provinces" Source="/Preloaded_GFX/VIC2/mapmode_ProvincesOff.png" Stretch="Fill"/>
+            </Button>
+
+            <Button Height="25" Width="30" Click="mapmodeButton_Terrain_Click" Margin="65,0,0,0" Panel.ZIndex="1" Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Image x:Name="mapmodeButton_Terrain" Source="/Preloaded_GFX/VIC2/mapmode_TerrainOff.png" Stretch="Fill"/>
             </Button>
 
         </Canvas>
