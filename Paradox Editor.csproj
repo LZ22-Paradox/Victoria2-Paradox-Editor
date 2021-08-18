@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hangfire.Core" Version="1.7.24" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
   </ItemGroup>
 

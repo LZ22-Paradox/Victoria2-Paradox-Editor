@@ -11,6 +11,9 @@ using System.Windows.Media;
 using Path = System.IO.Path;
 using Point = System.Windows.Point;
 using Image = System.Windows.Controls.Image;
+using static Paradox_Editor.ProgramProperties;
+using System.Collections;
+using System.Linq;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -23,12 +26,7 @@ namespace Paradox_Editor
     /// </summary>
     /// 
 
-    public class ProvinceFile
-    {
-        public int ID { get; set; }
-        public string ProvinceName { get; set; }
-        public string FilePath { get; set; }
-    }
+
 
     public partial class MainWindow : Window
     {
@@ -36,12 +34,9 @@ namespace Paradox_Editor
         {
             InitializeComponent();
             DataContext = this;
-            FlipTranslate = 1;
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-
-        public double FlipTranslate { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public ObservableCollection<ProvinceFile> FilePaths { get; set; } = new ObservableCollection<ProvinceFile>(); //Connected to the XAML
 
@@ -67,9 +62,36 @@ namespace Paradox_Editor
             var masterFolder = Directory.GetFiles(ProgramProperties.ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
 
             var vic2ProvinceFilePath = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            //string[] vic2MapFilePath = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "*.*", SearchOption.TopDirectoryOnly);
+            var vic2DefinitionCSVFile = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "definition.csv", SearchOption.AllDirectories);
 
-            List<String> vic2MapFilePath = new(Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "*.*", SearchOption.TopDirectoryOnly));
+            List<string> CSVProvince = new List<string>();
+            List<string[]> CSVRGB = new List<string[]>();
+            List<string> CSVProvinceName = new List<string>();
+
+            var CSVFile = vic2DefinitionCSVFile[0];
+            using (var reader = new StreamReader(CSVFile))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(';');
+
+                    CSVProvince.Add(values[0]); //Adding the province ID's
+                    string[] strArr = { values[1] + " " + " " + values[2] + " " + values[3] }; //Adding RGB codes
+                    CSVProvinceName.Add(values[4]); //Adding province name
+
+                    CSVRGB.Add(strArr);
+
+                    var strings = CSVRGB[0].Cast<string>().ToArray();
+                    //Finding a way to print the entries of CSVRGB. Important thing is that RGB values & names are there
+                    Debug.WriteLine(strings); //Get RGB values for each pass
+                }
+            }
+
+
+            //List<String> vic2MapFilePath = new(Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "*.*", SearchOption.TopDirectoryOnly));
+            //Above is currently unused.
+
 
             /*    //This is strictly code to find if a file is contained in the path
             bool inList = vic2MapFilePath.Contains(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp"));
@@ -81,15 +103,11 @@ namespace Paradox_Editor
             ScaleTransform flipTrans = new ScaleTransform(); //creates instance for scale
             mapCanvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
             flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
-            FlipTranslate = flipTrans.ScaleY;
             mapCanvas.RenderTransform = flipTrans; //Actually render the changes
-
-
 
             mapBackground.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
 
             foreach (string fileEntry in vic2ProvinceFilePath) //"For each file in the path list"
-                                                               //Masterfolder temporary until a provincefolder can be acquired
             {
                 string fileName = Path.GetFileName(fileEntry);
                 string[] SplitName = fileName.Split('-');
@@ -102,8 +120,6 @@ namespace Paradox_Editor
                     //Console.WriteLine("Problem File(s)" + " " + SplitName[0]);
                     //Debug.WriteLine("Problem File(s)" + " " + SplitName[0]);
                 }
-
-
             }
             Console.ReadLine();
         }

@@ -14,6 +14,13 @@ namespace Paradox_Editor
     {
         public static string ProvinceDirectory { get; set; }
 
+        public class ProvinceFile
+        {
+            public int ID { get; set; }
+            public string ProvinceName { get; set; }
+            public string FilePath { get; set; }
+        }
+
         public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22", "history", "provinces");
     }
 

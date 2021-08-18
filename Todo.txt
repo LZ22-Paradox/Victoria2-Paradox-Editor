@@ -1,6 +1,8 @@
 ﻿										T̳̿͟͞o̳̿͟͞ ̳̿͟͞D̳̿͟͞o̳̿͟͞ - ̳̿͟͞I̳̿͟͞d̳̿͟͞e̳̿͟͞a̳̿͟͞s̳̿͟͞ ̳̿͟͞t̳̿͟͞o̳̿͟͞ ̳̿͟͞A̳̿͟͞d̳̿͟͞d̳̿͟͞
 [] Environment = WPF with .NET 5.0 core
 
+[Definition.csv] - province;red;green;blue;provincename;x
+
 Must Do:
 1. Allow grey area to be interacted with much like the actual map
 2. Impliment basic province loading (click a province, get the file)
