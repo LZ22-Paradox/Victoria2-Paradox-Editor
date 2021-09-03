@@ -21,6 +21,11 @@
     <None Remove="Preloaded_GFX\VIC2\mapmode_ProvincesOn.png" />
     <None Remove="Preloaded_GFX\VIC2\mapmode_TerrainOff.png" />
     <None Remove="Preloaded_GFX\VIC2\mapmode_TerrainOn.png" />
+    <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%280%29.png" />
+    <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%281%29.png" />
+    <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%282%29.png" />
+    <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%283%29.png" />
+    <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%284%29.png" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
     <None Remove="vic2_provinces.bmp" />
@@ -51,6 +56,11 @@
     <Resource Include="Preloaded_GFX\VIC2\mapmode_ProvincesOn.png" />
     <Resource Include="Preloaded_GFX\VIC2\mapmode_TerrainOff.png" />
     <Resource Include="Preloaded_GFX\VIC2\mapmode_TerrainOn.png" />
+    <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(0).png" />
+    <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(1).png" />
+    <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(2).png" />
+    <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(3).png" />
+    <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(4).png" />
     <Resource Include="vic2_provinces.bmp" />
   </ItemGroup>
 

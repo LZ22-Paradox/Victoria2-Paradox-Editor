@@ -4,15 +4,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Drawing;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using Path = System.IO.Path;
 using Point = System.Windows.Point;
 using Image = System.Windows.Controls.Image;
 using static Paradox_Editor.ProgramProperties;
-using System.Collections;
 using System.Linq;
 
 //F1 to see WIKI detail on part
@@ -26,8 +22,6 @@ namespace Paradox_Editor
     /// </summary>
     /// 
 
-
-
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -37,6 +31,10 @@ namespace Paradox_Editor
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+
+        //make combined dictionary of colour owned by what country
+        //province colour
+
 
         public ObservableCollection<ProvinceFile> FilePaths { get; set; } = new ObservableCollection<ProvinceFile>(); //Connected to the XAML
 
@@ -69,7 +67,7 @@ namespace Paradox_Editor
             List<string> CSVProvinceName = new List<string>();
 
             var CSVFile = vic2DefinitionCSVFile[0];
-            using (var reader = new StreamReader(CSVFile))
+            using (var reader = new StreamReader(CSVFile)) //THIS FUNCTION GETS ALL PROVINCE CSV DATA (INCLUDING RGB)
             {
                 while (!reader.EndOfStream)
                 {
@@ -81,17 +79,11 @@ namespace Paradox_Editor
                     CSVProvinceName.Add(values[4]); //Adding province name
 
                     CSVRGB.Add(strArr);
-
                     var strings = CSVRGB[0].Cast<string>().ToArray();
                     //Finding a way to print the entries of CSVRGB. Important thing is that RGB values & names are there
                     Debug.WriteLine(strings); //Get RGB values for each pass
                 }
             }
-
-
-            //List<String> vic2MapFilePath = new(Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "*.*", SearchOption.TopDirectoryOnly));
-            //Above is currently unused.
-
 
             /*    //This is strictly code to find if a file is contained in the path
             bool inList = vic2MapFilePath.Contains(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp"));
@@ -131,6 +123,7 @@ namespace Paradox_Editor
             fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
             fileopener.Start(); //Open file
         }
+
         //public ICommand ClickMeCommand { get; set; } //Currently unused. Valuable in place of events.
 
 

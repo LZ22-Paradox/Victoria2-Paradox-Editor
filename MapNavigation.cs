@@ -66,9 +66,9 @@ namespace Paradox_Editor
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 if (e.Delta > 0)
-                    m.Translate(0, Math.Abs(e.Delta));
-                else
                     m.Translate(0, -Math.Abs(e.Delta));
+                else
+                    m.Translate(0, Math.Abs(e.Delta));
                 mapBackground.RenderTransform = new MatrixTransform(m);
             }
             else

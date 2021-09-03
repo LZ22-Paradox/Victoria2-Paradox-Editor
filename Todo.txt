@@ -22,6 +22,7 @@ Must Do:
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
 
+- Take RGB values, make object
 
 
 
