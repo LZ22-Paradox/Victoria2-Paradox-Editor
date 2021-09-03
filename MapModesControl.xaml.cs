@@ -28,54 +28,58 @@ namespace Paradox_Editor
 
         private void mapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
-            BitmapImage bitmapImage = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOn.png", UriKind.Relative));
-            mapmodeButton_Provinces.Source = bitmapImage;
-
             CurrentMapMode = 0;
             updateMapMode();
         }
 
         private void mapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
-            BitmapImage bitmapImage = new BitmapImage(new Uri(bitmapPath + "mapmode_ProvincesOn.png", UriKind.Relative));
-            mapmodeButton_Provinces.Source = bitmapImage;
-
             CurrentMapMode = 1;
             updateMapMode();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
-            BitmapImage bitmapImage = new BitmapImage(new Uri(bitmapPath + "mapmode_TerrainOn.png", UriKind.Relative));
-            mapmodeButton_Terrain.Source = bitmapImage;
-
-
             CurrentMapMode = 2;
             updateMapMode();
         }
 
-        public void updateMapMode()
+        public void updateMapMode() //Updates & Disables the other existing map modes
         {
-            BitmapImage provinceoff = new BitmapImage(new Uri(bitmapPath + "mapmode_ProvincesOff.png", UriKind.Relative));
             BitmapImage politicaloff = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOff.png", UriKind.Relative));
-            BitmapImage terrainoff = new BitmapImage(new Uri(bitmapPath + "mapmode_TerrainOff.png", UriKind.Relative));
+            BitmapImage politicalon = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOn.png", UriKind.Relative));
 
-            //  update/disable the other existing map modes
+            BitmapImage provinceoff = new BitmapImage(new Uri(bitmapPath + "mapmode_ProvincesOff.png", UriKind.Relative));
+            BitmapImage provinceon = new BitmapImage(new Uri(bitmapPath + "mapmode_ProvincesOn.png", UriKind.Relative));
+
+            BitmapImage terrainoff = new BitmapImage(new Uri(bitmapPath + "mapmode_TerrainOff.png", UriKind.Relative));
+            BitmapImage terrainon = new BitmapImage(new Uri(bitmapPath + "mapmode_TerrainOn.png", UriKind.Relative));
+
+            //Simplify code to alleviate repeating. A foreach loop might work after binding each button
+            //with an "on/off" property.
             if (CurrentMapMode == 0) //If Political is on
             {
+                mapmodeButton_Political.Source = politicalon;
                 mapmodeButton_Provinces.Source = provinceoff;
                 mapmodeButton_Terrain.Source = terrainoff;
             }
             else if (CurrentMapMode == 1) //If Provinces is on
             {
                 mapmodeButton_Political.Source = politicaloff;
+                mapmodeButton_Provinces.Source = provinceon;
                 mapmodeButton_Terrain.Source = terrainoff;
             }
             else if (CurrentMapMode == 2) //If Terrain is on
             {
                 mapmodeButton_Political.Source = politicaloff;
                 mapmodeButton_Provinces.Source = provinceoff;
+                mapmodeButton_Terrain.Source = terrainon;
             }
+
+
+            //\\
+
+
         }
     }
 }

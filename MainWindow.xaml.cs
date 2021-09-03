@@ -43,77 +43,85 @@ namespace Paradox_Editor
         private void SelectMasterFolder_Click(object _, EventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new(); //Open new dialogue
-            dialog.SelectedPath = ProgramProperties.StoredOpener; //Start directory of dialogue. Stored opener is the filepath the opener begins upon
+            dialog.SelectedPath = StoredOpener; //Start directory of dialogue. Stored opener is the filepath the opener begins upon
 
             if (dialog.ShowDialog() is System.Windows.Forms.DialogResult.OK)
             {
                 System.Windows.Forms.MessageBox.Show("You selected Filepath: " + dialog.SelectedPath); //State the filepath selected
-                Console.WriteLine(ProgramProperties.ProvinceDirectory);
-                ProgramProperties.ProvinceDirectory = dialog.SelectedPath;
-                ProgramProperties.StoredOpener = dialog.SelectedPath;
+                Console.WriteLine(ProvinceDirectory);
+                ProvinceDirectory = dialog.SelectedPath;
+                StoredOpener = dialog.SelectedPath;
                 Console.ReadLine();
             }
             else { }
 
             FilePaths.Clear(); //Clear all Rows as a "Refresh"
 
-            var masterFolder = Directory.GetFiles(ProgramProperties.ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
-
-            var vic2ProvinceFilePath = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            var vic2DefinitionCSVFile = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "definition.csv", SearchOption.AllDirectories);
-
-            List<string> CSVProvince = new List<string>();
-            List<string[]> CSVRGB = new List<string[]>();
-            List<string> CSVProvinceName = new List<string>();
-
-            var CSVFile = vic2DefinitionCSVFile[0];
-            using (var reader = new StreamReader(CSVFile)) //THIS FUNCTION GETS ALL PROVINCE CSV DATA (INCLUDING RGB)
+            try
             {
-                while (!reader.EndOfStream)
+                var masterFolder = Directory.GetFiles(ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
+                var vic2ProvinceFilePath = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
+                var vic2DefinitionCSVFile = Directory.GetFiles(Path.Combine(dialog.SelectedPath, "map"), "definition.csv", SearchOption.AllDirectories);
+                List<string> CSVProvince = new List<string>();
+                List<string[]> CSVRGB = new List<string[]>();
+                List<string> CSVProvinceName = new List<string>();
+
+                var CSVFile = vic2DefinitionCSVFile[0];
+                using (var reader = new StreamReader(CSVFile)) //THIS FUNCTION GETS ALL PROVINCE CSV DATA (INCLUDING RGB)
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(';');
 
-                    CSVProvince.Add(values[0]); //Adding the province ID's
-                    string[] strArr = { values[1] + " " + " " + values[2] + " " + values[3] }; //Adding RGB codes
-                    CSVProvinceName.Add(values[4]); //Adding province name
+                        CSVProvince.Add(values[0]); //Adding the province ID's
+                        string[] strArr = { values[1] + " " + " " + values[2] + " " + values[3] }; //Adding RGB codes
+                        CSVProvinceName.Add(values[4]); //Adding province name
 
-                    CSVRGB.Add(strArr);
-                    var strings = CSVRGB[0].Cast<string>().ToArray();
-                    //Finding a way to print the entries of CSVRGB. Important thing is that RGB values & names are there
-                    Debug.WriteLine(strings); //Get RGB values for each pass
+                        CSVRGB.Add(strArr);
+                        var strings = CSVRGB[0].Cast<string>().ToArray();
+                        //Finding a way to print the entries of CSVRGB. Important thing is that RGB values & names are there
+                        Debug.WriteLine(strings); //Get RGB values for each pass
+                    }
                 }
+
+                /*    //This is strictly code to find if a file is contained in the path
+                bool inList = vic2MapFilePath.Contains(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp"));
+                Console.WriteLine(inList);
+                Debug.WriteLine(inList);
+                */
+
+                ImageSourceConverter imgs = new ImageSourceConverter(); //Create instance of the image converter
+                ScaleTransform flipTrans = new ScaleTransform(); //creates instance for scale
+                mapCanvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
+                flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
+                mapCanvas.RenderTransform = flipTrans; //Actually render the changes
+
+                mapBackground.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
+
+                foreach (string fileEntry in vic2ProvinceFilePath) //"For each file in the path list"
+                {
+                    string fileName = Path.GetFileName(fileEntry);
+                    string[] SplitName = fileName.Split('-');
+                    if (int.TryParse(SplitName[0], out int IDValue))
+                    {
+                        FilePaths.Add(new ProvinceFile() { ID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
+                    }
+                    else
+                    {
+                        //Console.WriteLine("Problem File(s)" + " " + SplitName[0]);
+                        //Debug.WriteLine("Problem File(s)" + " " + SplitName[0]);
+                    }
+                }
+                Console.ReadLine();
             }
-
-            /*    //This is strictly code to find if a file is contained in the path
-            bool inList = vic2MapFilePath.Contains(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp"));
-            Console.WriteLine(inList);
-            Debug.WriteLine(inList);
-            */
-
-            ImageSourceConverter imgs = new ImageSourceConverter(); //Create instance of the image converter
-            ScaleTransform flipTrans = new ScaleTransform(); //creates instance for scale
-            mapCanvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
-            flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
-            mapCanvas.RenderTransform = flipTrans; //Actually render the changes
-
-            mapBackground.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
-
-            foreach (string fileEntry in vic2ProvinceFilePath) //"For each file in the path list"
+            catch
             {
-                string fileName = Path.GetFileName(fileEntry);
-                string[] SplitName = fileName.Split('-');
-                if (int.TryParse(SplitName[0], out int IDValue))
-                {
-                    FilePaths.Add(new ProvinceFile() { ID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
-                }
-                else
-                {
-                    //Console.WriteLine("Problem File(s)" + " " + SplitName[0]);
-                    //Debug.WriteLine("Problem File(s)" + " " + SplitName[0]);
-                }
+                Debug.WriteLine("ERROR.FP = Filepath Issue");
+                MessageBox.Show("Filepath unselected or invalid!");
+                MessageBox.Show("Check mod or game file selected.");
+                return;
             }
-            Console.ReadLine();
         }
 
         private void button_Click(object sender, RoutedEventArgs e)

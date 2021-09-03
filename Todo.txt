@@ -22,8 +22,11 @@ Must Do:
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
 
-- Take RGB values, make object
 
+- Practice Drawing Shapes by Reading Pixels
+- for width pixels { for height pixels { do code } }
+* How to read pixel
+* Read all map data is done once upon load. 
 
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.

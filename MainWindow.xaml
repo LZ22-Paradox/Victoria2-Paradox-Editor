@@ -29,6 +29,7 @@
         Width="86" Height="27" Click="SelectMasterFolder_Click" Margin="98,0,0,0"/>
 
 
+
         <local:MapModesControl Margin="700,600,0,0" Grid.Column="1" Panel.ZIndex="2">
         </local:MapModesControl>
 
@@ -48,6 +49,32 @@
         </DataGrid>
 
         <ContentPresenter Margin="0,0,0,660" Content="/provinces.png" Grid.Column="1"/>
+
+        <Expander x:Name="expander" Grid.Column="1" Header="Controls" Height="200" Margin="700,0,0,500" Width="200" IsExpanded="True" Panel.ZIndex="2">
+            <Grid Background="#FFE5E5E5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Pan Map" Grid.Row="0" FontSize="12"/>
+                <TextBlock Text="Left Click or Middle Mouse Button" FontSize="10" Grid.Row="1" FontStyle="Oblique"/>
+                <TextBlock Text="Scroll Left/Right" Grid.Row="2" FontSize="12"/>
+                <TextBlock Text="Shift + ScrollWheel" FontSize="10" Grid.Row="3" FontStyle="Oblique"/>
+                <TextBlock Text="Scroll Up/Down" Grid.Row="4" FontSize="12"/>
+                <TextBlock Text="Control + ScrollWheel" FontSize="10" Grid.Row="5" FontStyle="Oblique"/>
+                <TextBlock Text="Zoom In/Out" Grid.Row="6" FontSize="12"/>
+                <TextBlock Text="ScrollWheel" FontSize="10" Grid.Row="7" FontStyle="Oblique"/>
+
+            </Grid>
+        </Expander>
 
         <Grid x:Name="mapGrid" Margin="16,25,10,10" Background="#FF909090" Grid.Column="1"
               Panel.ZIndex="1">
