@@ -28,6 +28,7 @@
     <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%284%29.png" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
+    <None Remove="TestProvince.bmp" />
     <None Remove="vic2_provinces.bmp" />
   </ItemGroup>
 
@@ -61,6 +62,7 @@
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(2).png" />
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(3).png" />
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(4).png" />
+    <Resource Include="TestProvince.bmp" />
     <Resource Include="vic2_provinces.bmp" />
   </ItemGroup>
 

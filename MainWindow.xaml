@@ -50,7 +50,7 @@
 
         <ContentPresenter Margin="0,0,0,660" Content="/provinces.png" Grid.Column="1"/>
 
-        <Expander x:Name="expander" Grid.Column="1" Header="Controls" Height="200" Margin="700,0,0,500" Width="200" IsExpanded="True" Panel.ZIndex="2">
+        <Expander x:Name="expander" Grid.Column="1" Header="Controls" Height="200" Margin="700,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="2">
             <Grid Background="#FFE5E5E5">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -72,6 +72,7 @@
                 <TextBlock Text="Control + ScrollWheel" FontSize="10" Grid.Row="5" FontStyle="Oblique"/>
                 <TextBlock Text="Zoom In/Out" Grid.Row="6" FontSize="12"/>
                 <TextBlock Text="ScrollWheel" FontSize="10" Grid.Row="7" FontStyle="Oblique"/>
+                <TextBlock Text="More User Convienence Controls Are Planned" FontSize="8" Grid.Row="8" FontWeight="Bold" TextAlignment="Center"/>
 
             </Grid>
         </Expander>
@@ -94,5 +95,16 @@
                 </Canvas>
             </ScrollViewer>
         </Grid>
+
+        <!--Below is the designer setup for testing with pixel reading & layers-->
+        <Grid Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="2">
+            <Canvas Name="testlayer1">
+                <Image Margin="500,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500"/>
+            </Canvas>
+            <Canvas Name="testlayer2">
+                <!--This is a second layer for testing-->
+            </Canvas>
+        </Grid>
+
     </Grid>
 </Window>
