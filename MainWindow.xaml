@@ -7,7 +7,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen">
+        Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -97,9 +97,9 @@
         </Grid>
 
         <!--Below is the designer setup for testing with pixel reading & layers-->
-        <Grid Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="2">
+        <Grid Name="testgrid1" Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="2">
             <Canvas Name="testlayer1">
-                <Image Margin="500,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500"/>
+                <Image x:Name="testimage1" Margin="400,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500"/>
             </Canvas>
             <Canvas Name="testlayer2">
                 <!--This is a second layer for testing-->

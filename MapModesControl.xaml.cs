@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+using System.Media;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace Paradox_Editor
@@ -46,6 +41,9 @@ namespace Paradox_Editor
 
         public void updateMapMode() //Updates & Disables the other existing map modes
         {
+            SoundPlayer splayer = new SoundPlayer(Properties.Resources.VIC2_ValidClick);
+            splayer.Play();
+
             BitmapImage politicaloff = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOff.png", UriKind.Relative));
             BitmapImage politicalon = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOn.png", UriKind.Relative));
 

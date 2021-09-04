@@ -21,15 +21,16 @@ namespace Paradox_Editor
             public string FilePath { get; set; }
         }
 
-        public class TestProvinceFile
+        public class Country
         {
             public int ID { get; set; }
-            public string ProvinceName { get; set; }
-            public string FilePath { get; set; }
-            public string ProvinceColour { get; set; }
+            public string CommonFilepath { get; set; }
+            public string HistoryFilepath { get; set; }
+            public string RGB { get; set; }
         }
 
         public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22", "history", "provinces");
+        //Stored opener will be subject to change for user convienence
     }
 
 }

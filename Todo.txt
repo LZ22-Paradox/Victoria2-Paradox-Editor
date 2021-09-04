@@ -18,6 +18,7 @@ Must Do:
 				0 If there is no province data, clicking on a certain id should be able to GENERATE province data?
 					= Making custom maps should be made easier.
 * Display the name and ID of a province while hovering over it
+* Fix StoredOpener to be convienent for those reusing the program
 
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.

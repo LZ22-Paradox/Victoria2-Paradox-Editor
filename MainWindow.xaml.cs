@@ -10,6 +10,7 @@ using Point = System.Windows.Point;
 using Image = System.Windows.Controls.Image;
 using static Paradox_Editor.ProgramProperties;
 using System.Linq;
+using System.Windows.Media.Imaging;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -29,7 +30,13 @@ namespace Paradox_Editor
             InitializeComponent();
             DataContext = this;
 
+        }
+
+        private void MainWindow_Load(object _1, EventArgs _2)
+        {
             MapEditor.TestProvinceUpdate();
+
+
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
@@ -126,6 +133,11 @@ namespace Paradox_Editor
             }
         }
 
+        public static explicit operator MainWindow(WindowCollection v)
+        {
+            throw new NotImplementedException();
+        }
+
         private void button_Click(object sender, RoutedEventArgs e)
         {
             Process fileopener = new(); //Start a new process under the variable of fileopener
@@ -133,6 +145,10 @@ namespace Paradox_Editor
             fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
             fileopener.Start(); //Open file
         }
+
+
+
+
 
         //public ICommand ClickMeCommand { get; set; } //Currently unused. Valuable in place of events.
 

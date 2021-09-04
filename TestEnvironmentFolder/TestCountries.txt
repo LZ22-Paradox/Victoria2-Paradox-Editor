@@ -1,0 +1,15 @@
+﻿#Please keep tags sorted alphabetically when you add/remove country tags
+
+# Special countries...
+REB 	= 	"countries/rebels.txt"
+
+################LZ22's New Nations
+JAN		="countries/Jan Mayen.txt"
+PSK		="countries/Pskov.txt"
+MAN		="countries/Mann.txt"
+
+##HoD Dominions
+dynamic_tags  = yes # any tags after this is considered dynamic dominions
+D01		= "countries/D01.txt"
+D02		= "countries/D02.txt"
+D03		= "countries/D03.txt"

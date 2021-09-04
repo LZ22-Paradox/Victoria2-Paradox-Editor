@@ -28,6 +28,11 @@
     <None Remove="Preloaded_GFX\VIC2\VIC2_Buttons%284%29.png" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
+    <None Remove="Sounds\VIC2_ValidClick.wav" />
+    <None Remove="TestEnvironmentFolder\TestCountries.txt" />
+    <None Remove="TestEnvironmentFolder\TestCountries\Jan Mayen.txt" />
+    <None Remove="TestEnvironmentFolder\TestCountries\Mann.txt" />
+    <None Remove="TestEnvironmentFolder\TestCountries\Pskov.txt" />
     <None Remove="TestProvince.bmp" />
     <None Remove="vic2_provinces.bmp" />
   </ItemGroup>
@@ -62,6 +67,11 @@
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(2).png" />
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(3).png" />
     <Resource Include="Preloaded_GFX\VIC2\VIC2_Buttons(4).png" />
+    <Resource Include="Sounds\VIC2_ValidClick.wav" />
+    <Resource Include="TestEnvironmentFolder\TestCountries.txt" />
+    <Resource Include="TestEnvironmentFolder\TestCountries\Jan Mayen.txt" />
+    <Resource Include="TestEnvironmentFolder\TestCountries\Mann.txt" />
+    <Resource Include="TestEnvironmentFolder\TestCountries\Pskov.txt" />
     <Resource Include="TestProvince.bmp" />
     <Resource Include="vic2_provinces.bmp" />
   </ItemGroup>
