@@ -10,7 +10,6 @@ using Point = System.Windows.Point;
 using Image = System.Windows.Controls.Image;
 using static Paradox_Editor.ProgramProperties;
 using System.Linq;
-using System.Windows.Media.Imaging;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -114,7 +113,7 @@ namespace Paradox_Editor
                     string[] SplitName = fileName.Split('-');
                     if (int.TryParse(SplitName[0], out int IDValue))
                     {
-                        FilePaths.Add(new ProvinceFile() { ID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
+                        FilePaths.Add(new ProvinceFile() { ProvinceID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
                     }
                     else
                     {
@@ -146,22 +145,6 @@ namespace Paradox_Editor
             fileopener.Start(); //Open file
         }
 
-
-
-
-
-        //public ICommand ClickMeCommand { get; set; } //Currently unused. Valuable in place of events.
-
-
-        //To do later:
-        /* - Path selection for map files
-         * - Load Map
-         * - Load Map ID Text file
-         *      o Read ID's & equate to colors [or other way around]
-         * ?Seperation of map modes; colors are displayed based on history files over what provinces have ownership tag
-         * 
-         * 
-         */
 
     }
 }

@@ -16,7 +16,7 @@ namespace Paradox_Editor
 
         public class ProvinceFile
         {
-            public int ID { get; set; }
+            public int ProvinceID { get; set; }
             public string ProvinceName { get; set; }
             public string FilePath { get; set; }
         }
@@ -24,6 +24,7 @@ namespace Paradox_Editor
         public class Country
         {
             public int ID { get; set; }
+            public string CountryName { get; set; }
             public string CommonFilepath { get; set; }
             public string HistoryFilepath { get; set; }
             public string RGB { get; set; }

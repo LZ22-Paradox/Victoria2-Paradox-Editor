@@ -16,8 +16,6 @@ namespace Paradox_Editor
     {
         //Above is currently useless: Use for graphical loading of map a later point.
 
-        public static ProvinceFile TestProvinceData { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath, colour
-
         public static Bitmap ConvertToBitmap(BitmapSource bitmapSource)
         {
             var width = bitmapSource.PixelWidth;
@@ -56,7 +54,13 @@ namespace Paradox_Editor
         /// color3 - Part of uniform
         /// </summary>
 
-        public ObservableCollection<Country> CountryList { get; set; } = new ObservableCollection<Country>(); //Connected to the XAML
+
+
+        //Observable collections may not even be the way to go. Lists are simpler and more understood here
+        //--------------------------------------------------------------------------
+        public Country CurrentCountry { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        //--------------------------------------------------------------------------
+        public static ObservableCollection<Country> CountryList { get; set; } = new ObservableCollection<Country>(); //Connected to the XAML
 
         public static void TestProvinceUpdate() //The test process for how map loading should work.
         {
@@ -66,17 +70,47 @@ namespace Paradox_Editor
 
             //string[] readText = (string[])File.ReadLines(TestCountriesTextFile);
 
-            var lines = File.ReadAllLines("C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\TestCountries.txt");
-            foreach (var line in lines)
+            /*This is a test origin. Later will be set by fileselect.*/
+            var origin = "C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\";
+            /*This is a test "CSV" file. Later will use the fileselect's current found CSV.*/
+            var countriestxtlines = File.ReadAllLines("C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\TestCountries.txt");
+
+            List<string[]> CountriesInTxt = new List<string[]>(); //COUNTRIES.TXT FILE
+            foreach (var line in countriestxtlines)
             {
                 string input = line;
                 int index = input.IndexOf("#");
                 if (index >= 0)
                     input = input.Substring(0, index);
+                index = input.IndexOf("dynamic_tags");
+                if (index >= 0)
+                    input = input.Substring(0, index);
+
                 Debug.WriteLine(input);
+
+                if (input != "")
+                {
+                    string firstremoval = input.Replace("\t", "");
+                    //string secondremoval = firstremoval.Replace("=", "");
+
+                    //Test next part in searching for country color in given filepath using respective origin\\
+                    //Get specific array entry of "color = { 255  255  255 }" to represent the country's colour.\\
+
+                    ///Provinces use ID, ProvinceRGB, ProvinceName; countries only use CountryName, CountryTAG, CountryRGB but
+                    ///the program will need to read every provincefile according to the provinces, and display their RGB
+                    ///according to the country that is set as "owner=" in said file. If no owner, then spit console error
+
+                    string[] words = firstremoval.Split('=');
+
+                    CountriesInTxt.Add(words); //CONTAINS country TAG & History txt file path
+
+                }
+
+                //CountryList.Add(new Country() { CountryName = values[4], ID = Int32.Parse(values[0]), RGB = values[1] + " " + " " + values[2] + " " + values[3] }); //Add the respective province data into the FilePaths source
+
             } //currently only reads (mostly) valid entries in the countries.txt file.
-            //Next: get the color value of the given country (thanks to the embeded filepath)
-                //- and then slap it together into the countrylist collection
+              //Next: get the color value of the given country (thanks to the embeded filepath)
+              //- and then slap it together into the countrylist collection
 
 
             //Read TAG first
@@ -98,11 +132,13 @@ namespace Paradox_Editor
             var Paths = new string[] { "Path 1", "Path 2", "Path 3", "Path 4", "Path 5", "Path 6" };
             var TestCSVFile = new string[] { "1;255;0;0;Red", "2;38;0;255;Blue", "3;118;255;0;Green", "4;250;0;255;Purple", "5;0;242;255;Cyan", "6;250;255;0;Yellow" }; //Reads each entry from the filepath (the CSV File) as a part of an array
 
-            foreach (var entry in TestCSVFile)
+
+            //Code for the below already exists in the main MainWindow.xaml.cs, around Line 79\\
+            foreach (var entry in TestCSVFile) //STRICTLY PROVINCE DATA ; USABLE FOR COUNTRY PLACEMENT | TEST CSV FILE\\
             {
                 var values = entry.Split(';'); //Current values of said-line
 
-                insertedIDs.Add(values[0]);
+                insertedIDs.Add(values[0]); //0 = ID, 1,2,3 = RGB, 4 = ProvinceName
                 string[] strArr = { values[1] + " " + " " + values[2] + " " + values[3] }; //Adding RGB codes
                 insertedNames.Add(values[4]); //Adding province name of current line to Province Name List
                 insertedRGBs.Add(strArr); //Adds the RGB Array Values from current line into the Province RGB List

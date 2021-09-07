@@ -1,0 +1,6 @@
+owner = JAN
+controller = JAN
+add_core = PSK
+add_core = JAN
+trade_goods = wool
+life_rating = 25

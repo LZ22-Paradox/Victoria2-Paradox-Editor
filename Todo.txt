@@ -9,6 +9,7 @@ Must Do:
 
 * Make map mode icons dynamic depending on the game selected
 * Make horizontal scroll TRUELY smooth (doesnt use JUSt mouse delta, does something else)
+* Find a way to merge countrydata under one "super-variable" so it is easier for the program to use data from it
 * Setup ICommand (Events cause memory leaks)
 * Impliment map editing/viewing
 	- Select Master Folder

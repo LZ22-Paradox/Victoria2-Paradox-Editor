@@ -91,4 +91,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestEnvironmentFolder\TestProvinceFiles\provinces\" />
+  </ItemGroup>
+
 </Project>
