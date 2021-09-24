@@ -30,7 +30,7 @@
 
 
 
-        <local:MapModesControl Margin="700,600,0,0" Grid.Column="1" Panel.ZIndex="2">
+        <local:MapModesControl x:Name="mapModeButtons" Margin="700,600,0,0" Grid.Column="1" Panel.ZIndex="2">
         </local:MapModesControl>
 
         <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2" ItemsSource="{Binding Path=FilePaths}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False" CanUserAddRows="False">
@@ -73,7 +73,36 @@
                 <TextBlock Text="Zoom In/Out" Grid.Row="6" FontSize="12"/>
                 <TextBlock Text="ScrollWheel" FontSize="10" Grid.Row="7" FontStyle="Oblique"/>
                 <TextBlock Text="More User Convienence Controls Are Planned" FontSize="8" Grid.Row="8" FontWeight="Bold" TextAlignment="Center"/>
+            </Grid>
+        </Expander>
 
+        <Expander x:Name="testexpander" Grid.Column="1" Header="Test Variables" Height="200" Margin="0,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="3">
+            <Grid Background="#FFE5E5E5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBox Name="TestPTB1" Grid.Column="0" Text="Mann" Grid.Row="0" FontSize="12" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="1, Red Province" Grid.Row="0" FontSize="9"/>
+                <TextBox Name="TestPTB2" Grid.Column="0" Text="Jan Mayen" FontSize="12" Grid.Row="1" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="2, Blue Province" Grid.Row="1" FontSize="9"/>
+                <TextBox Name="TestPTB3" Grid.Column="0" Text="Jan Mayen" Grid.Row="2" FontSize="12" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="3, Green Province" Grid.Row="2" FontSize="9"/>
+                <TextBox Name="TestPTB4" Grid.Column="0" Text="Mann" FontSize="12" Grid.Row="3" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="4, Purple Province" Grid.Row="3" FontSize="9"/>
+                <TextBox Name="TestPTB5" Grid.Column="0" Text="Pskov" Grid.Row="4" FontSize="12" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="5, Cyan Province" Grid.Row="4" FontSize="9"/>
+                <TextBox Name="TestPTB6" Grid.Column="0" Text="Pskov" FontSize="12" Grid.Row="5" KeyDown="Testbox_TextChanged"/>
+                <TextBlock Grid.Column="1" Text="6, Yellow Province" Grid.Row="5" FontSize="9"/>
             </Grid>
         </Expander>
 
@@ -99,10 +128,10 @@
         <!--Below is the designer setup for testing with pixel reading & layers-->
         <Grid Name="testgrid1" Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="2">
             <Canvas Name="testlayer1">
-                <Image x:Name="testimage1" Margin="400,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500"/>
+                <Image x:Name="testimage1" Margin="400,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
             </Canvas>
-            <Canvas Name="testlayer2">
-                <!--This is a second layer for testing-->
+            <Canvas Name="testlayer2" Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="3" >
+                <Image Visibility="Visible" x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Source="/TestProvince.bmp"/>
             </Canvas>
         </Grid>
 

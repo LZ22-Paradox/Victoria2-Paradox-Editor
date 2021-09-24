@@ -1,32 +1,30 @@
-﻿using System;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Xamarin.Essentials;
 using static Paradox_Editor.ProgramProperties;
+using Color = System.Windows.Media.Color;
 
 namespace Paradox_Editor
 {
     public partial class MapEditor
     {
-        //Above is currently useless: Use for graphical loading of map a later point.
 
-        public static Bitmap ConvertToBitmap(BitmapSource bitmapSource)
-        {
-            var width = bitmapSource.PixelWidth;
-            var height = bitmapSource.PixelHeight;
-            var stride = width * ((bitmapSource.Format.BitsPerPixel + 7) / 8);
-            var memoryBlockPointer = Marshal.AllocHGlobal(height * stride);
-            bitmapSource.CopyPixels(new Int32Rect(0, 0, width, height), memoryBlockPointer, height * stride, stride);
-            var bitmap = new Bitmap(width, height, stride, System.Drawing.Imaging.PixelFormat.Format32bppPArgb, memoryBlockPointer);
-            return bitmap;
-        }
-
+        
         /// <summary>
         /// 
         /// - modname/commmon/countries.txt
@@ -37,8 +35,7 @@ namespace Paradox_Editor
         /// - modname/common/countries/Pskov.
         ///color = { 240  230  140 } *This is the country colour of Pskov indicated in the file
         ///
-        /// 
-        /// 
+
         /// - modname\history\provinces\africa\1688 - Ajdir.txt
         /// owner = SPA
         /// controller = SPA
@@ -54,16 +51,9 @@ namespace Paradox_Editor
         /// color3 - Part of uniform
         /// </summary>
 
-
-
-        //Observable collections may not even be the way to go. Lists are simpler and more understood here
-        //--------------------------------------------------------------------------
-        public Country CurrentCountry { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-        //--------------------------------------------------------------------------
-        public static ObservableCollection<Country> CountryList { get; set; } = new ObservableCollection<Country>(); //Connected to the XAML
-
         public static void TestProvinceUpdate() //The test process for how map loading should work.
         {
+            var MainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
 
             string TestCountriesTextFile = new(Properties.Resources.TestCountries);
             //@"/TestEnvironmentFolder/TestCountries.txt";
@@ -104,73 +94,71 @@ namespace Paradox_Editor
 
                     CountriesInTxt.Add(words); //CONTAINS country TAG & History txt file path
 
-                }
+                } ///MAKE NEW CLASS TO SPLIT INFORMATION FROM TEXT FILES
+            }
+            
+            var insertedIDs = new List<string>();
+            var insertedRGBs = new List<string[]>();
+            var insertedNames = new List<string>();
 
-                //CountryList.Add(new Country() { CountryName = values[4], ID = Int32.Parse(values[0]), RGB = values[1] + " " + " " + values[2] + " " + values[3] }); //Add the respective province data into the FilePaths source
+            var provinceToCountry = new Dictionary<string, string>();
+            provinceToCountry.Add("1", MainWindow.TestPTB1.Text);
+            provinceToCountry.Add("2", MainWindow.TestPTB2.Text);
+            provinceToCountry.Add("3", MainWindow.TestPTB3.Text);
+            provinceToCountry.Add("4", MainWindow.TestPTB4.Text);
+            provinceToCountry.Add("5", MainWindow.TestPTB5.Text);
+            provinceToCountry.Add("6", MainWindow.TestPTB6.Text);
 
-            } //currently only reads (mostly) valid entries in the countries.txt file.
-              //Next: get the color value of the given country (thanks to the embeded filepath)
-              //- and then slap it together into the countrylist collection
-
-
-            //Read TAG first
-            //Listing would look like: { PSK, countries/Pskov.txt, 240  230  140 }
-            //PSK.Path = countries/Pksov.txt
-            //PSK.RGB = 240 230 140
-
-            ///The tag PSK before path is a custom type: CountryTAG
-
-
-            //Check owner & find tag that matches; get the tag's color
-
-
-            List<string> insertedIDs = new List<string>();
-            List<string[]> insertedRGBs = new List<string[]>();
-            List<string> insertedPaths = new List<string>();
-            List<string> insertedNames = new List<string>();
-
-            var Paths = new string[] { "Path 1", "Path 2", "Path 3", "Path 4", "Path 5", "Path 6" };
-            var TestCSVFile = new string[] { "1;255;0;0;Red", "2;38;0;255;Blue", "3;118;255;0;Green", "4;250;0;255;Purple", "5;0;242;255;Cyan", "6;250;255;0;Yellow" }; //Reads each entry from the filepath (the CSV File) as a part of an array
+            var colorToProvinceId = new Dictionary<string, string>();
+            var countryToColor = new Dictionary<string, Color>();
+            countryToColor.Add("Jan Mayen", Color.FromRgb(15, 100, 132));
+            countryToColor.Add("Mann", Color.FromRgb(178,  34,  34));
+            countryToColor.Add("Pskov", Color.FromRgb(240,  230,  140));
 
 
-            //Code for the below already exists in the main MainWindow.xaml.cs, around Line 79\\
-            foreach (var entry in TestCSVFile) //STRICTLY PROVINCE DATA ; USABLE FOR COUNTRY PLACEMENT | TEST CSV FILE\\
+            var countryToTAG = new Dictionary<string, string>();
+
+            var TAGToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
+
+            var provinceIDToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
+
+
+            var cfg = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
+            using (var reader = new StreamReader(@"C:\Users\LukeZurg22_Gaming\source\repos\Paradox Editor\TestEnvironmentFolder\testdefinition.csv"))
+            using (var csv = new CsvReader(reader, cfg))
             {
-                var values = entry.Split(';'); //Current values of said-line
-
-                insertedIDs.Add(values[0]); //0 = ID, 1,2,3 = RGB, 4 = ProvinceName
-                string[] strArr = { values[1] + " " + " " + values[2] + " " + values[3] }; //Adding RGB codes
-                insertedNames.Add(values[4]); //Adding province name of current line to Province Name List
-                insertedRGBs.Add(strArr); //Adds the RGB Array Values from current line into the Province RGB List
-
+                colorToProvinceId = csv.GetRecords<ProvinceDefinition>().ToDictionary(c => c.red + " " + c.green + " " + c.blue, c => c.province);
             }
 
-
-            var MainWindow = (MainWindow)Application.Current.MainWindow;
-            //MainWindow.testimage1.Source = new BitmapImage(new Uri("pack://application:,,,/Paradox Editor;component/TestProvince.bmp"));
-
-            // Winforms Image we want to get the WPF Image from...
-
-            ImageSource img = MainWindow.testimage1.Source;
-            BitmapSource bmp = (BitmapSource)img;
-
-            var dzungar = ConvertToBitmap(bmp);
-
-            for (int x = 0; x < dzungar.Width; x++)
+            var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.testimage1.Source);
+            var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
+            writeableBmp.Clear(Colors.White);
+            for (int x = 0; x < firstLayer.Width; x++)
             {
-                for (int y = 0; y < dzungar.Height; y++)
+                for (int y = 0; y < firstLayer.Height; y++)
                 {
-                    System.Drawing.Color pixel = dzungar.GetPixel(x, y); //x = 94, y = 38 (255, 0, 00) ; RED
-                    int red = pixel.R;
-                    int green = pixel.G;
-                    int blue = pixel.B;
+                    var pixel = firstLayer.GetPixel(x, y);
+                    if (
+                        colorToProvinceId.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
+                        provinceToCountry.TryGetValue(provinceID, out var country) && 
+                        countryToColor.TryGetValue(country, out var countryColor))
+                    {
+                        writeableBmp.FillRectangle(x, y, x+1, y+1, countryColor); //Draws the country colors
+                    }
+                    else
+                    {
+                        writeableBmp.FillRectangle(x, y, x+1, y+1, pixel); //Draws the province colors
+                    }
+
                 }
             }
-
-
-            //\\
+            MainWindow.testimage2.Source = writeableBmp;
 
         }
 
+        public static void TestForceMap()
+        {
+            TestProvinceUpdate();
+        } //TestForceMap
     }
 }

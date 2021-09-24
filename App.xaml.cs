@@ -30,7 +30,14 @@ namespace Paradox_Editor
             public string RGB { get; set; }
         }
 
-        public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22", "history", "provinces");
+        public class Province
+        {
+            public int[] OriginalProvinceRGB { get; set; }
+            public string[] NewProvinceRGB { get; set; }
+
+        }
+
+        public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         //Stored opener will be subject to change for user convienence
     }
 

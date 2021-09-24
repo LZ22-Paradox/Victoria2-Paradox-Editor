@@ -36,20 +36,30 @@ namespace Paradox_Editor
 
             var end = e.MouseDevice.GetPosition(mapCanvas);
             var m = mapBackground.RenderTransform.Value;
-
             m.OffsetX = m.OffsetX - (start.X - end.X);
             m.OffsetY = m.OffsetY - (start.Y - end.Y);
 
-            start = e.MouseDevice.GetPosition(mapCanvas);
+            var test1 = testimage1.RenderTransform.Value;
+            test1.OffsetX = m.OffsetX - (start.X - end.X);
+            test1.OffsetY = m.OffsetY - (start.Y - end.Y);
 
+
+
+            start = e.MouseDevice.GetPosition(mapCanvas);
             mapBackground.RenderTransform = new MatrixTransform(m);
+
+            testimage1.RenderTransform = mapBackground.RenderTransform; //Applies to other layer
+            testimage2.RenderTransform = testimage1.RenderTransform; //Applies to other layer
+
         }
 
         private void MainWindow_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            
+
             Point p = e.MouseDevice.GetPosition(mapBackground);
             var m = mapBackground.RenderTransform.Value;
+            var testm1 = testimage1.RenderTransform.Value;
+
 
             //make a translation matrix that matches the translation STATE of the image, apply current scaling
             //factor and apply scaling factor to the translation. Apply scale to current translation
@@ -58,17 +68,27 @@ namespace Paradox_Editor
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
                 if (e.Delta > 0)
+                {
                     m.Translate(Math.Abs(e.Delta), 0);
+                }
                 else
+                {
                     m.Translate(-Math.Abs(e.Delta), 0);
+                }
+
                 mapBackground.RenderTransform = new MatrixTransform(m);
             }
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 if (e.Delta > 0)
+                {
                     m.Translate(0, -Math.Abs(e.Delta));
+                }
                 else
+                {
                     m.Translate(0, Math.Abs(e.Delta));
+                }
+
                 mapBackground.RenderTransform = new MatrixTransform(m);
             }
             else
@@ -77,6 +97,8 @@ namespace Paradox_Editor
                 if (e.Delta > 0) //adjusting scaling factor
                 {
                     m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
+
+                    testm1.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
                 }
                 //a translate may need to be included in order to get scale in order to match
                 //m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
@@ -85,12 +107,16 @@ namespace Paradox_Editor
                 else
                 {
                     m.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
+
+                    testm1.ScaleAtPrepend(0.9, 0.9, p.X, p.Y);
                 }
 
-                //ZacharyPatten#7432
                 //ZBAGI#7539
+
                 mapBackground.RenderTransform = new MatrixTransform(m);
 
+                testimage1.RenderTransform = mapBackground.RenderTransform;
+                testimage2.RenderTransform = testimage1.RenderTransform;
             }
         }
 

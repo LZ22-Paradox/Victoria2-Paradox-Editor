@@ -10,6 +10,7 @@ using Point = System.Windows.Point;
 using Image = System.Windows.Controls.Image;
 using static Paradox_Editor.ProgramProperties;
 using System.Linq;
+using System.Windows.Input;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -34,8 +35,12 @@ namespace Paradox_Editor
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapEditor.TestProvinceUpdate();
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
 
-
+            MapModesControl.CurrentMapMode = 1;
+            MapModesControl.updateMapMode();
+            //MainWindow.testlayer1.Visibility = Visibility.Visible;
+            //MainWindow.testlayer2.Visibility = Visibility.Hidden;
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
@@ -143,6 +148,14 @@ namespace Paradox_Editor
             fileopener.StartInfo.FileName = "explorer"; //Open the windows explorer/files; no other program
             fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
             fileopener.Start(); //Open file
+        }
+
+        private void Testbox_TextChanged(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.Enter))
+            {
+                MapEditor.TestForceMap();
+            }
         }
 
 
