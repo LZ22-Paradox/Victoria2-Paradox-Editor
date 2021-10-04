@@ -25,18 +25,18 @@ namespace Paradox_Editor
 
     public partial class MainWindow : Window
     {
-        private MapNavigation mapNavigator;
-        private MapNavigation TESTnavigator;
+        private MapNavigation Navigator;
 
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
-            
-            mapNavigator = new MapNavigation(mapBackground, mapCanvas);
-            
-            TESTnavigator = new MapNavigation(testimage1, mapCanvas);
 
+            Navigator =
+                new MapNavigation(mapCanvas)
+                .AddImage(mapBackground)
+                .AddImage(testimage1)
+                .AddImage(testimage2);
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -52,26 +52,22 @@ namespace Paradox_Editor
 
         public void map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            mapNavigator.MouseLeftButtonUp(sender, e);
-            //TESTnavigator.MouseLeftButtonUp(sender, e);
+            Navigator.MouseLeftButtonUp(sender, e);
         }
         
         public void map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            mapNavigator.MouseLeftButtonDown(sender, e);
-            //TESTnavigator.MouseLeftButtonDown(sender, e);
+            Navigator.MouseLeftButtonDown(sender, e);
         }
         
         public void map_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            mapNavigator.MouseWheel(sender, e);
-            TESTnavigator.MouseWheel(sender, e);
+            Navigator.MouseWheel(sender, e);
         }
 
         public void map_MouseMove(object sender, MouseEventArgs e)
         {
-            mapNavigator.MouseMove(sender, e);
-            TESTnavigator.MouseMove(sender, e);
+            Navigator.MouseMove(sender, e);
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
