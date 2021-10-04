@@ -23,8 +23,6 @@ namespace Paradox_Editor
 {
     public partial class MapEditor
     {
-
-        
         /// <summary>
         /// 
         /// - modname/commmon/countries.txt
@@ -117,12 +115,12 @@ namespace Paradox_Editor
 
 
             var countryToTAG = new Dictionary<string, string>();
-
+            
             var TAGToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
-
+            
             var provinceIDToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
 
-
+            //class that grabs file, reads it, and prepares data
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
             using (var reader = new StreamReader(@"C:\Users\LukeZurg22_Gaming\source\repos\Paradox Editor\TestEnvironmentFolder\testdefinition.csv"))
             using (var csv = new CsvReader(reader, cfg))
@@ -133,7 +131,7 @@ namespace Paradox_Editor
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.testimage1.Source);
             var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
             writeableBmp.Clear(Colors.White);
-            for (int x = 0; x < firstLayer.Width; x++)
+            for (int x = 0; x < firstLayer.Width; x++) //REUSE LATER. STATIC CLASS BAD
             {
                 for (int y = 0; y < firstLayer.Height; y++)
                 {
@@ -153,7 +151,6 @@ namespace Paradox_Editor
                 }
             }
             MainWindow.testimage2.Source = writeableBmp;
-
         }
 
         public static void TestForceMap()

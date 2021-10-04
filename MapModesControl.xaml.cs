@@ -63,8 +63,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.testlayer1.Visibility = Visibility.Hidden;
-                MainWindow.testlayer2.Visibility = Visibility.Visible;
+/*                MainWindow.testlayer1.Visibility = Visibility.Hidden;
+                MainWindow.testlayer2.Visibility = Visibility.Visible;*/
 
             }
             else if (CurrentMapMode == 1) //If Provinces is on
@@ -73,8 +73,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceon;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.testlayer1.Visibility = Visibility.Visible;
-                MainWindow.testlayer2.Visibility = Visibility.Hidden;
+/*                MainWindow.testlayer1.Visibility = Visibility.Visible;
+                MainWindow.testlayer2.Visibility = Visibility.Hidden;*/
 
             }
             else if (CurrentMapMode == 2) //If Terrain is on
@@ -83,8 +83,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainon;
 
-                MainWindow.testlayer1.Visibility = Visibility.Hidden;
-                MainWindow.testlayer2.Visibility = Visibility.Hidden;
+/*                MainWindow.testlayer1.Visibility = Visibility.Hidden;
+                MainWindow.testlayer2.Visibility = Visibility.Hidden;*/
             }
 
 

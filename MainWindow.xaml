@@ -109,31 +109,33 @@
         <Grid x:Name="mapGrid" Margin="16,25,10,10" Background="#FF909090" Grid.Column="1"
               Panel.ZIndex="1">
 
+            
             <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto" AllowDrop="True">
 
-                <Canvas x:Name="mapCanvas" RenderTransformOrigin="0.5,0.5" MouseWheel="MainWindow_MouseWheel">
+                <Canvas x:Name="mapCanvas" Background="Transparent" RenderTransformOrigin="0.5,0.5">
                     <Image x:Name="mapBackground" Height="700" Width="1446" Source="/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           MouseLeftButtonDown="map_MouseLeftButtonDown"
-                           MouseMove="map_MouseMove" MouseLeftButtonUp="map_MouseLeftButtonUp"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both" MouseDown="map_MouseLeftButtonDown" MouseUp="map_MouseLeftButtonUp">
+                           StretchDirection="Both"
+                            
+                           MouseMove="map_MouseMove"
+                           MouseWheel="map_MouseWheel"
+                           MouseLeftButtonUp="map_MouseLeftButtonUp"
+                           MouseLeftButtonDown="map_MouseLeftButtonDown"
+                           >
                     </Image>
+
+                    <Image Source="/TestProvince.bmp" x:Name="testimage1" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
+
+                    <Image Visibility="Visible" x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Source="/TestProvince.bmp"/>
+
+
                 </Canvas>
             </ScrollViewer>
         </Grid>
 
         <!--Below is the designer setup for testing with pixel reading & layers-->
-        <Grid Name="testgrid1" Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="2">
-            <Canvas Name="testlayer1">
-                <Image x:Name="testimage1" Margin="400,100,0,0" Source="/TestProvince.bmp" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
-            </Canvas>
-            <Canvas Name="testlayer2" Grid.Column="0" Grid.ColumnSpan="1" Panel.ZIndex="3" >
-                <Image Visibility="Visible" x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Source="/TestProvince.bmp"/>
-            </Canvas>
-        </Grid>
-
     </Grid>
 </Window>

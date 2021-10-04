@@ -25,10 +25,17 @@ namespace Paradox_Editor
 
     public partial class MainWindow : Window
     {
+        private MapNavigation mapNavigator;
+        private MapNavigation TESTnavigator;
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+            
+            mapNavigator = new MapNavigation(mapBackground, mapCanvas);
+            
+            TESTnavigator = new MapNavigation(testimage1, mapCanvas);
 
         }
 
@@ -41,6 +48,30 @@ namespace Paradox_Editor
             MapModesControl.updateMapMode();
             //MainWindow.testlayer1.Visibility = Visibility.Visible;
             //MainWindow.testlayer2.Visibility = Visibility.Hidden;
+        }
+
+        public void map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            mapNavigator.MouseLeftButtonUp(sender, e);
+            //TESTnavigator.MouseLeftButtonUp(sender, e);
+        }
+        
+        public void map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            mapNavigator.MouseLeftButtonDown(sender, e);
+            //TESTnavigator.MouseLeftButtonDown(sender, e);
+        }
+        
+        public void map_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            mapNavigator.MouseWheel(sender, e);
+            TESTnavigator.MouseWheel(sender, e);
+        }
+
+        public void map_MouseMove(object sender, MouseEventArgs e)
+        {
+            mapNavigator.MouseMove(sender, e);
+            TESTnavigator.MouseMove(sender, e);
         }
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
@@ -97,7 +128,7 @@ namespace Paradox_Editor
                         Debug.WriteLine(strings); //Get RGB values for each pass
                     }
                 }
-
+                
                 /*    //This is strictly code to find if a file is contained in the path
                 bool inList = vic2MapFilePath.Contains(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp"));
                 Console.WriteLine(inList);
