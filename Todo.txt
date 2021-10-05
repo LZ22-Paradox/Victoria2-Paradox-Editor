@@ -4,13 +4,9 @@
 [Definition.csv] - province;red;green;blue;provincename;x
 
 Must Do:
-1. Allow grey area to be interacted with much like the actual map
 2. Impliment basic province loading (click a province, get the file)
 
 * Make map mode icons dynamic depending on the game selected
-* Make horizontal scroll TRUELY smooth (doesnt use JUSt mouse delta, does something else)
-* Find a way to merge countrydata under one "super-variable" so it is easier for the program to use data from it
-* Setup ICommand (Events cause memory leaks)
 * Impliment map editing/viewing
 	- Select Master Folder
 		o Upload Map File
@@ -22,16 +18,41 @@ Must Do:
 * Fix StoredOpener to be convienent for those reusing the program
 
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
+U General_button_click is the EU4 map mode clicking sound.
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
 
 
-- Practice Drawing Shapes by Reading Pixels
-- for width pixels { for height pixels { do code } }
 * How to read pixel
 * Read all map data is done once upon load. 
+
+        /// <summary>
+        /// 
+        /// - modname/commmon/countries.txt
+        ///PSK		="countries/Pskov.txt"
+        ///MAN		="countries/Mann.txt" *Utilize the filepath it ALREADY GIVES in the textfile
+        ///JAN		="countries/Jan Mayen.txt"
+        ///
+        /// - modname/common/countries/Pskov.
+        ///color = { 240  230  140 } *This is the country colour of Pskov indicated in the file
+        ///
+
+        /// - modname\history\provinces\africa\1688 - Ajdir.txt
+        /// owner = SPA
+        /// controller = SPA
+        /// add_core = SPA
+        /// add_core = MGH
+        /// trade_goods = fish
+        /// life_rating = 35
+        /// colonial = 1
+        /// 
+        /// Country Colors file is for the soldier's uniforms.
+        /// color1 - Part of uniform
+        /// color2 - Part of uniform
+        /// color3 - Part of uniform
+        /// </summary>
+
 
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
 
-//ZacharyPatten\\
    //ZBAGI\\

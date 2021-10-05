@@ -178,10 +178,7 @@ namespace Paradox_Editor.Properties {
         ///D01		= &quot;countries/D01.txt&quot;
         ///D02		= &quot;countries/D02.txt&quot;
         ///D03		= &quot;countries/D03.txt&quot;
-        ///D04		= &quot;countries/D04.txt&quot;
-        ///D05		= &quot;countries/D05.txt&quot;
-        ///D06		= &quot;countries/D06.txt&quot;
-        ///D07		= &quot; [rest of string was truncated]&quot;;.
+        ///.
         /// </summary>
         internal static string TestCountries {
             get {

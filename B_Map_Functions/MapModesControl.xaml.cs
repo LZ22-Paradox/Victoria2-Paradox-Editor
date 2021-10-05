@@ -13,7 +13,8 @@ namespace Paradox_Editor
     public partial class MapModesControl : System.Windows.Controls.UserControl
     {
         public static int CurrentMapMode { get; set; } //Political(0), Provinces(1), Terrain(2)
-        public static string bitmapPath = @"/Preloaded_GFX/VIC2/"; //The Resource Path for the Icons
+        public static string bitmapPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
+///The above can be changed as modes are added
 
         public MapModesControl() => InitializeComponent();
 
@@ -63,8 +64,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-/*                MainWindow.testlayer1.Visibility = Visibility.Hidden;
-                MainWindow.testlayer2.Visibility = Visibility.Visible;*/
+                MainWindow.testimage1.Visibility = Visibility.Hidden;
+                MainWindow.testimage2.Visibility = Visibility.Visible;
 
             }
             else if (CurrentMapMode == 1) //If Provinces is on
@@ -73,8 +74,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceon;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-/*                MainWindow.testlayer1.Visibility = Visibility.Visible;
-                MainWindow.testlayer2.Visibility = Visibility.Hidden;*/
+                MainWindow.testimage1.Visibility = Visibility.Visible;
+                MainWindow.testimage2.Visibility = Visibility.Hidden;
 
             }
             else if (CurrentMapMode == 2) //If Terrain is on
@@ -83,8 +84,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainon;
 
-/*                MainWindow.testlayer1.Visibility = Visibility.Hidden;
-                MainWindow.testlayer2.Visibility = Visibility.Hidden;*/
+                MainWindow.testimage1.Visibility = Visibility.Hidden;
+                MainWindow.testimage2.Visibility = Visibility.Hidden;
             }
 
 

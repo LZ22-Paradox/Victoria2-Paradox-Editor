@@ -26,6 +26,15 @@ namespace Paradox_Editor
 
         public void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            ReleaseMouseCapture();
+        }
+        public void MouseLeave(object sender, MouseEventArgs e)
+        {
+            ReleaseMouseCapture();
+        }
+
+        private void ReleaseMouseCapture()
+        {
             Canvas.ReleaseMouseCapture();
             Canvas.Cursor = Cursors.Arrow;
         }
@@ -34,8 +43,8 @@ namespace Paradox_Editor
         {
             if (Canvas.IsMouseCaptured) return;
             Canvas.Cursor = Cursors.ScrollAll;
-            Canvas.CaptureMouse();
             start = e.MouseDevice.GetPosition(Canvas);
+            Canvas.CaptureMouse();
         }
 
         public void MouseMove(object sender, MouseEventArgs e) //THE MOUSE UP-DOWN MOVEMENT IS INVERTED WHEN CONVERTING MAPS (FlipTranslate is -1 when flipped)
@@ -50,9 +59,10 @@ namespace Paradox_Editor
                 m.OffsetX = m.OffsetX - (start.X - end.X);
                 m.OffsetY = m.OffsetY - (start.Y - end.Y);
 
-                start = e.MouseDevice.GetPosition(Canvas);
+             
                 image.RenderTransform = new MatrixTransform(m);
             });
+            start = e.MouseDevice.GetPosition(Canvas);
         }
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)
@@ -62,11 +72,9 @@ namespace Paradox_Editor
                 Point p = e.MouseDevice.GetPosition(image);
                 var m = image.RenderTransform.Value;
 
-
                 //make a translation matrix that matches the translation STATE of the image, apply current scaling
                 //factor and apply scaling factor to the translation. Apply scale to current translation
                 //m.gettranslation or something similar | bump down or so the translation state
-                //
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
                     if (e.Delta > 0)

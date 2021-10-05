@@ -12,7 +12,6 @@ namespace Paradox_Editor
         public string red { get; set; }
         public string green { get; set; }
         public string blue { get; set; }
-
-        
     }
+
 }
