@@ -9,43 +9,48 @@ namespace Paradox_Editor.A_Map_Navigation
     {
 
         private Image Image;
-        private Dictionary<string, string> Dictionary;
+        private WriteableBitmap FirstLayer;
+        public WriteableBitmap SizeReference { get; set; }
 
-        public DrawMapColors(Image image, Dictionary<string, string> dictionary)
+        private Dictionary<string, string> Dictionary1;
+        private Dictionary<string, string> Dictionary2;
+        private Dictionary<string, Color> Dictionary3;
+
+
+        public DrawMapColors(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, Color> dictionary3)
         {
             Image = image;
-            Dictionary = dictionary;
+            FirstLayer = firstlayer;
+            SizeReference = sizereference;
+            Dictionary1 = dictionary1; //colorToProvinceId
+            Dictionary2 = dictionary2; //provinceToCountry
+            Dictionary3 = dictionary3; //countryToColor
         }
 
-        public void Drawing(object sender)
+        public void Drawing()
         {
-
-            var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)Image.Source);
-            var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
-            writeableBmp.Clear(Colors.White);
-
             //var colorToProvindeID = Dictionary; || Find dictionary's use for trygetValue. Possible new class?
 
-/*            for (int x = 0; x < firstLayer.Width; x++) //REUSE LATER. STATIC CLASS BAD
+            for (int x = 0; x < FirstLayer.Width; x++) //REUSE LATER. STATIC CLASS BAD
             {
-                for (int y = 0; y < firstLayer.Height; y++)
+                for (int y = 0; y < FirstLayer.Height; y++)
                 {
-                    var pixel = firstLayer.GetPixel(x, y);
+                    var pixel = FirstLayer.GetPixel(x, y);
                     if (
-                        colorToProvinceId.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
-                        provinceToCountry.TryGetValue(provinceID, out var country) &&
-                        countryToColor.TryGetValue(country, out var countryColor))
+                        Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
+                        Dictionary2.TryGetValue(provinceID, out var country) &&
+                        Dictionary3.TryGetValue(country, out var countryColor))
                     {
-                        writeableBmp.FillRectangle(x, y, x + 1, y + 1, countryColor); //Draws the country colors
+                        SizeReference.FillRectangle(x, y, x + 1, y + 1, countryColor); //Draws the country colors
                     }
                     else
                     {
-                        writeableBmp.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
+                        SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
                     }
 
                 }
 
-            }*/
+            }
 
         }
 

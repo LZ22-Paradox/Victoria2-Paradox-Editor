@@ -38,7 +38,6 @@ namespace Paradox_Editor
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
-            MapEditor.TestProvinceUpdate();
             MapModesControl.CurrentMapMode = 1;
             MapModesControl.updateMapMode();
         }
@@ -47,7 +46,7 @@ namespace Paradox_Editor
         {
             if (Keyboard.IsKeyDown(Key.Enter))
             {
-                MapEditor.TestProvinceUpdate();
+                MapEditor.UpdatePoliticalMap();
             }
         }
 

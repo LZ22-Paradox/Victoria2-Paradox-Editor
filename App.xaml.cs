@@ -21,6 +21,16 @@ namespace Paradox_Editor
             public string FilePath { get; set; }
         }
 
+        public class HistoryFile
+        {
+            public string Controller { get; set; }
+            public string Core { get; set; }
+            public string TradeGoods { get; set; }
+            public string LifeRating { get; set; }
+            public string Terrain { get; set; }
+            public string Colonial { get; set; }
+        }
+
         public class Country
         {
             public int ID { get; set; }

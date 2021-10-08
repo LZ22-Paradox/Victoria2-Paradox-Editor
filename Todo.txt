@@ -25,6 +25,10 @@ U Make a super program. An application combining my Flag Converter, Map Editor &
 * How to read pixel
 * Read all map data is done once upon load. 
 
+OWN = COUNTRY DIRECTLY *OWNS* IT(province)
+CONTROL = COUNTRY HAS STRIPES OVER IT(province)
+CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
+
         /// <summary>
         /// 
         /// - modname/commmon/countries.txt
