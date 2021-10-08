@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace Paradox_Editor
@@ -23,12 +24,12 @@ namespace Paradox_Editor
 
         public class HistoryFile
         {
-            public string Controller { get; set; }
-            public string Core { get; set; }
-            public string TradeGoods { get; set; }
-            public string LifeRating { get; set; }
-            public string Terrain { get; set; }
-            public string Colonial { get; set; }
+            public List<string> Controller { get; set; }
+            public List<string> Core { get; set; }
+            public List<string> TradeGoods { get; set; }
+            public List<string> LifeRating { get; set; }
+            public List<string> Terrain { get; set; }
+            public List<string> Colonial { get; set; }
         }
 
         public class Country

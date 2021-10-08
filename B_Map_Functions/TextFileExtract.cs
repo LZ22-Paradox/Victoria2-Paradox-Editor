@@ -61,10 +61,16 @@ namespace Paradox_Editor.B_Map_Functions
 
         public bool ExtractForDictionary(string Dictionary)
         {
+            var ownerList = new List<string>();
+            var controllerList = new List<string>();
+            var coreList = new List<string>();
+            var tradeGoodList = new List<string>();
+            var lifeRatingList = new List<string>();
+            var terrainList = new List<string>();
+            var colonialList = new List<string>();
 
             foreach (string fileEntry in FilePath) //"For each file in the path list"
             {
-
                 string fileName = Path.GetFileName(fileEntry); //FileEntry = Filepath
                 string[] SplitName = fileName.Split('-'); //SplitName[1] = Province Name
                 if (int.TryParse(SplitName[0], out int IDValue)) //IDValue = Province ID
@@ -90,17 +96,57 @@ namespace Paradox_Editor.B_Map_Functions
                 {
                     Debug.WriteLine("Problem File(s) | Dictionary Extractor");
                 }
-/*                foreach (var line in File.ReadAllLines(fileEntry)) //Where the magic happens
+
+                foreach (var line in File.ReadAllLines(fileEntry)) //Where the magic happens
                 {
-                    var list = new List<string>();
 
                     SeperatedLines = line.Replace(" ", "").Split('=');
-                    list.Add(SeperatedLines[1]);
+                    if (SeperatedLines[0] == "owner")
+                    {
+                        ownerList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "controller")
+                    {
+                        controllerList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "trade_goods")
+                    {
+                        tradeGoodList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "life_rating")
+                    {
+                        lifeRatingList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "colonial")
+                    {
+                        colonialList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "terrain")
+                    {
+                        terrainList.Add(SeperatedLines[1]);
+                    }
+                    if (SeperatedLines[0] == "add_core")
+                    {
+                        coreList.Add(SeperatedLines[1]);
+                    }
+                }
 
-                    InnerData.Add(new HistoryFile() { Controller = list[1], Core = list[2], TradeGoods = list[3], LifeRating = list[4], Terrain = list[5], Colonial = list[6] });
-
-                }*/
-
+                InnerData.Add(new HistoryFile()
+                {
+                    Controller = controllerList,
+                    Core = coreList,
+                    TradeGoods = tradeGoodList,
+                    LifeRating = lifeRatingList,
+                    Terrain = terrainList,
+                    Colonial = colonialList
+                }); ;
+                ownerList.Clear();
+                controllerList.Clear();
+                coreList.Clear();
+                tradeGoodList.Clear();
+                lifeRatingList.Clear();
+                terrainList.Clear();
+                colonialList.Clear();
 
 
             }
