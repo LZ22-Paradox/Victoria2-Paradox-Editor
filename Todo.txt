@@ -4,7 +4,11 @@
 [Definition.csv] - province;red;green;blue;provincename;x
 
 Must Do:
+1. Impliment countries visually based on history file inout
 2. Impliment basic province loading (click a province, get the file)
+
+#. Optimize for performance
+#. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
 
 * Make map mode icons dynamic depending on the game selected
 * Impliment map editing/viewing

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
-using static Paradox_Editor.ProgramProperties;
 using System.Windows.Input;
 using Paradox_Editor.C_Window_Functions;
 

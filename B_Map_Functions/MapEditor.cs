@@ -3,15 +3,13 @@ using CsvHelper.Configuration;
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.B_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
-using System;
+using Paradox_Editor.D_Static_Variables;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Color = System.Windows.Media.Color;
@@ -24,12 +22,11 @@ namespace Paradox_Editor
         {
         }
 
-
         public static void UpdatePoliticalMap() //The test process for how map loading should work.
         {
             var MainWindow = (MainWindow)Application.Current.MainWindow;
 
-            string TestCountriesTextFile = new(Properties.Resources.TestCountries);
+            //string TestCountriesTextFile = new(Properties.Resources.TestCountries);
 
 
             /*This is a test origin. Later will be set by fileselect.*/
@@ -47,71 +44,89 @@ namespace Paradox_Editor
 
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
+            var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
             var provinceIDToTAG_Core = new Dictionary<string, string>(); //Directly owned by a country
             var provinceIDToTAG_Controller = new Dictionary<string, string>(); //Stripey lines; controlled by country
 
-            FolderSelect FolderSources = new FolderSelect();
+            var FolderSources = new FolderSelect();
             FolderSources.CollectDirectoryData("CollectDirectory");
             var vic2Provinces = FolderSources.FilePath1;
 
-            TextFileExtract Text = new TextFileExtract(vic2Provinces, provinceIDToFile, provinceIDToProvinceName, provinceIDToTAG_Core, provinceIDToTAG_Controller);
+            var Text = new TextFileExtract(vic2Provinces, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile);
             Text.ExtractForDictionary("Dictionary");
-            provinceIDToFile = Text.Dictionary1; //Adds Province ID's & full paths to said-file in a dictionary
-            provinceIDToProvinceName = Text.Dictionary2;
-            provinceIDToTAG_Core = Text.Dictionary3;
-            provinceIDToTAG_Controller = Text.Dictionary4;
+            provinceIDToFile = Text.provinceIDToFileDictionary; //Adds Province ID's & full paths to said-file in a dictionary
+            provinceIDToProvinceName = Text.provinceIDToProvinceNameDictionary;
 
+            provinceIDToHistoryFile = Text.provinceIDToHistoryFileDictionary;
 
-            var tagToCountry = new Dictionary<string, string>(); //You know the drill!
+            foreach (KeyValuePair<string, HistoryFile> entry in provinceIDToHistoryFile) //split into new class or into textfilextract
+            {
+                if (entry.Value.Controller.Count != 0)
+                    provinceIDToTAG_Controller.Add(entry.Key, entry.Value.Controller[0]);
+                else
+                    provinceIDToTAG_Controller.Add(entry.Key, "noController");
+            }
+
+            //provinceIDToTAG_Controller = 
+            //Text.Dictionary4;
+
+            var tagToCountry = new Dictionary<string, string>();
             foreach (var line in countriestxtlines)
             {
-                string input = line;
-                int index = input.IndexOf("#");
+                var input = line;
+                var index = input.IndexOf("#");
                 if (index >= 0)
                     input = input.Substring(0, index);
                 index = input.IndexOf("dynamic_tags");
                 if (index >= 0)
                     input = input.Substring(0, index);
 
-                if (input != "")
-                {
-                    string removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
-                    string[] words = removal.Split('=');
-                    string[] trimmedTagToCountry = { words[0].Trim(), words[1].Trim() };
-                    Debug.WriteLine(trimmedTagToCountry);
-                   tagToCountry.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
-                }
+                if (string.IsNullOrEmpty(input))
+                    continue;
+
+                var removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
+                var words = removal.Split('=');
+                var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
+                Debug.WriteLine(trimmedTagToCountry);
+                tagToCountry.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
+
             }
 
-            //find way to merge provinceIDToFile to 
+            //
 
-            var provinceIDToCountry = new Dictionary<string, string>();
-            provinceIDToCountry.Add("1", MainWindow.TestPTB1.Text);
-            provinceIDToCountry.Add("2", MainWindow.TestPTB2.Text);
-            provinceIDToCountry.Add("3", MainWindow.TestPTB3.Text);
-            provinceIDToCountry.Add("4", MainWindow.TestPTB4.Text);
-            provinceIDToCountry.Add("5", MainWindow.TestPTB5.Text);
-            provinceIDToCountry.Add("6", MainWindow.TestPTB6.Text);
+            var provinceIDToCountry = new Dictionary<string, string>()
+            {
+                { "1", MainWindow.TestPTB1.Text },
+                { "2", MainWindow.TestPTB2.Text },
+                { "3", MainWindow.TestPTB3.Text },
+                { "4", MainWindow.TestPTB4.Text },
+                { "5", MainWindow.TestPTB5.Text },
+                { "6", MainWindow.TestPTB6.Text },
+            };
 
-            var countryToColor = new Dictionary<string, Color>();
-            countryToColor.Add("Jan Mayen", Color.FromRgb(15, 100, 132));
-            countryToColor.Add("Mann", Color.FromRgb(178, 34, 34));
-            countryToColor.Add("Pskov", Color.FromRgb(240, 230, 140));
+            var countryToColor = new Dictionary<string, Color>()
+            {
+                { "Jan Mayen", Color.FromRgb(15, 100, 132)},
+                { "Mann", Color.FromRgb(178, 34, 34) },
+                { "Pskov", Color.FromRgb(240, 230, 140) }
+            };
 
 
 
 
+
+
+
+
+            //
 
             var TAGToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
-
-
-
 
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.testimage1.Source);
             var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
             writeableBmp.Clear(Colors.White);
 
-            DrawMapColors ColorMap = new DrawMapColors(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToCountry, countryToColor);
+            var ColorMap = new DrawMapColors(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToCountry, countryToColor);
             ColorMap.Drawing();
             MainWindow.testimage2.Source = ColorMap.SizeReference;
 

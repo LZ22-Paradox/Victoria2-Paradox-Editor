@@ -6,12 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media;
 using Point = System.Windows.Point;
-using static Paradox_Editor.ProgramProperties;
+using static Paradox_Editor.D_Static_Variables.ProgramProperties;
 using System.Windows;
 using System.Windows.Controls;
 using Paradox_Editor.B_Map_Functions;
 using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
+using Paradox_Editor.D_Static_Variables;
 
 namespace Paradox_Editor.C_Window_Functions
 {
@@ -58,16 +59,15 @@ namespace Paradox_Editor.C_Window_Functions
             FilePath1 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
             FilePath2 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "map"), "definition.csv", SearchOption.AllDirectories);
             FilePath3 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common"), "countries.txt", SearchOption.AllDirectories);
-
             return;
         }
 
         public void SelectMainFolder(object _, EventArgs e)
         {
-            FolderBrowserDialog dialog = new(); //Open new dialogue
+            var dialog = new FolderBrowserDialog(); //Open new dialogue
             dialog.SelectedPath = StoredOpener; //Start directory of dialogue. Stored opener is the filepath the opener begins upon
 
-            if (dialog.ShowDialog() is DialogResult.OK)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
                 MessageBox.Show("You selected Filepath: " + dialog.SelectedPath); //State the filepath selected
                 Console.WriteLine(ProvinceDirectory);
@@ -75,34 +75,31 @@ namespace Paradox_Editor.C_Window_Functions
                 StoredOpener = dialog.SelectedPath;
                 Console.ReadLine();
             }
-            else { }
 
             ProvinceData.Clear(); //Clear all Rows as a "Refresh"
 
-            try
-            {
+            //try
+            //{
                 CollectDirectoryData("CollectDirectory");
 
-                ImageSourceConverter imgs = new ImageSourceConverter(); //Create instance of the image converter
-                ScaleTransform flipTrans = new ScaleTransform(); //creates instance for scale
+                var imgs = new ImageSourceConverter(); //Create instance of the image converter
+                var flipTrans = new ScaleTransform(); //creates instance for scale
                 Canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
                 flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
                 Canvas.RenderTransform = flipTrans; //Actually render the changes
 
                 Image.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
 
-                TextFileExtract provinceDataCollection = new TextFileExtract(FilePath1, ProvinceData);
+                var provinceDataCollection = new TextFileExtract(FilePath1, ProvinceData);
                 provinceDataCollection.ExtractForCollection("Collection");
 
                 MapEditor.UpdatePoliticalMap(); //Call Political Map Mode Update
-            }
-            catch
+            /* }
+           catch (Exception exception)
             {
                 Debug.WriteLine("ERROR.FP = Filepath Issue");
-                System.Windows.MessageBox.Show("Filepath unselected or invalid! Check mod or game file selected.");
-                return;
-            }
+                System.Windows.MessageBox.Show(exception.Message + "There is an exception! Probably the filepath selected");
+            }*/
         }
-
     }
 }

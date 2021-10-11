@@ -1,28 +1,26 @@
-﻿using System;
+﻿using Paradox_Editor.D_Static_Variables;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Paradox_Editor.ProgramProperties;
 
 namespace Paradox_Editor.B_Map_Functions
 {
     public class TextFileExtract
     {
         public string[] FilePath;
-        private string[] SeperatedLines;
-        public Dictionary<string, string> Dictionary1;
-        public Dictionary<string, string> Dictionary2;
-        public Dictionary<string, string> Dictionary3;
+        public Dictionary<string, string> provinceIDToFileDictionary;
+        public Dictionary<string, string> provinceIDToProvinceNameDictionary;
+        public Dictionary<string, HistoryFile> provinceIDToHistoryFileDictionary;
         public Dictionary<string, string> Dictionary4;
+        public Dictionary<string, string> provinceIDToControllerDictionary;
+
 
         public ObservableCollection<ProvinceFile> OutgoingData { get; set; }
 
-        public ObservableCollection<HistoryFile> InnerData { get; set; } = new ObservableCollection<HistoryFile>();
-
+        public ObservableCollection<HistoryFile> historyFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
         public TextFileExtract(string[] filepath, ObservableCollection<ProvinceFile> datasend)
         {
@@ -30,21 +28,20 @@ namespace Paradox_Editor.B_Map_Functions
             OutgoingData = datasend;
         }
 
-        public TextFileExtract(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, string> dictionary4)
+        public TextFileExtract(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, HistoryFile> dictionary3)
         {
             FilePath = filepath;
-            Dictionary1 = dictionary1; //provinceIDToFile
-            Dictionary2 = dictionary2; //provinceIDToProvinceName
-            Dictionary3 = dictionary3; //provinceIDToTAG_Owner
-            Dictionary4 = dictionary4; //provinceIDToTAG_Controller
+            provinceIDToFileDictionary = dictionary1; //provinceIDToFile
+            provinceIDToProvinceNameDictionary = dictionary2; //provinceIDToProvinceName
+            provinceIDToHistoryFileDictionary = dictionary3; //provinceIDToHistoryFile
         }
 
         public bool ExtractForCollection(string Collection)
         {
             foreach (string fileEntry in FilePath) //"For each file in the path list"
             {
-                string fileName = Path.GetFileName(fileEntry);
-                string[] SplitName = fileName.Split('-');
+                var fileName = Path.GetFileName(fileEntry);
+                var SplitName = fileName.Split('-');
                 if (int.TryParse(SplitName[0], out int IDValue))
                 {
                     OutgoingData.Add(new ProvinceFile() { ProvinceID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
@@ -58,100 +55,107 @@ namespace Paradox_Editor.B_Map_Functions
             return true;
         }
 
-
         public bool ExtractForDictionary(string Dictionary)
         {
-            var ownerList = new List<string>();
-            var controllerList = new List<string>();
-            var coreList = new List<string>();
-            var tradeGoodList = new List<string>();
-            var lifeRatingList = new List<string>();
-            var terrainList = new List<string>();
-            var colonialList = new List<string>();
-
             foreach (string fileEntry in FilePath) //"For each file in the path list"
             {
-                string fileName = Path.GetFileName(fileEntry); //FileEntry = Filepath
-                string[] SplitName = fileName.Split('-'); //SplitName[1] = Province Name
-                if (int.TryParse(SplitName[0], out int IDValue)) //IDValue = Province ID
+                var ownerList = new List<string>();
+                var controllerList = new List<string>();
+                var coreList = new List<string>();
+                var tradeGoodList = new List<string>();
+                var lifeRatingList = new List<string>();
+                var terrainList = new List<string>();
+                var colonialList = new List<string>();
+
+                var stateBuildingList = new List<string>(); //Unused. See HistoryFile.cs & Todo.txt
+                var navalBaseList = new List<string>();
+
+
+                var fileName = Path.GetFileName(fileEntry); //FileEntry = Filepath
+                var splitName = fileName.Split('-'); //SplitName[1] = Province Name
+                if (int.TryParse(splitName[0], out int IDValue)) //IDValue = Province ID
                 {
-                    if (Dictionary1.ContainsKey(Convert.ToString(IDValue)))
+                    if (provinceIDToFileDictionary.ContainsKey(Convert.ToString(IDValue)))
                     {
                         Debug.WriteLine("Repeated Entry | " + IDValue);
                     }
                     else
                     {
-                        Dictionary1.Add(Convert.ToString(IDValue), fileEntry); //provinceIDToFile
+                        provinceIDToFileDictionary.Add(Convert.ToString(IDValue), fileEntry); //provinceIDToFile
                     }
-                    if (Dictionary2.ContainsKey(Convert.ToString(IDValue)))
+                    if (provinceIDToProvinceNameDictionary.ContainsKey(Convert.ToString(IDValue)))
                     {
                         Debug.WriteLine("Repeated Entry | " + IDValue);
                     }
                     else
                     {
-                        Dictionary2.Add(Convert.ToString(IDValue), SplitName[1].Replace(" ", ""));
+                        provinceIDToProvinceNameDictionary.Add(Convert.ToString(IDValue), splitName[1].Replace(" ", ""));
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("Problem File(s) | Dictionary Extractor");
+                    Debug.WriteLine("Problem File(s) | Dictionary Extractor -TextFileExtract.cs");
                 }
 
                 foreach (var line in File.ReadAllLines(fileEntry)) //Where the magic happens
                 {
+                    var badLines = new[] { "}", "upgrade", "building", "level", "state_building", "\t" };
+                    if (badLines.Any(line.Contains) == false)
+                    {
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
+                            var key = seperatedLines[0];
+                            var value = seperatedLines[1];
+                            if (key.Contains("owner"))
+                                ownerList.Add(value);
 
-                    SeperatedLines = line.Replace(" ", "").Split('=');
-                    if (SeperatedLines[0] == "owner")
-                    {
-                        ownerList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "controller")
-                    {
-                        controllerList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "trade_goods")
-                    {
-                        tradeGoodList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "life_rating")
-                    {
-                        lifeRatingList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "colonial")
-                    {
-                        colonialList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "terrain")
-                    {
-                        terrainList.Add(SeperatedLines[1]);
-                    }
-                    if (SeperatedLines[0] == "add_core")
-                    {
-                        coreList.Add(SeperatedLines[1]);
+                            else if (key.Contains("controller"))
+                                controllerList.Add(value);
+
+                            else if (key.Contains("trade_goods"))
+                                tradeGoodList.Add(value);
+
+                            else if (key.Contains("life_rating"))
+                                lifeRatingList.Add(value);
+
+                            else if (key.Contains("colonial"))
+                                colonialList.Add(value);
+
+                            else if (key.Contains("terrain"))
+                                terrainList.Add(value);
+
+                            else if (key.Contains("add_core"))
+                                coreList.Add(value);
+
+                            else if (key.Contains("naval_base"))
+                                navalBaseList.Add(value);
+
+                            //add something regarding state_buildings.
+                        }
                     }
                 }
 
-                InnerData.Add(new HistoryFile()
+                var historyFile = new HistoryFile()
                 {
                     Controller = controllerList,
                     Core = coreList,
                     TradeGoods = tradeGoodList,
                     LifeRating = lifeRatingList,
                     Terrain = terrainList,
-                    Colonial = colonialList
-                }); ;
-                ownerList.Clear();
-                controllerList.Clear();
-                coreList.Clear();
-                tradeGoodList.Clear();
-                lifeRatingList.Clear();
-                terrainList.Clear();
-                colonialList.Clear();
+                    Colonial = colonialList,
+                    Naval_Base = navalBaseList
+                };
 
+                historyFileData.Add(historyFile);
 
+                if (!provinceIDToHistoryFileDictionary.ContainsKey(Convert.ToString(IDValue)))
+                    provinceIDToHistoryFileDictionary.Add(Convert.ToString(IDValue), historyFile); //duplicates entries. This is not needed.
+                else
+                    Debug.WriteLine("Repeated Entry | " + IDValue);
             }
+
             return true;
         }
-
     }
 }
