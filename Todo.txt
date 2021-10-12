@@ -10,6 +10,7 @@ Must Do:
 #. Optimize for performance
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
 
+
 * Make map mode icons dynamic depending on the game selected
 * Impliment map editing/viewing
 	- Select Master Folder

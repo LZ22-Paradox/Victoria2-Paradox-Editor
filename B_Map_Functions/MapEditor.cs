@@ -45,8 +45,8 @@ namespace Paradox_Editor
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
-            var provinceIDToTAG_Core = new Dictionary<string, string>(); //Directly owned by a country
-            var provinceIDToTAG_Controller = new Dictionary<string, string>(); //Stripey lines; controlled by country
+            var provinceIDToCoreTAG = new Dictionary<string, string>(); //Stripey Green Lines; Core from a country
+            var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
 
             var FolderSources = new FolderSelect();
             FolderSources.CollectDirectoryData("CollectDirectory");
@@ -62,13 +62,10 @@ namespace Paradox_Editor
             foreach (KeyValuePair<string, HistoryFile> entry in provinceIDToHistoryFile) //split into new class or into textfilextract
             {
                 if (entry.Value.Controller.Count != 0)
-                    provinceIDToTAG_Controller.Add(entry.Key, entry.Value.Controller[0]);
+                    provinceIDToControllerTAG.Add(entry.Key, entry.Value.Controller[0]);
                 else
-                    provinceIDToTAG_Controller.Add(entry.Key, "noController");
-            }
-
-            //provinceIDToTAG_Controller = 
-            //Text.Dictionary4;
+                    provinceIDToControllerTAG.Add(entry.Key, "noController");
+            } //Got Province ID to Controller TAG
 
             var tagToCountry = new Dictionary<string, string>();
             foreach (var line in countriestxtlines)
@@ -88,28 +85,49 @@ namespace Paradox_Editor
                 var words = removal.Split('=');
                 var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
                 Debug.WriteLine(trimmedTagToCountry);
-                tagToCountry.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
-
+                tagToCountry.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]); //Acquire TAG to Country
             }
 
             //
 
             var provinceIDToCountry = new Dictionary<string, string>()
-            {
+/*            {
                 { "1", MainWindow.TestPTB1.Text },
                 { "2", MainWindow.TestPTB2.Text },
                 { "3", MainWindow.TestPTB3.Text },
                 { "4", MainWindow.TestPTB4.Text },
                 { "5", MainWindow.TestPTB5.Text },
                 { "6", MainWindow.TestPTB6.Text },
-            };
+            }*/;
 
-            var countryToColor = new Dictionary<string, Color>()
+
+            var countriesFolder = Path.GetFullPath("C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\TestCountries\\");
+            // surprise tool:     Directory.GetFiles(ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
+            var countryToColor = new Dictionary<string, Color>();
+            foreach (var countryFile in countriesFolder)
             {
+                //Read the specific line
+                //color = { 178  34  34 }
+                //color
+                //_=_
+                //{_
+                //R_
+                //G_
+                //B_
+                //}
+                ///Best case is to find the line that starts with "color" and only read what's in between the brackets;
+                ///set the country to equal that color then return and go to next country file.
+            }
+
+
+/*            {
                 { "Jan Mayen", Color.FromRgb(15, 100, 132)},
                 { "Mann", Color.FromRgb(178, 34, 34) },
                 { "Pskov", Color.FromRgb(240, 230, 140) }
-            };
+            }*/
+//I have country name, I need to search for it in test countries and get color = { x, y, z }
+
+;
 
 
 

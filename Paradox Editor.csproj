@@ -12,6 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="BackgroundSelectEU4.png" />
+    <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />
     <None Remove="Preloaded_Assets\EU4\mapmode_ProvincesOff.png" />
     <None Remove="Preloaded_Assets\EU4\mapmode_ProvincesOn.png" />
@@ -50,7 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="BackgroundSelectEU4.png" />
     <Resource Include="blank_world_map.png" />
+    <Resource Include="BackgroundSelectVIC2.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_ProvincesOff.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_ProvincesOn.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_PoliticalOff.png" />

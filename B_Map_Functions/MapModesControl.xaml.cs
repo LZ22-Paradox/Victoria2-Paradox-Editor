@@ -1,14 +1,11 @@
-﻿using System;
+﻿using Paradox_Editor.C_Window_Functions;
+using System;
 using System.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace Paradox_Editor
 {
-    /// <summary>
-    /// Interaction logic for MapModes.xaml
-    /// </summary>
-    /// 
 
     public partial class MapModesControl : System.Windows.Controls.UserControl
     {
@@ -25,27 +22,27 @@ namespace Paradox_Editor
         private void mapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 0;
-            updateMapMode();
+            updateMapModeVisibility();
         }
 
         private void mapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
-            updateMapMode();
+            updateMapModeVisibility();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
-            updateMapMode();
+            updateMapModeVisibility();
         }
 
-        public static void updateMapMode() //Updates & Disables the other existing map modes
+        public static void updateMapModeVisibility() //Updates & Disables the other existing map modes
         {
             var MainWindow = (MainWindow)Application.Current.MainWindow;
 
-            SoundPlayer splayer = new SoundPlayer(Properties.Resources.VIC2_ValidClick);
-            splayer.Play();
+            var SoundHandler = new GameSoundHandler();
+            SoundHandler.PlaySound();
 
             BitmapImage politicaloff = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOff.png", UriKind.Relative));
             BitmapImage politicalon = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOn.png", UriKind.Relative));

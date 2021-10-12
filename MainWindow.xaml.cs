@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.D__Static_Classes_Types;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -37,7 +38,7 @@ namespace Paradox_Editor
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapModesControl.CurrentMapMode = 1;
-            MapModesControl.updateMapMode();
+            MapModesControl.updateMapModeVisibility();
         }
 
         private void Testbox_TextChanged(object sender, KeyEventArgs e)
@@ -86,6 +87,17 @@ namespace Paradox_Editor
         public static explicit operator MainWindow(WindowCollection v)
         {
             throw new NotImplementedException();
+        }
+
+        private void Game_Selected(object sender, RoutedEventArgs e)
+        {
+            if (Vic2.IsSelected)
+            {
+                GameMode.gameMode = "VIC2";
+            } else if (Europa4.IsSelected)
+            {
+                GameMode.gameMode = "EU4";
+            }
         }
 
     }
