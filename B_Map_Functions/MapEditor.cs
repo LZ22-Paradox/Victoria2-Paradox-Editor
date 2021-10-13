@@ -57,9 +57,7 @@ namespace Paradox_Editor
             provinceIDToFile = Text.provinceIDToFileDictionary; //Adds Province ID's & full paths to said-file in a dictionary
             provinceIDToProvinceName = Text.provinceIDToProvinceNameDictionary;
 
-            provinceIDToHistoryFile = Text.provinceIDToHistoryFileDictionary;
-
-            foreach (KeyValuePair<string, HistoryFile> entry in provinceIDToHistoryFile) //split into new class or into textfilextract
+            foreach (KeyValuePair<string, HistoryFile> entry in Text.provinceIDToHistoryFileDictionary) //split into new class or into textfilextract
             {
                 if (entry.Value.Controller.Count != 0)
                     provinceIDToControllerTAG.Add(entry.Key, entry.Value.Controller[0]);
@@ -67,7 +65,7 @@ namespace Paradox_Editor
                     provinceIDToControllerTAG.Add(entry.Key, "noController");
             } //Got Province ID to Controller TAG
 
-            var tagToCountry = new Dictionary<string, string>();
+            var tagToCountryName = new Dictionary<string, string>();
             foreach (var line in countriestxtlines)
             {
                 var input = line;
@@ -85,71 +83,52 @@ namespace Paradox_Editor
                 var words = removal.Split('=');
                 var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
                 Debug.WriteLine(trimmedTagToCountry);
-                tagToCountry.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]); //Acquire TAG to Country
+                tagToCountryName.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]); //Acquire TAG to Country
             }
 
-            //
+            var countryNameToColor = new Dictionary<string, Color>();
+            var countriesFolder = Directory.GetFiles("C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\TestCountries\\");
+            CountryNameToColor CountryNameToColorConverter = new CountryNameToColor(countriesFolder);
+            CountryNameToColorConverter.GetCountryColor();
+            countryNameToColor = CountryNameToColorConverter.NameToColor;
 
-            var provinceIDToCountry = new Dictionary<string, string>()
-/*            {
-                { "1", MainWindow.TestPTB1.Text },
-                { "2", MainWindow.TestPTB2.Text },
-                { "3", MainWindow.TestPTB3.Text },
-                { "4", MainWindow.TestPTB4.Text },
-                { "5", MainWindow.TestPTB5.Text },
-                { "6", MainWindow.TestPTB6.Text },
-            }*/;
-
-
-            var countriesFolder = Path.GetFullPath("C:\\Users\\LukeZurg22_Gaming\\source\\repos\\Paradox Editor\\TestEnvironmentFolder\\TestCountries\\");
-            // surprise tool:     Directory.GetFiles(ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
-            var countryToColor = new Dictionary<string, Color>();
-            foreach (var countryFile in countriesFolder)
-            {
-                //Read the specific line
-                //color = { 178  34  34 }
-                //color
-                //_=_
-                //{_
-                //R_
-                //G_
-                //B_
-                //}
-                ///Best case is to find the line that starts with "color" and only read what's in between the brackets;
-                ///set the country to equal that color then return and go to next country file.
-            }
+            var provinceIDToCountry = new Dictionary<string, string>();
+            /*            {
+                            { "1", MainWindow.TestPTB1.Text },
+                            { "2", MainWindow.TestPTB2.Text },
+                            { "3", MainWindow.TestPTB3.Text },
+                            { "4", MainWindow.TestPTB4.Text },
+                            { "5", MainWindow.TestPTB5.Text },
+                            { "6", MainWindow.TestPTB6.Text },
+                        }*/
 
 
-/*            {
-                { "Jan Mayen", Color.FromRgb(15, 100, 132)},
-                { "Mann", Color.FromRgb(178, 34, 34) },
-                { "Pskov", Color.FromRgb(240, 230, 140) }
-            }*/
-//I have country name, I need to search for it in test countries and get color = { x, y, z }
-
-;
+            ///I Have:::
+            ///countryNameToColor
+            ///tagToCountryName
+            ///provinceIDToControllerTAG
+            //NEED TO GET PROVINCECOLORTOPROVINCEID [read CSV]
+            //Use color to get country name to get country tag to get province id
 
 
-
-
-
-
-
-
-            //
-
-            var TAGToFile = new Dictionary<string, string>(); //Path to the file i want to open if the country/province is clicked
 
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.testimage1.Source);
             var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
             writeableBmp.Clear(Colors.White);
 
-            var ColorMap = new DrawMapColors(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToCountry, countryToColor);
+            var ColorMap = new DrawMapColors(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToCountry, countryNameToColor);
             ColorMap.Drawing();
             MainWindow.testimage2.Source = ColorMap.SizeReference;
 
 
+
         }
+
+
+
+
+
+
 
     }
 }
