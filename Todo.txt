@@ -5,8 +5,12 @@
 
 Must Do:
 1. Impliment countries visually based on history file inout
+    o Finish DawMapColors
+    o Set the data reading to the main uploaded files
+        [] Bugfix from there; if there are any. Test. Lag delays are expected.
 2. Impliment basic province loading (click a province, get the file)
 
+#. Impliment automatic switching between audio soundsets in-program
 #. Optimize for performance
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
 

@@ -14,10 +14,11 @@ namespace Paradox_Editor.A_Map_Navigation
 
         private Dictionary<string, string> Dictionary1;
         private Dictionary<string, string> Dictionary2;
-        private Dictionary<string, Color> Dictionary3;
+        private Dictionary<string, string> Dictionary3;
+        private Dictionary<string, Color> Dictionary4;
 
 
-        public DrawMapColors(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, Color> dictionary3)
+        public DrawMapColors(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, Color> dictionary4)
         {
             Image = image;
             FirstLayer = firstlayer;
@@ -25,6 +26,7 @@ namespace Paradox_Editor.A_Map_Navigation
             Dictionary1 = dictionary1; //colorToProvinceId
             Dictionary2 = dictionary2; //provinceToCountry
             Dictionary3 = dictionary3; //countryToColor
+            Dictionary4 = dictionary4;
         }
 
         public void Drawing()
@@ -36,7 +38,7 @@ namespace Paradox_Editor.A_Map_Navigation
                 for (int y = 0; y < FirstLayer.Height; y++)
                 {
                     var pixel = FirstLayer.GetPixel(x, y);
-                    if (
+/*                    if (
                         Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
                         Dictionary2.TryGetValue(provinceID, out var country) &&
                         Dictionary3.TryGetValue(country, out var countryColor))
@@ -46,7 +48,9 @@ namespace Paradox_Editor.A_Map_Navigation
                     else
                     {
                         SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
-                    }
+                    }*/
+
+///This is the area of significant change for next update. See the IF statement parameters with the new dictionary entries.
 
                 }
 
