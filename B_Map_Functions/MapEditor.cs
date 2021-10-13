@@ -110,7 +110,6 @@ namespace Paradox_Editor
 
 
 
-
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.testimage1.Source);
             var writeableBmp = BitmapFactory.New((int)firstLayer.Width, (int)firstLayer.Height);
             writeableBmp.Clear(Colors.White);
