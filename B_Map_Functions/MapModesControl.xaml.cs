@@ -11,7 +11,7 @@ namespace Paradox_Editor
     {
         public static int CurrentMapMode { get; set; } //Political(0), Provinces(1), Terrain(2)
         public static string bitmapPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
-///The above can be changed as modes are added
+        ///The above can be changed as modes are added
 
         public MapModesControl() => InitializeComponent();
 
@@ -23,26 +23,29 @@ namespace Paradox_Editor
         {
             CurrentMapMode = 0;
             updateMapModeVisibility();
+            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
+            SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
             updateMapModeVisibility();
+            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
+            SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
             updateMapModeVisibility();
+            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
+            SoundHandler.PlayClickSound();
         }
 
         public static void updateMapModeVisibility() //Updates & Disables the other existing map modes
         {
             var MainWindow = (MainWindow)Application.Current.MainWindow;
-
-            var SoundHandler = new GameSoundHandler();
-            SoundHandler.PlaySound();
 
             BitmapImage politicaloff = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOff.png", UriKind.Relative));
             BitmapImage politicalon = new BitmapImage(new Uri(bitmapPath + "mapmode_PoliticalOn.png", UriKind.Relative));
@@ -61,8 +64,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.testimage1.Visibility = Visibility.Hidden;
-                MainWindow.testimage2.Visibility = Visibility.Visible;
+                MainWindow.mapBackground.Visibility = Visibility.Hidden;
+                MainWindow.mapPolitical.Visibility = Visibility.Visible;
 
             }
             else if (CurrentMapMode == 1) //If Provinces is on
@@ -71,8 +74,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceon;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.testimage1.Visibility = Visibility.Visible;
-                MainWindow.testimage2.Visibility = Visibility.Hidden;
+                MainWindow.mapBackground.Visibility = Visibility.Visible;
+                MainWindow.mapPolitical.Visibility = Visibility.Hidden;
 
             }
             else if (CurrentMapMode == 2) //If Terrain is on
@@ -81,8 +84,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainon;
 
-                MainWindow.testimage1.Visibility = Visibility.Hidden;
-                MainWindow.testimage2.Visibility = Visibility.Hidden;
+                MainWindow.mapBackground.Visibility = Visibility.Hidden;
+                MainWindow.mapPolitical.Visibility = Visibility.Hidden;
             }
 
 

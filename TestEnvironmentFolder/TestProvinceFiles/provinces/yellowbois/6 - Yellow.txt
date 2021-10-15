@@ -1,7 +1,0 @@
-owner = MAN
-controller = MAN
-add_core = PSK
-add_core = MAN
-trade_goods = coal
-life_rating = 30
-colonial = 2

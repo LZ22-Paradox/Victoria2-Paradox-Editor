@@ -71,118 +71,29 @@ namespace Paradox_Editor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///
-        ///#========================= H E A D E R =========================
-        ///
-        ///color = { 255  255  255 }
-        ///graphical_culture = EuropeanGC
-        ///
-        ///
-        ///#========================= P A R T I E S =========================
-        ///
-        ///party = {
-        ///name = &quot;JAN_conservative_92&quot;
-        ///start_date = 1700.1.1
-        ///end_date = 2000.1.1
-        ///ideology = conservative
-        ///economic_policy = interventionism
-        ///trade_policy = protectionism
-        ///religious_policy = moralism
-        ///citizenship_policy = limited_citizenship
-        ///war_policy = pro_military
-        ///}
-        ///party = {
-        ///name = &quot;JAN_liberal_ [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static string Jan_Mayen {
+        internal static System.IO.UnmanagedMemoryStream EU4_Connecting {
             get {
-                return ResourceManager.GetString("Jan_Mayen", resourceCulture);
+                return ResourceManager.GetStream("EU4_Connecting", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///
-        ///#========================= H E A D E R =========================
-        ///
-        ///color = { 178  34  34 }
-        ///graphical_culture = BritishGC
-        ///
-        ///
-        ///#========================= P A R T I E S =========================
-        ///
-        ///party = {
-        ///name = &quot;MAN_conservative_89&quot;
-        ///start_date = 1700.1.1
-        ///end_date = 2000.1.1
-        ///ideology = conservative
-        ///economic_policy = state_capitalism
-        ///trade_policy = protectionism
-        ///religious_policy = moralism
-        ///citizenship_policy = limited_citizenship
-        ///war_policy = jingoism
-        ///social_policy = no_position_set
-        ///}
-        ///part [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static string Mann {
+        internal static System.IO.UnmanagedMemoryStream EU4_ValidClick {
             get {
-                return ResourceManager.GetString("Mann", resourceCulture);
+                return ResourceManager.GetStream("EU4_ValidClick", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
-        ///
-        ///#========================= H E A D E R =========================
-        ///
-        ///color = { 240  230  140 }
-        ///graphical_culture = EuropeanGC
-        ///
-        ///
-        ///#========================= P A R T I E S =========================
-        ///
-        ///party = {
-        ///name = &quot;PSK_conservative_92&quot;
-        ///start_date = 1700.1.1
-        ///end_date = 2000.1.1
-        ///ideology = conservative
-        ///economic_policy = interventionism
-        ///trade_policy = protectionism
-        ///religious_policy = moralism
-        ///citizenship_policy = limited_citizenship
-        ///war_policy = pro_military
-        ///social_policy = no_position_set
-        ///} [rest of string was truncated]&quot;;.
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
-        internal static string Pskov {
+        internal static System.IO.UnmanagedMemoryStream VIC2_Connecting {
             get {
-                return ResourceManager.GetString("Pskov", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to #Please keep tags sorted alphabetically when you add/remove country tags
-        ///
-        ///# Special countries...
-        ///REB 	= 	&quot;countries/rebels.txt&quot;
-        ///
-        ///################LZ22&apos;s New Nations
-        ///JAN		=&quot;countries/Jan Mayen.txt&quot;
-        ///PSK		=&quot;countries/Pskov.txt&quot;
-        ///MAN		=&quot;countries/Mann.txt&quot;
-        ///
-        ///##HoD Dominions
-        ///dynamic_tags  = yes # any tags after this is considered dynamic dominions
-        ///D01		= &quot;countries/D01.txt&quot;
-        ///D02		= &quot;countries/D02.txt&quot;
-        ///D03		= &quot;countries/D03.txt&quot;
-        ///.
-        /// </summary>
-        internal static string TestCountries {
-            get {
-                return ResourceManager.GetString("TestCountries", resourceCulture);
+                return ResourceManager.GetStream("VIC2_Connecting", resourceCulture);
             }
         }
         

@@ -10,10 +10,6 @@ using Paradox_Editor.D__Static_Classes_Types;
 
 namespace Paradox_Editor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
 
     public partial class MainWindow : Window
     {
@@ -27,11 +23,10 @@ namespace Paradox_Editor
             Navigator =
                 new MapNavigation(mapCanvas)
                 .AddImage(mapBackground)
-                .AddImage(testimage1)
+                .AddImage(mapPolitical)
                 .AddImage(testimage2);
 
-            SelectMap = new FolderSelect(mapCanvas, mapBackground);
-
+            SelectMap = new FolderSelect(mapCanvas, mapBackground, mapPolitical);
             DataContext = SelectMap;
         }
 
@@ -89,16 +84,18 @@ namespace Paradox_Editor
             throw new NotImplementedException();
         }
 
-        private void Game_Selected(object sender, RoutedEventArgs e)
+        public void GameSelected(object sender, RoutedEventArgs e)
         {
-            if (Vic2.IsSelected)
+            if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
                 GameMode.gameMode = "VIC2";
-            } else if (Europa4.IsSelected)
+            }
+            else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
                 GameMode.gameMode = "EU4";
             }
+            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
+            SoundHandler.PlayConnectingSound();
         }
-
     }
 }

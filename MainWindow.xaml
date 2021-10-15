@@ -48,15 +48,15 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Column="1" Margin="15,-635,0,0" VerticalAlignment="Center" Width="150" SelectedIndex="0">
+        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Column="1" Margin="15,-635,0,0" VerticalAlignment="Center" Width="150" SelectedIndex="0" SelectionChanged="GameSelected">
             <ListBoxItem x:Name="Vic2" Content="N/A">
             </ListBoxItem>
-            <ListBoxItem Content="Victoria II" Selected="Game_Selected" FontFamily="18thCentury" FontSize="20" FontWeight="Bold">
+            <ListBoxItem Content="Victoria II" FontFamily="18thCentury" FontSize="20" FontWeight="Bold">
                 <ListBoxItem.Background>
                     <ImageBrush ImageSource="pack://application:,,,/Paradox Editor;component/BackgroundSelectVIC2.png" Stretch="Fill"/>
                 </ListBoxItem.Background>
             </ListBoxItem>
-            <ListBoxItem x:Name="Europa4" Content="Europa Universalis IV" Selected="Game_Selected" Foreground="White" FontFamily="Italianate" FontSize="14">
+            <ListBoxItem x:Name="Europa4" Content="Europa Universalis IV" Foreground="White" FontFamily="Italianate" FontSize="14">
                 <ListBoxItem.Background>
                     <ImageBrush ImageSource="/BackgroundSelectEU4.png" Stretch="Fill"/>
                 </ListBoxItem.Background>
@@ -139,11 +139,11 @@
                            StretchDirection="Both">
                     </Image>
 
-                    <Image Source="/TestProvince.bmp" x:Name="testimage1" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
+                    <Image x:Name="mapPolitical" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Visibility="Visible"/>
 
-                    <Image x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Source="/TestProvince.bmp" Visibility="Visible"/>
+                    <Image x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
 
-                    <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
+                    <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
 
 
                 </Canvas>

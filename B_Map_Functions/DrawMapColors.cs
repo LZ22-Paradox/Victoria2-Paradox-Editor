@@ -9,7 +9,7 @@ namespace Paradox_Editor.A_Map_Navigation
     {
 
         private Image Image;
-        private WriteableBitmap FirstLayer;
+        public WriteableBitmap FirstLayer;
         public WriteableBitmap SizeReference { get; set; }
 
         private Dictionary<string, string> Dictionary1;
@@ -24,33 +24,36 @@ namespace Paradox_Editor.A_Map_Navigation
             FirstLayer = firstlayer;
             SizeReference = sizereference;
             Dictionary1 = dictionary1; //colorToProvinceId
-            Dictionary2 = dictionary2; //provinceToCountry
-            Dictionary3 = dictionary3; //countryToColor
-            Dictionary4 = dictionary4;
+            Dictionary2 = dictionary2; //provinceIDToCountryTAG
+            Dictionary3 = dictionary3; //countryTAGToCountryName
+            Dictionary4 = dictionary4; //countryToColor
+
+            //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
         }
 
         public void Drawing()
         {
-            //var colorToProvindeID = Dictionary; || Find dictionary's use for trygetValue. Possible new class?
-
-            for (int x = 0; x < FirstLayer.Width; x++) //REUSE LATER. STATIC CLASS BAD
+            for (int x = 0; x < FirstLayer.Width; x++)
             {
                 for (int y = 0; y < FirstLayer.Height; y++)
                 {
-                    var pixel = FirstLayer.GetPixel(x, y);
-/*                    if (
+                    var pixel = FirstLayer.GetPixel(x, y); //Error is thrown here
+                    if (
                         Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
-                        Dictionary2.TryGetValue(provinceID, out var country) &&
-                        Dictionary3.TryGetValue(country, out var countryColor))
+                        Dictionary2.TryGetValue(provinceID, out var countryTAG) &&
+                        Dictionary3.TryGetValue(countryTAG, out var countryName) &&
+                        Dictionary4.TryGetValue(countryName, out var countryColor))
                     {
                         SizeReference.FillRectangle(x, y, x + 1, y + 1, countryColor); //Draws the country colors
                     }
                     else
                     {
-                        SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
-                    }*/
+                        //SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
+                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(0, 0, 0)); //Draw missing data in black
 
-///This is the area of significant change for next update. See the IF statement parameters with the new dictionary entries.
+                    }
+
+                    ///This is the area of significant change for next update. See the IF statement parameters with the new dictionary entries.
 
                 }
 

@@ -22,25 +22,29 @@ namespace Paradox_Editor.C_Window_Functions
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public string[] MasterFolder;
-        public string[] FilePath1 { get; set; }
-        public string[] FilePath2 { get; set; }
-        public string[] FilePath3 { get; set; }
+        public string[] Path_Provinces { get; set; }
+        public static string[] Path_CSV { get; set; }
+        public static string[] Path_CountriesTxt { get; set; }
 
+        public static string[] Path_Countries { get; set; }
 
         private Canvas Canvas;
-        private Image Image;
+        private Image Image1;
+        private Image Image2;
 
-        public FolderSelect(string[] filepath1, Canvas canvas, Image image)
+
+        public FolderSelect(string[] filepath1, Canvas canvas, Image image1)
         {
-            FilePath1 = filepath1;
-            Image = image;
+            Path_Provinces = filepath1;
+            Image1 = image1;
             Canvas = canvas;
         }
 
-        public FolderSelect(Canvas canvas, Image image)
+        public FolderSelect(Canvas canvas, Image image1, Image image2)
         {
-            Image = image;
             Canvas = canvas;
+            Image1 = image1;
+            Image2 = image2;
         }
 
         public FolderSelect() { }
@@ -56,9 +60,10 @@ namespace Paradox_Editor.C_Window_Functions
         public void CollectDirectoryData(string CollectDirectory)
         {
             MasterFolder = Directory.GetFiles(ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
-            FilePath1 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            FilePath2 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "map"), "definition.csv", SearchOption.AllDirectories);
-            FilePath3 = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common"), "countries.txt", SearchOption.AllDirectories);
+            Path_Provinces = Directory.GetFiles(Path.Combine(ProvinceDirectory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
+            Path_CSV = Directory.GetFiles(Path.Combine(ProvinceDirectory, "map"), "definition.csv", SearchOption.AllDirectories);
+            Path_CountriesTxt = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common"), "countries.txt", SearchOption.AllDirectories);
+            Path_Countries = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
             return;
         }
 
@@ -80,20 +85,21 @@ namespace Paradox_Editor.C_Window_Functions
 
             //try
             //{
-                CollectDirectoryData("CollectDirectory");
+            CollectDirectoryData("CollectDirectory");
 
-                var imgs = new ImageSourceConverter(); //Create instance of the image converter
-                var flipTrans = new ScaleTransform(); //creates instance for scale
-                Canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
-                flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
-                Canvas.RenderTransform = flipTrans; //Actually render the changes
+            var imgs = new ImageSourceConverter(); //Create instance of the image converter
+            var flipTrans = new ScaleTransform(); //creates instance for scale
+            Canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
+            flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
+            Canvas.RenderTransform = flipTrans; //Actually render the changes
 
-                Image.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
+            Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
+            Image2 = Image1;
 
-                var provinceDataCollection = new TextFileExtract(FilePath1, ProvinceData);
-                provinceDataCollection.ExtractForCollection("Collection");
+            var provinceDataCollection = new TextFileExtract(Path_Provinces, ProvinceData);
+            provinceDataCollection.ExtractForCollection("Collection");
 
-                MapEditor.UpdatePoliticalMap(); //Call Political Map Mode Update
+            MapEditor.UpdatePoliticalMap(); //Call Political Map Mode Update
             /* }
            catch (Exception exception)
             {
