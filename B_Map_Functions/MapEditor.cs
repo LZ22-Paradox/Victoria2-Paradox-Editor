@@ -93,16 +93,16 @@ namespace Paradox_Editor
             ///tagToCountryName
             ///provinceIDToControllerTAG
             ///colorToProvinceId
-
+            
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapBackground.Source); //May be problem
             var writeableBmp = BitmapFactory.New((int)firstLayer.PixelWidth, (int)firstLayer.PixelHeight); //Different dimensions than firstlayer
             writeableBmp.Clear(Colors.White);
-
+            
             //WriteableBitmap firstlayer,
             //WriteableBitmap sizereference,
             //Image image,
 
-            var ColorMap = new DrawMapColors(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor);
+            var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor);
             ColorMap.Drawing();
             MainWindow.mapPolitical.Source = ColorMap.SizeReference;
 

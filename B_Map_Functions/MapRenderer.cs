@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace Paradox_Editor.A_Map_Navigation
 {
-    public class DrawMapColors
+    public class MapRenderer
     {
 
         private Image Image;
@@ -18,7 +18,7 @@ namespace Paradox_Editor.A_Map_Navigation
         private Dictionary<string, Color> Dictionary4;
 
 
-        public DrawMapColors(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, Color> dictionary4)
+        public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, Color> dictionary4)
         {
             Image = image;
             FirstLayer = firstlayer;
@@ -33,9 +33,9 @@ namespace Paradox_Editor.A_Map_Navigation
 
         public void Drawing()
         {
-            for (int x = 0; x < FirstLayer.Width; x++)
+            for (int x = 0; x < FirstLayer.PixelWidth - 1; x++)
             {
-                for (int y = 0; y < FirstLayer.Height; y++)
+                for (int y = 0; y < FirstLayer.PixelHeight - 1; y++)
                 {
                     var pixel = FirstLayer.GetPixel(x, y); //Error is thrown here
                     if (
