@@ -4,10 +4,12 @@
 [Definition.csv] - province;red;green;blue;provincename;x
 
 Must Do:
-1. Impliment countries visually based on history file inout
-    o Finish DawMapColors
-    o Set the data reading to the main uploaded files
-        [] Bugfix from there; if there are any. Test. Lag delays are expected.
+
+1. FolderSelect is the master folder that executes the methods needed
+2. Fix left provincefile column not displaying. See bindings in XAML
+3. Fix up sound & gamemode
+#. Fix Map loading to sync size with provinceMap
+#. Adjust map to load Oceans as white, and uncontrolled provinces as black. (Just like Vic2 screenshots)
 2. Impliment basic province loading (click a province, get the file)
 
 #. Impliment automatic switching between audio soundsets in-program

@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="D_ Static_Classes_Types\ProgramProperties.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="BackgroundSelectEU4.png" />
     <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />

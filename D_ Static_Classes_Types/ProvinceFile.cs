@@ -1,4 +1,4 @@
-﻿namespace Paradox_Editor.D_Static_Variables
+﻿namespace Paradox_Editor.D_Static_Classes_Types
 {
     public class ProvinceFile
     {

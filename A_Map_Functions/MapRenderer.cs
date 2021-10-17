@@ -49,7 +49,7 @@ namespace Paradox_Editor.A_Map_Navigation
                     else
                     {
                         //SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
-                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(0, 0, 0)); //Draw missing data in black
+                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(255, 255, 255)); //Draw missing data in black
 
                     }
 

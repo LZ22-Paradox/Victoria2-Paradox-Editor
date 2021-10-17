@@ -64,7 +64,7 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.mapBackground.Visibility = Visibility.Hidden;
+                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapPolitical.Visibility = Visibility.Visible;
 
             }
@@ -74,7 +74,7 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceon;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainoff;
 
-                MainWindow.mapBackground.Visibility = Visibility.Visible;
+                MainWindow.mapProvinces.Visibility = Visibility.Visible;
                 MainWindow.mapPolitical.Visibility = Visibility.Hidden;
 
             }
@@ -84,7 +84,7 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = provinceoff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = terrainon;
 
-                MainWindow.mapBackground.Visibility = Visibility.Hidden;
+                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapPolitical.Visibility = Visibility.Hidden;
             }
 

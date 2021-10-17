@@ -8,16 +8,10 @@ namespace Paradox_Editor.B_Map_Functions
 {
     public class CountryNameToColor
     {
-        string[] Folder { get; set; }
         public Dictionary<string, Color> NameToColor { get; set; } = new Dictionary<string, Color>();
         public string[] SeperatedColors { get; set; }
 
-        public CountryNameToColor(string[] folder)
-        {
-            Folder = folder;
-        }
-
-        public void GetCountryColor()
+        public Dictionary<string, Color> GetCountryColor(string[] Folder)
         {
             foreach (var countryFile in Folder)
             {
@@ -39,7 +33,7 @@ namespace Paradox_Editor.B_Map_Functions
                 }
 
             }
-        }
-
+            return NameToColor;
+        }       
     }
 }
