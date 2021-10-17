@@ -89,36 +89,6 @@
             </Grid>
         </Expander>
 
-        <Expander x:Name="testexpander" Grid.Column="1" Header="Test Variables" Height="200" Margin="0,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="3">
-            <Grid Background="#FFE5E5E5">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBox Name="TestPTB1" Grid.Column="0" Text="Mann" Grid.Row="0" FontSize="12" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="1, Red Province" Grid.Row="0" FontSize="9"/>
-                <TextBox Name="TestPTB2" Grid.Column="0" Text="Jan Mayen" FontSize="12" Grid.Row="1" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="2, Blue Province" Grid.Row="1" FontSize="9"/>
-                <TextBox Name="TestPTB3" Grid.Column="0" Text="Jan Mayen" Grid.Row="2" FontSize="12" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="3, Green Province" Grid.Row="2" FontSize="9"/>
-                <TextBox Name="TestPTB4" Grid.Column="0" Text="Mann" FontSize="12" Grid.Row="3" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="4, Purple Province" Grid.Row="3" FontSize="9"/>
-                <TextBox Name="TestPTB5" Grid.Column="0" Text="Pskov" Grid.Row="4" FontSize="12" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="5, Cyan Province" Grid.Row="4" FontSize="9"/>
-                <TextBox Name="TestPTB6" Grid.Column="0" Text="Pskov" FontSize="12" Grid.Row="5" KeyDown="Testbox_TextChanged"/>
-                <TextBlock Grid.Column="1" Text="6, Yellow Province" Grid.Row="5" FontSize="9"/>
-            </Grid>
-        </Expander>
-
         <Grid x:Name="mapGrid" Margin="16,25,10,10" Background="#FF909090" Grid.Column="1"
               Panel.ZIndex="1">
 

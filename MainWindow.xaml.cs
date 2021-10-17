@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D__Static_Classes_Types;
+using Paradox_Editor.D_Static_Classes_Types;
 
 //F1 to see WIKI detail on part
 //F12 to see mechanicla usage in VS
@@ -15,6 +16,7 @@ namespace Paradox_Editor
     {
         private MapNavigation Navigator;
         private FolderSelect SelectMap;
+        public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         //private MapEditor UpdateTest;
         public MainWindow()
         {
@@ -34,14 +36,6 @@ namespace Paradox_Editor
         {
             MapModesControl.CurrentMapMode = 1;
             MapModesControl.updateMapModeVisibility();
-        }
-
-        private void Testbox_TextChanged(object sender, KeyEventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.Enter))
-            {
-                MapEditor.UpdatePoliticalMap();
-            }
         }
 
         public void map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -76,7 +70,10 @@ namespace Paradox_Editor
 
         public void button_Click(object sender, RoutedEventArgs e)
         {
-            SelectMap.Click_Specific_Entry(sender, e);
+            Process fileopener = new(); //Start a new process under the variable of fileopener
+            fileopener.StartInfo.FileName = "explorer"; //Open the windows explorer/files; no other program
+            fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
+            fileopener.Start(); //Open file
         }
 
         public static explicit operator MainWindow(WindowCollection v)
@@ -88,11 +85,11 @@ namespace Paradox_Editor
         {
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
-                GameMode.gameMode = "VIC2";
+                //Gamemode = "VIC2";
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
-                GameMode.gameMode = "EU4";
+                //GameMode.gameMode = "EU4";
             }
             var SoundHandler = new GameSoundHandler();//Work on special sound handler later
             SoundHandler.PlayConnectingSound();

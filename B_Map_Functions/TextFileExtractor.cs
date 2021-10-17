@@ -1,4 +1,6 @@
-﻿using Paradox_Editor.D_Static_Variables;
+﻿using Paradox_Editor.D__Static_Classes_Types;
+using Paradox_Editor.D_Static_Classes_Types;
+using Paradox_Editor.D_Static_Variables;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,13 +10,12 @@ using System.Linq;
 
 namespace Paradox_Editor.B_Map_Functions
 {
-    public class TextFileExtract
+    public class TextFileExtractor
     {
         public string[] FilePath;
         public Dictionary<string, string> provinceIDToFileDictionary;
         public Dictionary<string, string> provinceIDToProvinceNameDictionary;
         public Dictionary<string, HistoryFile> provinceIDToHistoryFileDictionary;
-        public Dictionary<string, string> Dictionary4;
         public Dictionary<string, string> provinceIDToControllerDictionary;
 
 
@@ -22,13 +23,13 @@ namespace Paradox_Editor.B_Map_Functions
 
         public ObservableCollection<HistoryFile> historyFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
-        public TextFileExtract(string[] filepath, ObservableCollection<ProvinceFile> datasend)
+        public TextFileExtractor(string[] filepath, ObservableCollection<ProvinceFile> datasend)
         {
             FilePath = filepath;
             OutgoingData = datasend;
         }
 
-        public TextFileExtract(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, HistoryFile> dictionary3)
+        public TextFileExtractor(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, HistoryFile> dictionary3)
         {
             FilePath = filepath;
             provinceIDToFileDictionary = dictionary1; //provinceIDToFile
@@ -36,7 +37,7 @@ namespace Paradox_Editor.B_Map_Functions
             provinceIDToHistoryFileDictionary = dictionary3; //provinceIDToHistoryFile
         }
 
-        public bool ExtractForCollection(string Collection)
+        public bool ExtractForCollection()
         {
             foreach (string fileEntry in FilePath) //"For each file in the path list"
             {
@@ -55,7 +56,7 @@ namespace Paradox_Editor.B_Map_Functions
             return true;
         }
 
-        public bool ExtractForDictionary(string Dictionary)
+        public ProvinceIDDictionaries ExtractForDictionary()
         {
             foreach (string fileEntry in FilePath) //"For each file in the path list"
             {
@@ -135,7 +136,6 @@ namespace Paradox_Editor.B_Map_Functions
                         }
                     }
                 }
-
                 var historyFile = new HistoryFile()
                 {
                     Controller = controllerList,
@@ -155,7 +155,12 @@ namespace Paradox_Editor.B_Map_Functions
                     Debug.WriteLine("Repeated Entry | " + IDValue);
             }
 
-            return true;
+            return new ProvinceIDDictionaries()
+            {
+                ToFile = provinceIDToFileDictionary,
+                ToName = provinceIDToProvinceNameDictionary,
+                ToHistoryFile = provinceIDToHistoryFileDictionary
+            };
         }
     }
 }

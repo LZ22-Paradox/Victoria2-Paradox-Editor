@@ -1,44 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows.Media;
 using Point = System.Windows.Point;
-using static Paradox_Editor.D_Static_Variables.ProgramProperties;
-using System.Windows;
 using System.Windows.Controls;
 using Paradox_Editor.B_Map_Functions;
 using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
-using Paradox_Editor.D_Static_Variables;
+using Paradox_Editor.D__Static_Classes_Types;
+using Paradox_Editor.D_Static_Classes_Types;
 
 namespace Paradox_Editor.C_Window_Functions
 {
     public class FolderSelect
     {
+
+        //public string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
+        //Stored opener will be subject to change for user convienence
+
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>(); //Connected to the XAML
-        public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-
-        public string[] MasterFolder;
-        public string[] Path_Provinces { get; set; }
-        public static string[] Path_CSV { get; set; }
-        public static string[] Path_CountriesTxt { get; set; }
-
-        public static string[] Path_Countries { get; set; }
-
         private Canvas Canvas;
         private Image Image1;
         private Image Image2;
-
-
-        public FolderSelect(string[] filepath1, Canvas canvas, Image image1)
-        {
-            Path_Provinces = filepath1;
-            Image1 = image1;
-            Canvas = canvas;
-        }
 
         public FolderSelect(Canvas canvas, Image image1, Image image2)
         {
@@ -49,43 +32,33 @@ namespace Paradox_Editor.C_Window_Functions
 
         public FolderSelect() { }
 
-        public void Click_Specific_Entry(object sender, RoutedEventArgs e)
-        {
-            Process fileopener = new(); //Start a new process under the variable of fileopener
-            fileopener.StartInfo.FileName = "explorer"; //Open the windows explorer/files; no other program
-            fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
-            fileopener.Start(); //Open file
-        }
 
-        public void CollectDirectoryData(string CollectDirectory)
-        {
-            MasterFolder = Directory.GetFiles(ProvinceDirectory, "*.txt", SearchOption.AllDirectories);
-            Path_Provinces = Directory.GetFiles(Path.Combine(ProvinceDirectory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            Path_CSV = Directory.GetFiles(Path.Combine(ProvinceDirectory, "map"), "definition.csv", SearchOption.AllDirectories);
-            Path_CountriesTxt = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common"), "countries.txt", SearchOption.AllDirectories);
-            Path_Countries = Directory.GetFiles(Path.Combine(ProvinceDirectory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
-            return;
-        }
 
         public void SelectMainFolder(object _, EventArgs e)
         {
             var dialog = new FolderBrowserDialog(); //Open new dialogue
-            dialog.SelectedPath = StoredOpener; //Start directory of dialogue. Stored opener is the filepath the opener begins upon
+            //dialog.SelectedPath = storedOpener;
 
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                MessageBox.Show("You selected Filepath: " + dialog.SelectedPath); //State the filepath selected
-                Console.WriteLine(ProvinceDirectory);
-                ProvinceDirectory = dialog.SelectedPath;
-                StoredOpener = dialog.SelectedPath;
-                Console.ReadLine();
-            }
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
 
+            MessageBox.Show("You selected Filepath: " + dialog.SelectedPath); //State the filepath selected
+            Console.WriteLine(dialog.SelectedPath);
+            var selectDirectory = dialog.SelectedPath;
+            var storedOpener = dialog.SelectedPath; //Unused; Reimpliment stored opener.
+            Console.ReadLine();
             ProvinceData.Clear(); //Clear all Rows as a "Refresh"
 
-            //try
-            //{
-            CollectDirectoryData("CollectDirectory");
+
+            var mapEditorInstance = new MapEditor();
+            var directoryData = mapEditorInstance.CollectDirectoryData(selectDirectory);
+
+            var provinceTagToColor = mapEditorInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
+            var tagToCountryName = mapEditorInstance.GetTagToCountryName(directoryData.CountriesTxt);
+
+            var supacollection_wip = mapEditorInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
+
+            //SORT REST OF METHODS FROM HERE
 
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             var flipTrans = new ScaleTransform(); //creates instance for scale
@@ -95,17 +68,13 @@ namespace Paradox_Editor.C_Window_Functions
 
             Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
             Image2 = Image1;
+            
+            var provinceDataCollection = new TextFileExtractor(directoryData.HistoryProvinces, ProvinceData);
+            provinceDataCollection.ExtractForCollection();
 
-            var provinceDataCollection = new TextFileExtract(Path_Provinces, ProvinceData);
-            provinceDataCollection.ExtractForCollection("Collection");
 
-            MapEditor.UpdatePoliticalMap(); //Call Political Map Mode Update
-            /* }
-           catch (Exception exception)
-            {
-                Debug.WriteLine("ERROR.FP = Filepath Issue");
-                System.Windows.MessageBox.Show(exception.Message + "There is an exception! Probably the filepath selected");
-            }*/
+            //update.UpdatePoliticalMap();
+
         }
     }
 }

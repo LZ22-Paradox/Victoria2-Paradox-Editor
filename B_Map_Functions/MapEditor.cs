@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.B_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.D__Static_Classes_Types;
 using Paradox_Editor.D_Static_Variables;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,43 +23,40 @@ namespace Paradox_Editor
         {
         }
 
-        public static void UpdatePoliticalMap() //The test process for how map loading should work.
+        public DirectoryStructure CollectDirectoryData(string directory)
         {
-            var MainWindow = (MainWindow)Application.Current.MainWindow;
+            var MasterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
+            var Path_Provinces = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
+            var Path_CSV = Path.Combine(directory, "map", "definition.csv");
+            var Path_CountriesTxt = Path.Combine(directory, "common", "countries.txt");
+            var Path_Countries = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
+            return new DirectoryStructure()
+            {
+                MasterDirectory = MasterFolder,
+                Countries = Path_Countries,
+                CountriesTxt = Path_CountriesTxt,
+                DefinitionCSV = Path_CSV,
+                HistoryProvinces = Path_Provinces
+            };
+        }
 
+        public Dictionary<string, string> GetProvinceColorToID(string pathToCSVFile) //Done
+        {
             var colorToProvinceId = new Dictionary<string, string>();
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
-            using (var reader = new StreamReader(FolderSelect.Path_CSV[0]))
+            using (var reader = new StreamReader(pathToCSVFile))
             using (var csv = new CsvReader(reader, cfg))
             {
                 colorToProvinceId = csv.GetRecords<ProvinceDefinition>().ToDictionary(c => c.red + " " + c.green + " " + c.blue, c => c.province);
             }
+            return colorToProvinceId;
+        }
 
-            var provinceIDToFile = new Dictionary<string, string>();
-            var provinceIDToProvinceName = new Dictionary<string, string>();
-            var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
-            var provinceIDToCoreTAG = new Dictionary<string, string>(); //Stripey Green Lines; Core from a country
-            var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
-
-            var FolderSources = new FolderSelect();
-            FolderSources.CollectDirectoryData("CollectDirectory");
-            var vic2Provinces = FolderSources.Path_Provinces;
-
-            var Text = new TextFileExtract(vic2Provinces, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile);
-            Text.ExtractForDictionary("Dictionary");
-            provinceIDToFile = Text.provinceIDToFileDictionary; //Adds Province ID's & full paths to said-file in a dictionary
-            provinceIDToProvinceName = Text.provinceIDToProvinceNameDictionary;
-
-            foreach (KeyValuePair<string, HistoryFile> entry in Text.provinceIDToHistoryFileDictionary) //split into new class or into textfilextract
-            {
-                if (entry.Value.Controller.Count != 0)
-                    provinceIDToControllerTAG.Add(entry.Key, entry.Value.Controller[0]);
-                else
-                    provinceIDToControllerTAG.Add(entry.Key, "noController");
-            }
-
+        public Dictionary<string, string> GetTagToCountryName(string pathToCountriesTxt)
+        {
             var tagToCountryName = new Dictionary<string, string>();
-            foreach (var line in File.ReadAllLines(FolderSelect.Path_CountriesTxt[0]))
+
+            foreach (var line in File.ReadAllLines(pathToCountriesTxt)) //Check Path_CountriesTxt
             {
                 var input = line;
                 var index = input.IndexOf("#");
@@ -75,14 +73,68 @@ namespace Paradox_Editor
                 var words = removal.Split('=');
                 var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
                 Debug.WriteLine(trimmedTagToCountry);
-                if (!tagToCountryName.ContainsKey(trimmedTagToCountry[0])) {
-                tagToCountryName.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
-                } else
+                if (!tagToCountryName.ContainsKey(trimmedTagToCountry[0]))
+                {
+                    tagToCountryName.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
+                }
+                else
                 {
                     Debug.WriteLine("Repeated TAG in common/countries/: " + trimmedTagToCountry[0]);
                 }
             }
+            return tagToCountryName;
+        }
 
+        public ProvinceOutputData GetProvinceIDToData(string[] pathToHistoryFile)
+        {
+            var provinceIDToFile = new Dictionary<string, string>();
+            var provinceIDToProvinceName = new Dictionary<string, string>();
+            var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
+            /*var provinceIDToCoreTAG = new Dictionary<string, string>();*/ /*|||UNUSED|||*/ //Stripey Green Lines; Core from a country
+            var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
+
+            var Text = new TextFileExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile);
+            var ExtractedData = Text.ExtractForDictionary();
+
+            provinceIDToFile = ExtractedData.ToFile;
+            provinceIDToProvinceName = ExtractedData.ToName;
+            provinceIDToHistoryFile = ExtractedData.ToHistoryFile;
+            
+
+            foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
+            {
+                if (entry.Value.Controller.Count != 0)
+                    provinceIDToControllerTAG.Add(entry.Key, entry.Value.Controller[0]);
+                else
+                    provinceIDToControllerTAG.Add(entry.Key, "noController");
+            }
+            return new ProvinceOutputData()
+            {
+                IDToFile = ExtractedData.ToFile,
+                IDToName = ExtractedData.ToName,
+                IDToHistory = ExtractedData.ToHistoryFile, //IDToCores = Text.provinceIDToCoresDictionary,
+                IDToController = provinceIDToControllerTAG
+            };
+        }
+
+        //SORT REST OF METHODS FROM HERE
+
+
+        public void UpdatePoliticalMap() //The test process for how map loading should work.
+        {
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
+
+            var provinceIDToFile = new Dictionary<string, string>();
+            var provinceIDToProvinceName = new Dictionary<string, string>();
+            var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
+            var provinceIDToCoreTAG = new Dictionary<string, string>(); //Stripey Green Lines; Core from a country
+            var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
+
+
+
+
+
+/*          
             var countryNameToColor = new Dictionary<string, Color>();
             CountryNameToColor CountryNameToColorConverter = new CountryNameToColor(FolderSelect.Path_Countries);
             CountryNameToColorConverter.GetCountryColor();
@@ -93,11 +145,11 @@ namespace Paradox_Editor
             ///tagToCountryName
             ///provinceIDToControllerTAG
             ///colorToProvinceId
-            
+
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapBackground.Source); //May be problem
-            var writeableBmp = BitmapFactory.New((int)firstLayer.PixelWidth, (int)firstLayer.PixelHeight); //Different dimensions than firstlayer
+            var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
             writeableBmp.Clear(Colors.White);
-            
+
             //WriteableBitmap firstlayer,
             //WriteableBitmap sizereference,
             //Image image,
@@ -105,7 +157,7 @@ namespace Paradox_Editor
             var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapBackground, colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor);
             ColorMap.Drawing();
             MainWindow.mapPolitical.Source = ColorMap.SizeReference;
-
+*/
 
         }
     }
