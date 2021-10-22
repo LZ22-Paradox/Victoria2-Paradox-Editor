@@ -23,24 +23,21 @@ namespace Paradox_Editor
         {
             CurrentMapMode = 0;
             updateMapModeVisibility();
-            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
-            SoundHandler.PlayClickSound();
+            GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
             updateMapModeVisibility();
-            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
-            SoundHandler.PlayClickSound();
+            GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
             updateMapModeVisibility();
-            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
-            SoundHandler.PlayClickSound();
+            GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
         public static void updateMapModeVisibility() //Updates & Disables the other existing map modes

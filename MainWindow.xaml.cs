@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Static_Classes_Types;
@@ -11,12 +14,14 @@ using Paradox_Editor.D_Static_Classes_Types;
 
 namespace Paradox_Editor
 {
-
     public partial class MainWindow : Window
     {
         private MapNavigation Navigator;
         private FolderSelect SelectMap;
-        public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
+
+
         //private MapEditor UpdateTest;
         public MainWindow()
         {
@@ -29,7 +34,6 @@ namespace Paradox_Editor
                 .AddImage(testimage2);
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
-            DataContext = SelectMap;
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -68,14 +72,14 @@ namespace Paradox_Editor
             SelectMap.SelectMainFolder(sender, e);
         }
 
-        public void button_Click(object sender, RoutedEventArgs e)
+        public void OpenFileFromList(object sender, RoutedEventArgs e)
         {
             Process fileopener = new(); //Start a new process under the variable of fileopener
             fileopener.StartInfo.FileName = "explorer"; //Open the windows explorer/files; no other program
             fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
             fileopener.Start(); //Open file
         }
-
+        
         public static explicit operator MainWindow(WindowCollection v)
         {
             throw new NotImplementedException();
@@ -85,14 +89,13 @@ namespace Paradox_Editor
         {
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
-                //Gamemode = "VIC2";
+                GameSoundHandler.SoundHandler.Gamemode = "VIC2";
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
-                //GameMode.gameMode = "EU4";
+                GameSoundHandler.SoundHandler.Gamemode = "EU4";
             }
-            var SoundHandler = new GameSoundHandler();//Work on special sound handler later
-            SoundHandler.PlayConnectingSound();
+            GameSoundHandler.SoundHandler.PlayConnectingSound();
         }
     }
 }

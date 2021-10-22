@@ -12,37 +12,5 @@ namespace Paradox_Editor
     }
 
     public static class ProgramProperties
-    {
-        public static string ProvinceDirectory { get; set; }
-
-        public class ProvinceFile
-        {
-            public int ProvinceID { get; set; }
-            public string ProvinceName { get; set; }
-            public string FilePath { get; set; }
-        }
-
-        public class HistoryFile
-        {
-            public List<string> Controller { get; set; }
-            public List<string> Core { get; set; }
-            public List<string> TradeGoods { get; set; }
-            public List<string> LifeRating { get; set; }
-            public List<string> Terrain { get; set; }
-            public List<string> Colonial { get; set; }
-        }
-
-        public class Country
-        {
-            public int ID { get; set; }
-            public string CountryName { get; set; }
-            public string CommonFilepath { get; set; }
-            public string HistoryFilepath { get; set; }
-            public string RGB { get; set; }
-        }
-
-        public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
-        //Stored opener will be subject to change for user convienence
-    }
-
+    { }
 }

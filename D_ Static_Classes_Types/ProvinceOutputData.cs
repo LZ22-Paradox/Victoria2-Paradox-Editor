@@ -1,5 +1,4 @@
-﻿using Paradox_Editor.D_Static_Variables;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 using Paradox_Editor.D_Static_Classes_Types;
 using System.Collections.Generic;
-using Paradox_Editor.D_Static_Variables;
 using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Navigation;
 using System.Windows.Shell;
@@ -17,16 +16,16 @@ using System.Windows;
 
 namespace Paradox_Editor.C_Window_Functions
 {
+
+
     public class FolderSelect
     {
 
-        //public string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
-        //Stored opener will be subject to change for user convienence
-
-        public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>(); //Connected to the XAML
+        public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         private Canvas Canvas;
         private Image Image1;
         private Image Image2;
+        //Stored opener will be subject to change for user convienence
 
         public FolderSelect(Canvas canvas, Image image1, Image image2)
         {
@@ -36,8 +35,6 @@ namespace Paradox_Editor.C_Window_Functions
         }
 
         public FolderSelect() { }
-
-
 
         public void SelectMainFolder(object _, EventArgs e)
         {
@@ -54,8 +51,7 @@ namespace Paradox_Editor.C_Window_Functions
             var selectDirectory = dialog.SelectedPath;
             var storedOpener = dialog.SelectedPath; //Unused; Reimpliment stored opener.
             Console.ReadLine();
-            ProvinceData.Clear(); //Clear all Rows as a "Refresh"
-
+            MainWindow.ProvinceData.Clear(); //Clear all Rows as a "Refresh"
 
             var mapEditorInstance = new DataAcquisition();
             var directoryData = mapEditorInstance.CollectDirectoryData(selectDirectory);
@@ -67,9 +63,10 @@ namespace Paradox_Editor.C_Window_Functions
             CountryNameToColor CountryNameToColorConverter = new CountryNameToColor();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
 
-            var provinceDataCollection = new TextFileExtractor(directoryData.HistoryProvinces, ProvinceData);
-            MainWindow.fileListView.DataContext = this;
-            var provinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces);
+            var provinceDataCollection = new TextFileExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
+            MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
+
+            MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             var flipTrans = new ScaleTransform(); //creates instance for scale
@@ -79,6 +76,7 @@ namespace Paradox_Editor.C_Window_Functions
 
             Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(dialog.SelectedPath, "map", "provinces.bmp")));
             Image2 = Image1;
+
 
 
             ///-----------------------Lazy Ending-----------------------------

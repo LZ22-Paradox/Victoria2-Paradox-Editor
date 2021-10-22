@@ -2,7 +2,6 @@
 using CsvHelper.Configuration;
 using Paradox_Editor.B_Map_Functions;
 using Paradox_Editor.D_Static_Classes_Types;
-using Paradox_Editor.D_Static_Variables;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;

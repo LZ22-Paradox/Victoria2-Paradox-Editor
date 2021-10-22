@@ -6,8 +6,10 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:poop="clr-namespace:Paradox_Editor.C_Window_Functions"
         mc:Ignorable="d"
-        Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load">
+        Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -33,7 +35,7 @@
         <local:MapModesControl x:Name="mapModeButtons" Margin="700,600,0,0" Grid.Column="1" Panel.ZIndex="2">
         </local:MapModesControl>
 
-        <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2" ItemsSource="{Binding Path=ProvinceData}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False" CanUserAddRows="False">
+        <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2" ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn/>
                 <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID}"/>
@@ -41,7 +43,7 @@
                 <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="61">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Open" Height="18" Width="55" Click="button_Click"/>
+                            <Button Content="Open" Height="18" Width="55" Click="OpenFileFromList"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -102,6 +104,7 @@
                            MouseLeftButtonUp="map_MouseLeftButtonUp"
                            MouseLeftButtonDown="map_MouseLeftButtonDown"
                            MouseLeave="map_MouseLeave">
+                    
                     <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
@@ -109,7 +112,12 @@
                            StretchDirection="Both">
                     </Image>
 
-                    <Image x:Name="mapPolitical" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Visibility="Visible"/>
+                    <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/blank_world_map.png"
+                           Margin="-250,0,0,0" Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
+                           StretchDirection="Both"/>
+                    
 
                     <Image x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
 

@@ -6,27 +6,34 @@
 Must Do:
 
 1. FolderSelect is the master folder that executes the methods needed
-2. Fix left provincefile column not displaying. See bindings in XAML
-3. Fix up sound & gamemode
-#. Fix Map loading to sync size with provinceMap
+2. Fix up sound & gamemode
+
+#. Fix map loading to allow OTHER mods besides DoD
+    - See first line in CSV. It is different in GFM compared to DoD
+    - IMPLIMENT IGNORE LINES WITH A HASHTAG "4" [TextFileExtractor.cs]
+
 #. Adjust map to load Oceans as white, and uncontrolled provinces as black. (Just like Vic2 screenshots)
-2. Impliment basic province loading (click a province, get the file)
+#. Impliment basic province loading (click a province, get the file)
 
-#. Impliment automatic switching between audio soundsets in-program
+#. Impliment toggle-able layer of edges between provinces
+
+#. Impliment AUTOMATIC switching between audio soundsets in-program
+    - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
+
 #. Optimize for performance
+    - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
+    - A "local render" may help with not having to re-render the entire map when a single province is edited.
+        o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
+            * See ways for specific replacement
+
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
+    - These apply to province history files
 
-
-* Make map mode icons dynamic depending on the game selected
+#. Make map mode icons dynamic depending on the game selected
 * Impliment map editing/viewing
-	- Select Master Folder
-		o Upload Map File
-		o Upload Province Data
-			= Click ICommands
-				0 If there is no province data, clicking on a certain id should be able to GENERATE province data?
-					= Making custom maps should be made easier.
-* Display the name and ID of a province while hovering over it
-* Fix StoredOpener to be convienent for those reusing the program
+
+#. Display the name and ID of a province while hovering over it
+#. Fix StoredOpener to be convienent for those reusing the program's loading
 
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
 U General_button_click is the EU4 map mode clicking sound.

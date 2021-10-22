@@ -13,24 +13,11 @@ namespace Paradox_Editor.C_Window_Functions
 {
     public class GameSoundHandler
     {
+        public static GameSoundHandler SoundHandler { get; set; } = new GameSoundHandler();
         public string SoundSet { get; set; }
         public string ValidClick { get; set; }
         public string Gamemode { get; set; }
 
-        public void SoundHandler() //Updates & Disables the other existing map modes
-        {
-            if (Gamemode == "VIC2")
-            {
-
-                SoundSet = "Vic2_";
-                string path = Path.Combine(Environment.CurrentDirectory, SoundSet, ValidClick);
-
-            }
-            else if (Gamemode == "EU4")
-            {
-                SoundSet = "Eu4_";
-            }
-        }
         public void PlayClickSound() //Updates & Disables the other existing map modes
         {
             if (Gamemode == "VIC2")
