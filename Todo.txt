@@ -2,46 +2,66 @@
 [] Environment = WPF with .NET 5.0 core
 
 [Definition.csv] - province;red;green;blue;provincename;x
+* FolderSelect is the master folder that executes the methods needed
 
-Must Do:
+----====Must Do====----
+1. Fix map loading to allow OTHER mods besides DoD
+    - OLD IDEA: IMPLIMENT IGNORE LINES WITH A HASHTAG "4" [TextFileExtractor.cs]
+        o NEW IDEA: CUT PAST THE #, DON'T DELETE THE ENTIRE LINE
+            * Potentially may need to rewrite the etnire CSV extraction code
 
-1. FolderSelect is the master folder that executes the methods needed
-2. Fix up sound & gamemode
+2. Impliment basic province loading (click a province, get the file)
 
-#. Fix map loading to allow OTHER mods besides DoD
-    - See first line in CSV. It is different in GFM compared to DoD
-    - IMPLIMENT IGNORE LINES WITH A HASHTAG "4" [TextFileExtractor.cs]
-
-#. Adjust map to load Oceans as white, and uncontrolled provinces as black. (Just like Vic2 screenshots)
-#. Impliment basic province loading (click a province, get the file)
-
-#. Impliment toggle-able layer of edges between provinces
-
-#. Impliment AUTOMATIC switching between audio soundsets in-program
-    - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
+3. Make map mode icons dynamic depending on the game selected
+    - Change source sent to class MapModesControl depending on game mode
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
+        o See Threads & Tasks (Asyncronous or Otherwise)
+        o See potential of memory streams
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
             * See ways for specific replacement
 
+#. Impliment visibility for SIMPLE terrain map mode.
+    - Detailed: Get the existing terrain map and just have a layer to display it.
+        o Absolutely NO pixel manipulation required.
+    - Simplified: Reads history files. Blank files give black output. Others give certain colours.
+        o Dig in game files
+
+
+#. Impliment In-program file editing (for ease of GUI convienence)
+
+#. Impliment toggle-able layer of edges between provinces. (Togglable Borders)
+
+
+#. Impliment AUTOMATIC switching between audio soundsets in-program
+    - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
+
+
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
     - These apply to province history files
+#. Impliment core aspects
+    - Population
+    - Culture
+    - Religion??
+        o Potential for a Vic2 religion map mode
 
-#. Make map mode icons dynamic depending on the game selected
-* Impliment map editing/viewing
 
+#. Impliment complex terrain map mode
+
+
+#. Save game editing
+
+#. Replace old example map with one that is fixed. (Denmark is hideous)
 #. Display the name and ID of a province while hovering over it
 #. Fix StoredOpener to be convienent for those reusing the program's loading
+#. Make custom control settings
+    - Make a way for the usage of a custom configuration file that can be saved or loaded
 
-U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?)
-U General_button_click is the EU4 map mode clicking sound.
+U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?).
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
 
-
-* How to read pixel
-* Read all map data is done once upon load. 
 
 OWN = COUNTRY DIRECTLY *OWNS* IT(province)
 CONTROL = COUNTRY HAS STRIPES OVER IT(province)

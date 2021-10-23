@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Navigation;
 using System.Windows.Shell;
 using System.Windows;
+using System.Threading;
 
 namespace Paradox_Editor.C_Window_Functions
 {
@@ -36,22 +37,23 @@ namespace Paradox_Editor.C_Window_Functions
 
         public FolderSelect() { }
 
-        public void SelectMainFolder(object _, EventArgs e)
+        public void SelectMainFolder()
         {
             var MainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
 
-            var dialog = new FolderBrowserDialog(); //Open new dialogue
-            //dialog.SelectedPath = storedOpener;
-
+//-------------------------------Split Into New Method---------------------------------------------
+            var dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            MessageBox.Show("You selected Filepath: " + dialog.SelectedPath); //State the filepath selected
+            MessageBox.Show("You selected Filepath: " + dialog.SelectedPath);
             Console.WriteLine(dialog.SelectedPath);
             var selectDirectory = dialog.SelectedPath;
             var storedOpener = dialog.SelectedPath; //Unused; Reimpliment stored opener.
             Console.ReadLine();
-            MainWindow.ProvinceData.Clear(); //Clear all Rows as a "Refresh"
+            MainWindow.ProvinceData.Clear();
+//-------------------------------Split Into New Method----------------------------------------------
+
 
             var mapEditorInstance = new DataAcquisition();
             var directoryData = mapEditorInstance.CollectDirectoryData(selectDirectory);
@@ -59,6 +61,7 @@ namespace Paradox_Editor.C_Window_Functions
             var provinceColorToID = mapEditorInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
             var tagToCountryName = mapEditorInstance.GetTagToCountryName(directoryData.CountriesTxt);
             var provinceIDToDataDictionaries = mapEditorInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
+
 
             CountryNameToColor CountryNameToColorConverter = new CountryNameToColor();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
@@ -88,7 +91,7 @@ namespace Paradox_Editor.C_Window_Functions
             MainWindow.mapPolitical.Source = ColorMap.SizeReference;
             ///---------------------------------------------------------------
 
-        }
 
+        }
     }
 }

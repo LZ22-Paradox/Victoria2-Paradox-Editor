@@ -24,7 +24,7 @@ namespace Paradox_Editor.A_Map_Navigation
             FirstLayer = firstlayer;
             SizeReference = sizereference;
             Dictionary1 = dictionary1; //colorToProvinceId
-            Dictionary2 = dictionary2; //provinceIDToCountryTAG
+            Dictionary2 = dictionary2; //provinceIDToControllerTAG
             Dictionary3 = dictionary3; //countryTAGToCountryName
             Dictionary4 = dictionary4; //countryToColor
 
@@ -46,10 +46,13 @@ namespace Paradox_Editor.A_Map_Navigation
                     {
                         SizeReference.FillRectangle(x, y, x + 1, y + 1, countryColor); //Draws the country colors
                     }
-                    else
+                    else if (Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var UncolonizedID) && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
                     {
-                        //SizeReference.FillRectangle(x, y, x + 1, y + 1, pixel); //Draws the province colors
                         SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(255, 255, 255)); //Draw missing data in black
+                    } else
+                    {
+                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(0, 0, 0)); //Draw missing data in black
+
 
                     }
 

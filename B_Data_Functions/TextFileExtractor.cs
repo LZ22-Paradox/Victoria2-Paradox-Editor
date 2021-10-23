@@ -1,4 +1,5 @@
-﻿using Paradox_Editor.D_Static_Classes_Types;
+﻿using Paradox_Editor.D__Static_Classes_Types;
+using Paradox_Editor.D_Static_Classes_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ namespace Paradox_Editor.B_Map_Functions
 {
     public class TextFileExtractor
     {
+
         public string[] FilePath;
         public Dictionary<string, string> provinceIDToFileDictionary;
         public Dictionary<string, string> provinceIDToProvinceNameDictionary;
@@ -31,6 +33,7 @@ namespace Paradox_Editor.B_Map_Functions
             provinceIDToProvinceNameDictionary = dictionary2; //provinceIDToProvinceName
             provinceIDToHistoryFileDictionary = dictionary3; //provinceIDToHistoryFile
         }
+
 
         public ObservableCollection<ProvinceFile> ExtractForCollection(string[] FilePath) //Repair Line 44
         {
@@ -95,42 +98,48 @@ namespace Paradox_Editor.B_Map_Functions
                 }
 
                 foreach (var line in File.ReadAllLines(fileEntry))
-                //IMPLIMENT IGNORE LINES WITH A HASHTAG "4"
+                //IMPLIMENT IGNORE LINES WITH A POUND "4" | Delete everything AFTER the #. Otherwise, some line of lua may be lost
                 {
-                    var badLines = new[] { "}", "upgrade", "building", "level", "state_building", "\t" };
-                    if (badLines.Any(line.Contains) == false)
+                    if (NullOrWhiteSpaceCheck.IsNotEmptyOrWhiteSpace(line.Trim()))
                     {
-                        if (!string.IsNullOrEmpty(line))
+                        if (line.Length is not <= 1)
                         {
-                            var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
-                            var key = seperatedLines[0];
-                            var value = seperatedLines[1];
-                            if (key.Contains("owner"))
-                                ownerList.Add(value);
+                            var badLines = new[] { "}", "upgrade", "building", "level", "state_building", "\t", "#" };
+                            //Hashtag|Pound added to Badlines temporarily.
+                            if (badLines.Any(line.Contains) == false)
+                            {
+                                var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
+                                var key = seperatedLines[0];
+                                var value = seperatedLines[1];
 
-                            else if (key.Contains("controller"))
-                                controllerList.Add(value);
+                                if (line.Contains("owner"))
+                                    ownerList.Add(value);
 
-                            else if (key.Contains("trade_goods"))
-                                tradeGoodList.Add(value);
+                                else if (line.Contains("controller"))
+                                    controllerList.Add(value);
 
-                            else if (key.Contains("life_rating"))
-                                lifeRatingList.Add(value);
+                                else if (line.Contains("trade_goods"))
+                                    tradeGoodList.Add(value);
 
-                            else if (key.Contains("colonial"))
-                                colonialList.Add(value);
+                                else if (line.Contains("life_rating"))
+                                    lifeRatingList.Add(value);
 
-                            else if (key.Contains("terrain"))
-                                terrainList.Add(value);
+                                else if (line.Contains("colonial"))
+                                    colonialList.Add(value);
 
-                            else if (key.Contains("add_core"))
-                                coreList.Add(value);
+                                else if (line.Contains("terrain"))
+                                    terrainList.Add(value);
 
-                            else if (key.Contains("naval_base"))
-                                navalBaseList.Add(value);
+                                else if (line.Contains("add_core"))
+                                    coreList.Add(value);
 
-                            //add something regarding state_buildings.
+                                else if (line.Contains("naval_base"))
+                                    navalBaseList.Add(value);
+
+                                //add something regarding state_buildings.
+                            }
                         }
+
                     }
                 }
                 var historyFile = new HistoryFile()
@@ -159,5 +168,8 @@ namespace Paradox_Editor.B_Map_Functions
                 ToHistoryFile = provinceIDToHistoryFileDictionary
             };
         }
+
+
+
     }
 }

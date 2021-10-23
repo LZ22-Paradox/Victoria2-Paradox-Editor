@@ -6,7 +6,6 @@
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:poop="clr-namespace:Paradox_Editor.C_Window_Functions"
         mc:Ignorable="d"
         Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -30,9 +29,7 @@
         <Button x:Name="button" Content="Load Filepath" HorizontalAlignment="Left" VerticalAlignment="Top"
         Width="86" Height="27" Click="SelectMasterFolder_Click" Margin="98,0,0,0"/>
 
-
-
-        <local:MapModesControl x:Name="mapModeButtons" Margin="700,600,0,0" Grid.Column="1" Panel.ZIndex="2">
+        <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212">
         </local:MapModesControl>
 
         <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2" ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}" AutoGenerateColumns="False" CanUserAddRows="False">
@@ -50,22 +47,22 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Column="1" Margin="15,-635,0,0" VerticalAlignment="Center" Width="150" SelectedIndex="0" SelectionChanged="GameSelected">
+        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="GameSelected">
             <ListBoxItem x:Name="Vic2" Content="N/A">
             </ListBoxItem>
             <ListBoxItem Content="Victoria II" FontFamily="18thCentury" FontSize="20" FontWeight="Bold">
                 <ListBoxItem.Background>
-                    <ImageBrush ImageSource="pack://application:,,,/Paradox Editor;component/BackgroundSelectVIC2.png" Stretch="Fill"/>
+                    <ImageBrush ImageSource="/Preloaded_Assets/BackgroundSelectVIC2.png" Stretch="Fill"/>
                 </ListBoxItem.Background>
             </ListBoxItem>
             <ListBoxItem x:Name="Europa4" Content="Europa Universalis IV" Foreground="White" FontFamily="Italianate" FontSize="14">
                 <ListBoxItem.Background>
-                    <ImageBrush ImageSource="/BackgroundSelectEU4.png" Stretch="Fill"/>
+                    <ImageBrush ImageSource="/Preloaded_Assets/BackgroundSelectEU4.png" Stretch="Fill"/>
                 </ListBoxItem.Background>
             </ListBoxItem>
         </ComboBox>
 
-        <Expander x:Name="expander" Grid.Column="1" Header="Controls" Height="200" Margin="700,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="2">
+        <Expander x:Name="ControlsExpander" Grid.Column="1" VerticalAlignment="Top" Header="Controls" Height="200" Margin="700,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="2">
             <Grid Background="#FFE5E5E5">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -91,10 +88,15 @@
             </Grid>
         </Expander>
 
+        <ComboBox x:Name="ControlSelect" HorizontalAlignment="Center" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0">
+            <ListBoxItem x:Name="Standard" Content="Standard">
+            </ListBoxItem>
+            <ListBoxItem x:Name="PDN" Content="Paint.NET">
+            </ListBoxItem>
+        </ComboBox>
+
         <Grid x:Name="mapGrid" Margin="16,25,10,10" Background="#FF909090" Grid.Column="1"
               Panel.ZIndex="1">
-
-
             <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto" AllowDrop="True">
 
@@ -104,20 +106,20 @@
                            MouseLeftButtonUp="map_MouseLeftButtonUp"
                            MouseLeftButtonDown="map_MouseLeftButtonDown"
                            MouseLeave="map_MouseLeave">
-                    
-                    <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/blank_world_map.png"
+
+                    <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both">
                     </Image>
 
-                    <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/blank_world_map.png"
+                    <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both"/>
-                    
+
 
                     <Image x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
 

@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using Paradox_Editor.B_Map_Functions;
 using Paradox_Editor.D_Static_Classes_Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,6 +16,17 @@ namespace Paradox_Editor
     {
         public DataAcquisition()
         {
+        }
+
+        public sealed class MainCsvIndexSyntax : ClassMap<ProvinceDefinition>
+        {
+            public MainCsvIndexSyntax()
+            {
+                Map(m => m.province).Index(0);
+                Map(m => m.red).Index(1);
+                Map(m => m.green).Index(2);
+                Map(m => m.blue).Index(3);
+            }
         }
 
         public DirectoryStructure CollectDirectoryData(string directory)
@@ -34,14 +46,23 @@ namespace Paradox_Editor
             };
         }
 
-        public Dictionary<string, string> GetProvinceColorToID(string pathToCSVFile) //Done
+        public Dictionary<string, string> GetProvinceColorToID(string pathToCSVFile)
         {
             var colorToProvinceId = new Dictionary<string, string>();
-            var cfg = new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = ";" };
+
+            var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+                HasHeaderRecord = false,
+            };
             using (var reader = new StreamReader(pathToCSVFile))
             using (var csv = new CsvReader(reader, cfg))
             {
-                colorToProvinceId = csv.GetRecords<ProvinceDefinition>().ToDictionary(c => c.red + " " + c.green + " " + c.blue, c => c.province);
+                csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
+                var records = csv.GetRecords<ProvinceDefinition>();
+                {
+                    colorToProvinceId = csv.GetRecords<ProvinceDefinition>().ToDictionary(c => c.red + " " + c.green + " " + c.blue, c => c.province); //The source of error
+                }
             }
             return colorToProvinceId;
         }

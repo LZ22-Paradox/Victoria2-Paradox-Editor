@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -69,17 +71,23 @@ namespace Paradox_Editor
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
-            SelectMap.SelectMainFolder(sender, e);
+            //SelectMap.SelectMainFolder();
+            //var thread = new ThreadStart(delegate() //DOES NOT FUNCTION AS INTENDED | See Optimization for alternate threads
+            //{
+                SelectMap.SelectMainFolder();
+            //});
+            //thread.Invoke();
+            //GameSoundHandler.SoundHandler.PlayConnectingSound();
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
         {
-            Process fileopener = new(); //Start a new process under the variable of fileopener
-            fileopener.StartInfo.FileName = "explorer"; //Open the windows explorer/files; no other program
-            fileopener.StartInfo.Arguments = SelectedItem.FilePath; //Open the file with respective filepath
-            fileopener.Start(); //Open file
+            var fileopener = new Process();
+            fileopener.StartInfo.FileName = "explorer";
+            fileopener.StartInfo.Arguments = SelectedItem.FilePath;
+            fileopener.Start();
         }
-        
+
         public static explicit operator MainWindow(WindowCollection v)
         {
             throw new NotImplementedException();
