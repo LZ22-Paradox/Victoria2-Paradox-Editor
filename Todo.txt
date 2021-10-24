@@ -12,8 +12,13 @@
 
 2. Impliment basic province loading (click a province, get the file)
 
-3. Make map mode icons dynamic depending on the game selected
+3. Fix Two Problem Provinces [Vanilla Environment]
+Problem File(s) | Collection Extractor | 1337  Prome.txt
+Problem File(s) | Collection Extractor | 3246  JanMayen.txt
+
+4. Make map mode Icons dynamic depending on the game selected
     - Change source sent to class MapModesControl depending on game mode
+    - Apply this to the backgrounds of FileInterface & the map mode selector itself
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
@@ -22,6 +27,9 @@
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
             * See ways for specific replacement
+    - Merge data variables
+        o Try to merge some dictionaries that may not be needed when left alone, if possible.
+            * This requires a searchthrough for every dictionary
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.

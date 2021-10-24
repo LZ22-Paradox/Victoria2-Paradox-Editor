@@ -59,41 +59,5 @@ namespace Paradox_Editor.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream EU4_Connecting {
-            get {
-                return ResourceManager.GetStream("EU4_Connecting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream EU4_ValidClick {
-            get {
-                return ResourceManager.GetStream("EU4_ValidClick", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream VIC2_Connecting {
-            get {
-                return ResourceManager.GetStream("VIC2_Connecting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
-        /// </summary>
-        internal static System.IO.UnmanagedMemoryStream VIC2_ValidClick {
-            get {
-                return ResourceManager.GetStream("VIC2_ValidClick", resourceCulture);
-            }
-        }
     }
 }

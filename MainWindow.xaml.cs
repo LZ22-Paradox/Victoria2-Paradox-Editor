@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Static_Classes_Types;
 
 //F1 to see WIKI detail on part
-//F12 to see mechanicla usage in VS
+//F12 to see usage in VS
 //CTRL +press+ K, D sorts all tabs
 
 namespace Paradox_Editor
@@ -20,11 +17,10 @@ namespace Paradox_Editor
     {
         private MapNavigation Navigator;
         private FolderSelect SelectMap;
+
         public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
 
-
-        //private MapEditor UpdateTest;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,43 +37,40 @@ namespace Paradox_Editor
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapModesControl.CurrentMapMode = 1;
-            MapModesControl.updateMapModeVisibility();
+            MenuVisualHandler.VisualHandler.IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/";
+            MapModesControl.UpdateMapModeVisibility();
         }
 
-        public void map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        public void Map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Navigator.MouseLeftButtonUp(sender, e);
         }
 
-        public void map_MouseLeave(object sender, MouseEventArgs e)
+        public void Map_MouseLeave(object sender, MouseEventArgs e)
         {
             Navigator.MouseLeave(sender, e);
         }
 
-        public void map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void Map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Navigator.MouseLeftButtonDown(sender, e);
         }
 
-        public void map_MouseWheel(object sender, MouseWheelEventArgs e)
+        public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             Navigator.MouseWheel(sender, e);
         }
 
-        public void map_MouseMove(object sender, MouseEventArgs e)
+        public void Map_MouseMove(object sender, MouseEventArgs e)
         {
             Navigator.MouseMove(sender, e);
         }
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
-            //SelectMap.SelectMainFolder();
-            //var thread = new ThreadStart(delegate() //DOES NOT FUNCTION AS INTENDED | See Optimization for alternate threads
-            //{
-                SelectMap.SelectMainFolder();
-            //});
-            //thread.Invoke();
-            //GameSoundHandler.SoundHandler.PlayConnectingSound();
+/*            Task taskboi = new Task(SelectMap.SelectMainFolder); //Not entirely functional. Fix.
+            taskboi.Start();*/
+            SelectMap.SelectMainFolder();
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
@@ -88,6 +81,12 @@ namespace Paradox_Editor
             fileopener.Start();
         }
 
+        public void MapClick(object sender, RoutedEventArgs e) //Testing to get position of the mouse
+        {
+            Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver));
+            Debug.WriteLine("Reading");
+        }
+
         public static explicit operator MainWindow(WindowCollection v)
         {
             throw new NotImplementedException();
@@ -95,13 +94,21 @@ namespace Paradox_Editor
 
         public void GameSelected(object sender, RoutedEventArgs e)
         {
+            var VisualHandler = new MenuVisualHandler();
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
-                GameSoundHandler.SoundHandler.Gamemode = "VIC2";
+                GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
+                MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+                MapModesControl.UpdateMapModeVisibility();
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
-                GameSoundHandler.SoundHandler.Gamemode = "EU4";
+                GameSoundHandler.SoundHandler.SoundAssetChange("EU4");
+                MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
+                MapModesControl.UpdateMapModeVisibility();
+            } else
+            {
+                GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
             }
             GameSoundHandler.SoundHandler.PlayConnectingSound();
         }

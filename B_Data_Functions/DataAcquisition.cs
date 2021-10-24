@@ -105,6 +105,8 @@ namespace Paradox_Editor
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
+            var provinceIDToOwnerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
+
             /*var provinceIDToCoreTAG = new Dictionary<string, string>();*/ /*|||UNUSED|||*/ //Stripey Green Lines; Core from a country
             var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
 
@@ -114,15 +116,22 @@ namespace Paradox_Editor
             foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
             {
                 if (entry.Value.Controller.Count != 0)
+                {
+                    provinceIDToOwnerTAG.Add(entry.Key, entry.Value.Owner[0]);
                     provinceIDToControllerTAG.Add(entry.Key, entry.Value.Controller[0]);
+                }
                 else
+                {
+                    provinceIDToOwnerTAG.Add(entry.Key, "noOwner");
                     provinceIDToControllerTAG.Add(entry.Key, "noController");
+                }
             }
             return new ProvinceOutputData()
             {
                 IDToFile = ExtractedData.ToFile,
                 IDToName = ExtractedData.ToName,
                 IDToHistory = ExtractedData.ToHistoryFile, //IDToCores = Text.provinceIDToCoresDictionary,
+                IDToOwner = provinceIDToOwnerTAG,
                 IDToController = provinceIDToControllerTAG
             };
         }

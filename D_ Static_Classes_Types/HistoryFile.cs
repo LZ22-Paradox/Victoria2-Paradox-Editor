@@ -4,6 +4,7 @@ namespace Paradox_Editor.D_Static_Classes_Types
 {
     public class HistoryFile
     {
+        public List<string> Owner { get; set; }
         public List<string> Controller { get; set; }
         public List<string> Core { get; set; }
         public List<string> TradeGoods { get; set; }

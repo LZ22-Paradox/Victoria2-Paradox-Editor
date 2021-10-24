@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="Paradox_Editor.FileInterface"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Paradox_Editor"
+             mc:Ignorable="d" 
+             d:DesignHeight="267.5" d:DesignWidth="368" AllowDrop="True" Focusable="True">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55*"/>
+            <ColumnDefinition Width="255*"/>
+            <ColumnDefinition Width="58*"/>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="19"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="17*"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Text="1881 - The Helmsman's Wall" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Arial Black" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" Height="16" Width="252" TextAlignment="Center" FontSize="11"/>
+        <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0" BorderThickness="2,1,0,1" Margin="36,20,5,10"
+                Padding="1,1,1,1" Background="{x:Null}" Click="ExitClicked">
+            <Image Source="/Preloaded_Assets/VIC2/Icons/VIC2_Exit.png" Stretch="Uniform"/>
+        </Button>
+
+
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
+            <DataGrid Background="{x:Null}" ScrollViewer.CanContentScroll="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Boyoboy"/>
+                    <DataGridTextColumn x:Name="Column1" Header="ID" Width="40"/>
+                    <DataGridTextColumn x:Name="Column2" Header="Name" Width="105"/>
+                    <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="61">
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+        </ScrollViewer>
+
+
+
+        <Image x:Name="mapmodeButton_Political" Source="/Preloaded_Assets/EU4/Images/provinceInterface.png"
+               Grid.RowSpan="6" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
+    </Grid>
+</UserControl>

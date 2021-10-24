@@ -19,17 +19,24 @@
     <None Remove="BackgroundSelectEU4.png" />
     <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOff.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOn.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\mapmode_TerrainOff.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\mapmode_TerrainOn.png" />
+    <None Remove="Preloaded_Assets\EU4\Images\provinceInterface.png" />
     <None Remove="Preloaded_Assets\EU4\mapmode_ProvincesOff.png" />
     <None Remove="Preloaded_Assets\EU4\mapmode_ProvincesOn.png" />
-    <None Remove="Preloaded_Assets\EU4\Sounds\EU4_Connecting.wav" />
-    <None Remove="Preloaded_Assets\EU4\Sounds\EU4_ValidClick.wav" />
+    <None Remove="Preloaded_Assets\EU4\Sounds\connecting.wav" />
+    <None Remove="Preloaded_Assets\EU4\Sounds\validClick.wav" />
+    <None Remove="Preloaded_Assets\VIC2\Icons\VIC2_Exit.png" />
+    <None Remove="Preloaded_Assets\VIC2\Images\provinceInterface.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_PoliticalOff.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_PoliticalOn.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_ProvincesOff.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_ProvincesOn.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_TerrainOff.png" />
     <None Remove="Preloaded_Assets\VIC2\mapmode_TerrainOn.png" />
-    <None Remove="Preloaded_Assets\VIC2\Sounds\VIC2_Connecting.wav" />
+    <None Remove="Preloaded_Assets\VIC2\Sounds\connecting.wav" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
   </ItemGroup>
@@ -56,18 +63,25 @@
     <Resource Include="Preloaded_Assets\BackgroundSelectEU4.png" />
     <Resource Include="Preloaded_Assets\blank_world_map.png" />
     <Resource Include="Preloaded_Assets\BackgroundSelectVIC2.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOff.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOn.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_ProvincesOff.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_ProvincesOn.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_TerrainOff.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_TerrainOn.png" />
+    <Resource Include="Preloaded_Assets\EU4\Images\provinceInterface.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_PoliticalOff.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_PoliticalOn.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_ProvincesOff.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_ProvincesOn.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_TerrainOff.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_TerrainOn.png" />
-    <EmbeddedResource Include="Preloaded_Assets\EU4\Sounds\EU4_Connecting.wav" />
-    <EmbeddedResource Include="Preloaded_Assets\EU4\Sounds\EU4_ValidClick.wav" />
-    <EmbeddedResource Include="Preloaded_Assets\VIC2\Sounds\VIC2_Connecting.wav" />
-    <EmbeddedResource Include="Preloaded_Assets\VIC2\Sounds\VIC2_ValidClick.wav" />
+    <Resource Include="Preloaded_Assets\VIC2\Icons\VIC2_Exit.png" />
+    <Resource Include="Preloaded_Assets\VIC2\Images\provinceInterface.png" />
+    <Resource Include="Preloaded_Assets\EU4\Sounds\connecting.wav" />
+    <Resource Include="Preloaded_Assets\EU4\Sounds\validClick.wav" />
+    <Resource Include="Preloaded_Assets\VIC2\Sounds\connecting.wav" />
+    <Resource Include="Preloaded_Assets\VIC2\Sounds\validClick.wav" />
   </ItemGroup>
 
   <ItemGroup>

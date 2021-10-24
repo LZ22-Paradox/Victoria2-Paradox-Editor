@@ -1,13 +1,6 @@
-﻿using Paradox_Editor.D_Static_Classes_Types;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Media;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Paradox_Editor.C_Window_Functions
 {
@@ -17,42 +10,43 @@ namespace Paradox_Editor.C_Window_Functions
         public string SoundSet { get; set; }
         public string ValidClick { get; set; }
         public string Gamemode { get; set; }
+        public string SoundAssetsPath = @"/Preloaded_Assets/VIC2/Sounds/"; //The Resource Path for the Icons
+
+        public void SoundAssetChange(string Game)
+        {
+            if (Game == "VIC2")
+            {
+                SoundAssetsPath = @"\Preloaded_Assets\VIC2\Sounds\";
+            }
+            else if (Game == "EU4")
+            {
+                SoundAssetsPath = @"\Preloaded_Assets\EU4\Sounds\";
+            }
+            else
+            {
+            }
+            Gamemode = Game;
+        }
 
         public void PlayClickSound() //Updates & Disables the other existing map modes
         {
-            if (Gamemode == "VIC2")
-            {
-                var splayer = new SoundPlayer(Properties.Resources.VIC2_ValidClick);
-                splayer.Play();
-            }
-            else if (Gamemode == "EU4")
-            {
-                var splayer = new SoundPlayer(Properties.Resources.EU4_ValidClick);
-                splayer.Play();
-            }
-            else
-            {
-                var splayer = new SoundPlayer(Properties.Resources.VIC2_ValidClick);
-                splayer.Play();
-            }
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            var soundDirectory = new Uri(projectDirectory + SoundAssetsPath + "validClick.wav", UriKind.Relative);
+            var soundFileStream = File.OpenRead(soundDirectory.ToString());
+            var splayer = new SoundPlayer(soundFileStream);
+
+            splayer.Play();
         }
         public void PlayConnectingSound()
         {
-            if (Gamemode == "VIC2")
-            {
-                var splayer = new SoundPlayer(Properties.Resources.VIC2_Connecting);
-                splayer.Play();
-            }
-            else if (Gamemode == "EU4")
-            {
-                var splayer = new SoundPlayer(Properties.Resources.EU4_Connecting);
-                splayer.Play();
-            }
-            else
-            {
-                var splayer = new SoundPlayer(Properties.Resources.VIC2_Connecting);
-                splayer.Play();
-            }
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            var soundDirectory = new Uri(projectDirectory + SoundAssetsPath + "connecting.wav", UriKind.Relative);
+            var soundFileStream = File.OpenRead(soundDirectory.ToString());
+            var splayer = new SoundPlayer(soundFileStream);
+            splayer.Play();
         }
     }
 }
+

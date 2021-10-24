@@ -1,5 +1,4 @@
-﻿using Paradox_Editor.D__Static_Classes_Types;
-using Paradox_Editor.D_Static_Classes_Types;
+﻿using Paradox_Editor.D_Static_Classes_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +16,6 @@ namespace Paradox_Editor.B_Map_Functions
         public Dictionary<string, string> provinceIDToProvinceNameDictionary;
         public Dictionary<string, HistoryFile> provinceIDToHistoryFileDictionary;
         public Dictionary<string, string> provinceIDToControllerDictionary;
-        //public ObservableCollection<ProvinceFile> ProvinceData;
 
         public ObservableCollection<HistoryFile> historyFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
@@ -105,7 +103,7 @@ namespace Paradox_Editor.B_Map_Functions
                         if (line.Length is not <= 1)
                         {
                             var badLines = new[] { "}", "upgrade", "building", "level", "state_building", "\t", "#" };
-                            //Hashtag|Pound added to Badlines temporarily.
+                            //Hashtag|Pound added to Badlines temporarily. Add interactions s o o n :tm:
                             if (badLines.Any(line.Contains) == false)
                             {
                                 var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
@@ -144,6 +142,7 @@ namespace Paradox_Editor.B_Map_Functions
                 }
                 var historyFile = new HistoryFile()
                 {
+                    Owner = ownerList,
                     Controller = controllerList,
                     Core = coreList,
                     TradeGoods = tradeGoodList,

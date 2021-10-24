@@ -34,6 +34,6 @@ namespace Paradox_Editor.B_Map_Functions
 
             }
             return NameToColor;
-        }       
+        }
     }
 }

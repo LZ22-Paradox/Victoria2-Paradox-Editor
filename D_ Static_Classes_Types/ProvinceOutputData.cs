@@ -12,6 +12,7 @@ namespace Paradox_Editor.D_Static_Classes_Types
         public Dictionary<string, string> IDToName { get; set; }
         public Dictionary<string, HistoryFile> IDToHistory { get; set; }
         public Dictionary<string, string> IDToCores { get; set; }
+        public Dictionary<string, string> IDToOwner { get; set; }
         public Dictionary<string, string> IDToController { get; set; }
     }
 }
