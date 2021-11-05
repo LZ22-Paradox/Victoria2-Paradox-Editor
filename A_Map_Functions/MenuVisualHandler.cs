@@ -10,7 +10,6 @@ using System.Windows.Media.Imaging;
 namespace Paradox_Editor.A_Map_Functions
 {
 
-
     public class MenuVisualHandler
     {
         public static MenuVisualHandler VisualHandler { get; set; } = new MenuVisualHandler();
@@ -19,7 +18,7 @@ namespace Paradox_Editor.A_Map_Functions
         public string ImageAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
 
 
-        public void ConductAssetChange(string Gamemode)
+        public MapMode_IconSet ConductAssetChange(string Gamemode)
         {
             if (Gamemode == "VIC2")
             {
@@ -34,19 +33,19 @@ namespace Paradox_Editor.A_Map_Functions
             else
             {
                 IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/";
+                ImageAssetsPath = @"/Preloaded_Assets/VIC2/Images/";
             }
 
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
 
-        }
-
-        public MapMode_IconSet UpdateMapModeButtonVisuals()
-        {
             BitmapImage politicaloff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_PoliticalOff.png", UriKind.Relative));
             BitmapImage politicalon = new BitmapImage(new Uri(IconAssetsPath + "mapmode_PoliticalOn.png", UriKind.Relative));
             BitmapImage provinceoff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_ProvincesOff.png", UriKind.Relative));
             BitmapImage provinceon = new BitmapImage(new Uri(IconAssetsPath + "mapmode_ProvincesOn.png", UriKind.Relative));
             BitmapImage terrainoff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_TerrainOff.png", UriKind.Relative));
             BitmapImage terrainon = new BitmapImage(new Uri(IconAssetsPath + "mapmode_TerrainOn.png", UriKind.Relative));
+
+            MainWindow.FileInterface.background.Source = new BitmapImage(new Uri(ImageAssetsPath + "provinceInterface.png", UriKind.Relative));
 
             return new MapMode_IconSet()
             {
@@ -58,9 +57,6 @@ namespace Paradox_Editor.A_Map_Functions
                 TerrainOn = terrainon
             };
         }
-
-
     }
-
 
 }

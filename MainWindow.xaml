@@ -32,7 +32,7 @@
         <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212">
         </local:MapModesControl>
 
-        <local:FileInterface HorizontalAlignment="Center" Grid.Column="1" Panel.ZIndex="5" Margin="0,0,0,0" Height="267.5" Width="372"/>
+        <local:FileInterface x:Name="FileInterface" HorizontalAlignment="Center" Grid.Column="1" Panel.ZIndex="5" Margin="0,0,0,0" Height="267.5" Width="372"/>
 
         <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2"
                   ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}"
@@ -128,8 +128,12 @@
                            StretchDirection="Both"/>
 
 
-                    <Image x:Name="testimage2" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Visible"/>
-
+                    <Image x:Name="mapTerrain" Height="700" Width="1446" 
+                           Margin="-250,0,0,0" Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
+                           StretchDirection="Both"/>
+                    
                     <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
 
 

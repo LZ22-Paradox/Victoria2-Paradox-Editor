@@ -1,6 +1,7 @@
 ﻿using Paradox_Editor.C_Window_Functions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,11 @@ using System.Windows.Shapes;
 
 namespace Paradox_Editor
 {
+
     public partial class FileInterface : UserControl
     {
+        //public static FileInterface InterFace { get; set; } = new FileInterface();
+
         private Point start;
 
         public FileInterface()

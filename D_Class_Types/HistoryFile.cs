@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Paradox_Editor.D_Static_Classes_Types
+namespace Paradox_Editor.D_Class_Types
 {
     public class HistoryFile
     {

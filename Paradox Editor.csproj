@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="D_ Static_Classes_Types\ProgramProperties.cs" />
+    <Compile Remove="D_Class_Types\ProgramProperties.cs" />
   </ItemGroup>
 
   <ItemGroup>

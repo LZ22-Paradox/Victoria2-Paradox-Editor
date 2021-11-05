@@ -4,6 +4,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Point = System.Windows.Point;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Diagnostics;
 
 namespace Paradox_Editor
 {
@@ -59,7 +62,7 @@ namespace Paradox_Editor
                 m.OffsetX = m.OffsetX - (start.X - end.X);
                 m.OffsetY = m.OffsetY - (start.Y - end.Y);
 
-             
+
                 image.RenderTransform = new MatrixTransform(m);
             });
             start = e.MouseDevice.GetPosition(Canvas);
@@ -70,7 +73,7 @@ namespace Paradox_Editor
             Images.ForEach(image =>
             {
                 Point p = e.MouseDevice.GetPosition(image);
-                var m = image.RenderTransform.Value;
+                var matrix = image.RenderTransform.Value;
 
                 //make a translation matrix that matches the translation STATE of the image, apply current scaling
                 //factor and apply scaling factor to the translation. Apply scale to current translation
@@ -79,34 +82,34 @@ namespace Paradox_Editor
                 {
                     if (e.Delta > 0)
                     {
-                        m.Translate(Math.Abs(e.Delta), 0);
+                        matrix.Translate(Math.Abs(e.Delta), 0);
                     }
                     else
                     {
-                        m.Translate(-Math.Abs(e.Delta), 0);
+                        matrix.Translate(-Math.Abs(e.Delta), 0);
                     }
 
-                    image.RenderTransform = new MatrixTransform(m);
+                    image.RenderTransform = new MatrixTransform(matrix);
                 }
                 else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
                     if (e.Delta > 0)
                     {
-                        m.Translate(0, -Math.Abs(e.Delta));
+                        matrix.Translate(0, -Math.Abs(e.Delta));
                     }
                     else
                     {
-                        m.Translate(0, Math.Abs(e.Delta));
+                        matrix.Translate(0, Math.Abs(e.Delta));
                     }
 
-                    image.RenderTransform = new MatrixTransform(m);
+                    image.RenderTransform = new MatrixTransform(matrix);
                 }
                 else
 
                 {
                     if (e.Delta > 0) //adjusting scaling factor
                     {
-                        m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
+                        matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
 
                     }
                     //a translate may need to be included in order to get scale in order to match
@@ -115,12 +118,12 @@ namespace Paradox_Editor
 
                     else
                     {
-                        m.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
+                        matrix.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
                     }
 
                     //ZBAGI#7539 is the best
 
-                    image.RenderTransform = new MatrixTransform(m);
+                    image.RenderTransform = new MatrixTransform(matrix);
                 }
             });
         }

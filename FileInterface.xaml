@@ -38,6 +38,7 @@
                     <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="61">
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
+           
             </DataGrid>
 
 
@@ -45,7 +46,8 @@
 
 
 
-        <Image x:Name="mapmodeButton_Political" Source="/Preloaded_Assets/EU4/Images/provinceInterface.png"
+        <Image x:Name="background" Source="/Preloaded_Assets/EU4/Images/provinceInterface.png"
                Grid.RowSpan="6" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
     </Grid>
+    
 </UserControl>

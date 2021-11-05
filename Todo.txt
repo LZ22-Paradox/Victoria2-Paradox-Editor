@@ -10,15 +10,16 @@
         o NEW IDEA: CUT PAST THE #, DON'T DELETE THE ENTIRE LINE
             * Potentially may need to rewrite the etnire CSV extraction code
 
-2. Impliment basic province loading (click a province, get the file)
+2. Impliment basic province interfacing (click a province, get the file)
 
 3. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 4. Make map mode Icons dynamic depending on the game selected
-    - Change source sent to class MapModesControl depending on game mode
     - Apply this to the backgrounds of FileInterface & the map mode selector itself
+        o Fix FileInterface initial background
+            * Set FileInterface to coordinate with static background sources (Compatability with multiple instances.)
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
@@ -42,6 +43,9 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 #. Impliment toggle-able layer of edges between provinces. (Togglable Borders)
 
+#. Add Fort Mapmode
+
+#. Add States Mapmode
 
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.

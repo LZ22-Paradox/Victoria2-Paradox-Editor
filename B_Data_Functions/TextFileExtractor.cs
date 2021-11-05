@@ -1,4 +1,4 @@
-﻿using Paradox_Editor.D_Static_Classes_Types;
+﻿using Paradox_Editor.D_Class_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -161,7 +161,7 @@ namespace Paradox_Editor.B_Map_Functions
             }
 
             return new ProvinceIDDictionaries()
-            {
+            {                                                                                          
                 ToFile = provinceIDToFileDictionary,
                 ToName = provinceIDToProvinceNameDictionary,
                 ToHistoryFile = provinceIDToHistoryFileDictionary

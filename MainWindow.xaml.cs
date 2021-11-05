@@ -3,9 +3,11 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D_Static_Classes_Types;
+using Paradox_Editor.D_Class_Types;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -29,16 +31,15 @@ namespace Paradox_Editor
                 new MapNavigation(mapCanvas)
                 .AddImage(mapProvinces)
                 .AddImage(mapPolitical)
-                .AddImage(testimage2);
+                .AddImage(mapTerrain);
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
-            MapModesControl.CurrentMapMode = 1;
-            MenuVisualHandler.VisualHandler.IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/";
-            MapModesControl.UpdateMapModeVisibility();
+            MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+            MapModesControl.UpdateMapModeVisibility(1, MapModesControl.CurrentGameMode);
         }
 
         public void Map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -81,10 +82,16 @@ namespace Paradox_Editor
             fileopener.Start();
         }
 
-        public void MapClick(object sender, RoutedEventArgs e) //Testing to get position of the mouse
+        public void MapClick(object sender, MouseButtonEventArgs e) //Testing to get position of the mouse
         {
-            Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver));
-            Debug.WriteLine("Reading");
+            var bmp = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+
+            var start = e.MouseDevice.GetPosition(mapProvinces);
+
+
+            Color pixel = bmp.GetPixel((int)((bmp.Width / start.X) + start.X), (int)((bmp.Height / start.Y) + start.Y)); 
+            //Problem code above. Position is innacurate.
+            Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixel);
         }
 
         public static explicit operator MainWindow(WindowCollection v)
@@ -98,14 +105,15 @@ namespace Paradox_Editor
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
-                MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
-                MapModesControl.UpdateMapModeVisibility();
+                MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+
+                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameMode);
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("EU4");
-                MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
-                MapModesControl.UpdateMapModeVisibility();
+                MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
+                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameMode);
             } else
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
