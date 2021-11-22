@@ -45,8 +45,8 @@ namespace Paradox_Editor
              
             if (CurrentMapMode == 0) //If Political is on
             {
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOn;
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOff;
+                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOn;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
 
                 MainWindow.mapProvinces.Visibility = Visibility.Hidden;
@@ -55,8 +55,8 @@ namespace Paradox_Editor
             }
             else if (CurrentMapMode == 1) //If Provinces is on
             {
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOn;
+                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
 
                 MainWindow.mapProvinces.Visibility = Visibility.Visible;
@@ -65,8 +65,8 @@ namespace Paradox_Editor
             }
             else if (CurrentMapMode == 2) //If Terrain is on
             {
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOff;
+                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOn;
 
                 MainWindow.mapProvinces.Visibility = Visibility.Hidden;

@@ -50,6 +50,10 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
 
+#. Game-tester button to open the respective game with the mod
+    /// "v2game.exe" -mod=mod/GSGVickyMod.mod
+    /// "eu4.exe"    -mod=mod/Mod1Name.mod -mod=mod/Mod2Name.mod
+
 
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
     - These apply to province history files

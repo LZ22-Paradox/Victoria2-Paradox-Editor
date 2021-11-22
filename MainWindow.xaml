@@ -10,6 +10,14 @@
         Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
+    <Window.Background>
+        <ImageBrush>
+            <ImageBrush.ImageSource>
+                <BitmapImage UriSource="/Preloaded_Assets/VIC2/Images/main_bg.png"/>
+            </ImageBrush.ImageSource>
+        </ImageBrush>
+    </Window.Background>
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,18 +34,19 @@
             <ColumnDefinition Width="270*"/>
             <ColumnDefinition Width="955*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="button" Content="Load Filepath" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="86" Height="27" Click="SelectMasterFolder_Click" Margin="98,0,0,0"/>
+
 
         <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212">
         </local:MapModesControl>
 
         <local:FileInterface x:Name="FileInterface" HorizontalAlignment="Center" Grid.Column="1" Panel.ZIndex="5" Margin="0,0,0,0" Height="267.5" Width="372"/>
 
-        <DataGrid x:Name="fileListView" Margin="0,25,4,0" AlternatingRowBackground="#FFE2E2E2"
+        <Button x:Name="button" Content="SEL" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="21" Height="25" Click="SelectMasterFolder_Click" Margin="20,15,0,0" Grid.Column="0" Panel.ZIndex="1"/>
+        
+        <DataGrid x:Name="fileListView" Margin="20,15,0,10" AlternatingRowBackground="#FFE2E2E2"
                   ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}"
-                  AutoGenerateColumns="False" CanUserAddRows="False"
-                 >
+                  AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn/>
                 <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID}"/>
@@ -66,6 +75,11 @@
                 </ListBoxItem.Background>
             </ListBoxItem>
         </ComboBox>
+
+        <TextBlock x:Name="TestText0" HorizontalAlignment="Left" Text="Test" Grid.Column="1" Margin="170,0,0,0" Panel.ZIndex="2" VerticalAlignment="Top" Width="200"/>
+        <TextBlock x:Name="TestText1" HorizontalAlignment="Left" Text="Test" Grid.Column="1" Margin="170,30,0,0" Panel.ZIndex="2" VerticalAlignment="Top" Width="150"/>
+        <TextBlock x:Name="TestText2" HorizontalAlignment="Left" Text="Test" Grid.Column="1" Margin="170,60,0,0" Panel.ZIndex="2" VerticalAlignment="Top" Width="150"/>
+
 
         <Expander x:Name="ControlsExpander" Grid.Column="1" VerticalAlignment="Top" Header="Controls" Height="200" Margin="700,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="2">
             <Grid Background="#FFE5E5E5">
@@ -100,7 +114,7 @@
             </ListBoxItem>
         </ComboBox>
 
-        <Grid x:Name="mapGrid" Margin="16,25,10,10" Background="#FF909090" Grid.Column="1"
+        <Grid x:Name="mapGrid" Margin="16,20,20,10" Background="#FF909090" Grid.Column="1"
               Panel.ZIndex="1">
             <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto" AllowDrop="True">
@@ -110,9 +124,7 @@
                            MouseWheel="Map_MouseWheel"
                            MouseLeftButtonUp="Map_MouseLeftButtonUp"
                            MouseLeftButtonDown="Map_MouseLeftButtonDown"
-                           MouseLeave="Map_MouseLeave"
-                           MouseDown="MapClick"
-                        >
+                           MouseLeave="Map_MouseLeave">
 
                     <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"

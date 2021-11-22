@@ -26,3 +26,6 @@ dotnet_diagnostic.CA2211.severity = none
 
 # IDE0054: Use compound assignment
 dotnet_diagnostic.IDE0054.severity = silent
+
+# CA1707: Identifiers should not contain underscores
+dotnet_diagnostic.CA1707.severity = silent

@@ -7,6 +7,12 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Diagnostics;
+using System.Drawing;
+using Image = System.Windows.Controls.Image;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
 
 namespace Paradox_Editor
 {
@@ -48,10 +54,84 @@ namespace Paradox_Editor
             Canvas.Cursor = Cursors.ScrollAll;
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
+
+            ///----------FUNKY CODE FOR COLOUR PICKING BELOW----------!
+            ///
+           //make writable bitmap
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
+
+            var image = (Canvas)sender;
+            var source = (BitmapSource)MainWindow.mapProvinces.Source;
+            var mousePos = e.GetPosition(image);
+
+            var pixelX = (int)(mousePos.X / image.ActualWidth * source.PixelWidth);
+            var pixelY = (int)(mousePos.Y / image.ActualHeight * source.PixelHeight);
+
+
+
+            var bitmap = BitmapFromSource(source);
+
+            var pixelColor = bitmap.GetPixel(pixelX, pixelY);
+
+
+
+
+            var newFunk = new Bitmap(BitmapFromSource(source));
+            newFunk.SetPixel(pixelX, pixelY, System.Drawing.Color.Red);
+
+            var sourcey = BitmapToImageSource(newFunk);
+            MainWindow.mapProvinces.Source = sourcey;
+             
+
+            MainWindow.TestText0.Text = Convert.ToString(mousePos);
+            MainWindow.TestText1.Text = Convert.ToString(pixelX + ", " + pixelY);
+            MainWindow.TestText2.Text = Convert.ToString(pixelColor);
+
+
+            Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixelColor);
+
+
+
         }
 
-        public void MouseMove(object sender, MouseEventArgs e) //THE MOUSE UP-DOWN MOVEMENT IS INVERTED WHEN CONVERTING MAPS (FlipTranslate is -1 when flipped)
+
+
+        BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
+        }
+
+        public Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        {
+            Bitmap bitmap;
+            using (var outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                enc.Save(outStream);
+                bitmap = new Bitmap(outStream);
+            }
+            return bitmap;
+        }
+
+
+
+        ///----------FUNKY CODE FOR COLOUR PICKING ABOVE---------!
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+
             if (!Canvas.IsMouseCaptured) return;
 
             var end = e.MouseDevice.GetPosition(Canvas);
@@ -66,6 +146,7 @@ namespace Paradox_Editor
                 image.RenderTransform = new MatrixTransform(m);
             });
             start = e.MouseDevice.GetPosition(Canvas);
+
         }
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)
