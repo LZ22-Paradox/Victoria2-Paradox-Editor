@@ -161,7 +161,7 @@ namespace Paradox_Editor.B_Map_Functions
             }
 
             return new ProvinceIDDictionaries()
-            {                                                                                          
+            {
                 ToFile = provinceIDToFileDictionary,
                 ToName = provinceIDToProvinceNameDictionary,
                 ToHistoryFile = provinceIDToHistoryFileDictionary

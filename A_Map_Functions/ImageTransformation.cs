@@ -19,8 +19,8 @@ namespace Paradox_Editor.A_Map_Functions
         {
             CanvasTransform = canvas;
         }
-
-        public void InvertImage(Canvas CanvasTransform)
+        
+        public void InvertCanvas(Canvas CanvasTransform)
         {
             var flipTrans = new ScaleTransform(); //creates instance for scale
             CanvasTransform.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image

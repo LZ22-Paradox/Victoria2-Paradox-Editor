@@ -7,21 +7,26 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Diagnostics;
+using System.Drawing;
+using Image = System.Windows.Controls.Image;
+using System.Drawing.Imaging;
+using System.IO;
+using Paradox_Editor.C_Window_Functions;
 
 namespace Paradox_Editor
 {
-    public class MapNavigation
+    public class NavigationHandler
     {
         private Point start;
         private List<Image> Images = new List<Image>();
         private Canvas Canvas;
 
-        public MapNavigation(Canvas canvas)
+        public NavigationHandler(Canvas canvas)
         {
             Canvas = canvas;
         }
 
-        public MapNavigation AddImage(Image image)
+        public NavigationHandler AddImage(Image image)
         {
             Images.Add(image);
             return this;
@@ -48,10 +53,69 @@ namespace Paradox_Editor
             Canvas.Cursor = Cursors.ScrollAll;
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
+
+            if (Keyboard.IsKeyDown(Key.LeftAlt) && FolderSelect.IsMapLoaded == true)
+            {
+                //make WriteableBitmap Class
+                var MainWindow = (MainWindow)Application.Current.MainWindow;
+
+                var image = (Image)sender;
+
+                var source = (BitmapSource)MainWindow.mapProvinces.Source;
+                var mousePos = e.GetPosition(image);
+
+                var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
+                var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
+
+                var bitmap = BitmapFromSource(source);
+                var pixelColor = bitmap.GetPixel(pixelX, pixelY);
+
+                Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixelColor);
+
+                var windowPos = e.GetPosition(MainWindow);
+
+                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 25), 0, 0);
+                MainWindow.FileInterface.Visibility = Visibility.Visible;
+                MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
+            }
         }
 
-        public void MouseMove(object sender, MouseEventArgs e) //THE MOUSE UP-DOWN MOVEMENT IS INVERTED WHEN CONVERTING MAPS (FlipTranslate is -1 when flipped)
+        BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
+        }
+
+        public Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        {
+            Bitmap bitmap;
+            using (var outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                enc.Save(outStream);
+                bitmap = new Bitmap(outStream);
+            }
+            return bitmap;
+        }
+
+
+
+        ///----------FUNKY CODE FOR COLOUR PICKING ABOVE---------!
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+
             if (!Canvas.IsMouseCaptured) return;
 
             var end = e.MouseDevice.GetPosition(Canvas);
@@ -66,13 +130,14 @@ namespace Paradox_Editor
                 image.RenderTransform = new MatrixTransform(m);
             });
             start = e.MouseDevice.GetPosition(Canvas);
+
         }
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)
         {
             Images.ForEach(image =>
             {
-                Point p = e.MouseDevice.GetPosition(image);
+                var p = e.MouseDevice.GetPosition(image);
                 var matrix = image.RenderTransform.Value;
 
                 //make a translation matrix that matches the translation STATE of the image, apply current scaling
@@ -110,7 +175,6 @@ namespace Paradox_Editor
                     if (e.Delta > 0) //adjusting scaling factor
                     {
                         matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
-
                     }
                     //a translate may need to be included in order to get scale in order to match
                     //m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
@@ -120,8 +184,6 @@ namespace Paradox_Editor
                     {
                         matrix.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
                     }
-
-                    //ZBAGI#7539 is the best
 
                     image.RenderTransform = new MatrixTransform(matrix);
                 }

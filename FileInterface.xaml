@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Paradox_Editor"
              mc:Ignorable="d" 
-             d:DesignHeight="267.5" d:DesignWidth="368" AllowDrop="True" Focusable="True">
+             d:DesignHeight="280" d:DesignWidth="368" AllowDrop="True" Focusable="True">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="55*"/>
@@ -29,18 +30,20 @@
         </Button>
 
 
-        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
-            <DataGrid Background="{x:Null}" ScrollViewer.CanContentScroll="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Boyoboy"/>
-                    <DataGridTextColumn x:Name="Column1" Header="ID" Width="40"/>
-                    <DataGridTextColumn x:Name="Column2" Header="Name" Width="105"/>
-                    <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="61">
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-           
-            </DataGrid>
 
+        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
+            <Grid>
+                <TextBox Text="Owner = " Grid.Row="2" Grid.Column="1" VerticalAlignment="Top" Margin="-230,0,0,0" FontFamily="Arial" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="16" Width="60" TextAlignment="Center" FontSize="14" Focusable="False" IsTabStop="False" IsReadOnly="True"/>
+                <TextBox x:Name="OWNERBOX" Text="FRA" VerticalAlignment="Top" Margin="50,0,190,0" FontFamily="Arial" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" Height="16" TextAlignment="Center" FontSize="14"  IsTabStop="False" IsReadOnly="True"/>
+
+                <DataGrid Name="Info_Grid" Background="{x:Null}" ScrollViewer.CanContentScroll="True" Width="279" BorderBrush="#FF688CAF" Margin="2,34,2,48">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="CORES" x:Name="CORES_COLUMN" Width="*"/>
+                        <DataGridTextColumn Header="TAG" x:Name="TAG_COLUMN" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
 
         </ScrollViewer>
 
@@ -49,5 +52,5 @@
         <Image x:Name="background" Source="/Preloaded_Assets/EU4/Images/provinceInterface.png"
                Grid.RowSpan="6" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
     </Grid>
-    
+
 </UserControl>

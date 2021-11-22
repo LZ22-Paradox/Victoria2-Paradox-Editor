@@ -30,7 +30,7 @@ namespace Paradox_Editor.A_Map_Navigation
 
             //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
         }
-
+        
         public void Drawing()
         {
             for (int x = 0; x < FirstLayer.PixelWidth - 1; x++)

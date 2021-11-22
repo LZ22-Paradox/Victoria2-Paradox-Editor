@@ -42,8 +42,6 @@ namespace Paradox_Editor
         {
             ReleaseMouse();
         }
-
-
         private void ReleaseMouse()
         {
             this.ReleaseMouseCapture();

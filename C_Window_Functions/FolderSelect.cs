@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 namespace Paradox_Editor.C_Window_Functions
 {
 
-
     public class FolderSelect
     {
+        public static bool IsMapLoaded = false;
+
         public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         private Canvas Canvas;
         private Image Image1;
@@ -31,7 +32,7 @@ namespace Paradox_Editor.C_Window_Functions
 
 
         //GameSoundHandler.SoundHandler.PlayConnectingSound();
-
+        
         public void SelectMainFolder()
         {
             var MainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
@@ -42,6 +43,7 @@ namespace Paradox_Editor.C_Window_Functions
                 return;
             }
 
+            IsMapLoaded = true;
             var dataAcquisitionInstance = new DataAcquisition();
             var directoryData = dataAcquisitionInstance.CollectDirectoryData(selectedDirectory);
 
@@ -60,7 +62,7 @@ namespace Paradox_Editor.C_Window_Functions
             MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
             var image = new ImageTransformation(Canvas);
-            image.InvertImage(Canvas);
+            image.InvertCanvas(Canvas);
 
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));

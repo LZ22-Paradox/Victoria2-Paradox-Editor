@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -8,6 +10,7 @@ using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Class_Types;
+using Point = System.Drawing.Point;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -17,7 +20,7 @@ namespace Paradox_Editor
 {
     public partial class MainWindow : Window
     {
-        private MapNavigation Navigator;
+        private NavigationHandler Navigator;
         private FolderSelect SelectMap;
 
         public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
@@ -28,14 +31,14 @@ namespace Paradox_Editor
             InitializeComponent();
 
             Navigator =
-                new MapNavigation(mapCanvas)
+                new NavigationHandler(mapCanvas)
                 .AddImage(mapProvinces)
                 .AddImage(mapPolitical)
                 .AddImage(mapTerrain);
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
         }
-
+        
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
@@ -69,8 +72,8 @@ namespace Paradox_Editor
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
-/*            Task taskboi = new Task(SelectMap.SelectMainFolder); //Not entirely functional. Fix.
-            taskboi.Start();*/
+            /*            Task taskboi = new Task(SelectMap.SelectMainFolder); //Not entirely functional. Fix.
+                        taskboi.Start();*/
             SelectMap.SelectMainFolder();
         }
 
@@ -80,18 +83,6 @@ namespace Paradox_Editor
             fileopener.StartInfo.FileName = "explorer";
             fileopener.StartInfo.Arguments = SelectedItem.FilePath;
             fileopener.Start();
-        }
-
-        public void MapClick(object sender, MouseButtonEventArgs e) //Testing to get position of the mouse
-        {
-            var bmp = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-
-            var start = e.MouseDevice.GetPosition(mapProvinces);
-
-
-            Color pixel = bmp.GetPixel((int)((bmp.Width / start.X) + start.X), (int)((bmp.Height / start.Y) + start.Y)); 
-            //Problem code above. Position is innacurate.
-            Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixel);
         }
 
         public static explicit operator MainWindow(WindowCollection v)
@@ -114,7 +105,8 @@ namespace Paradox_Editor
                 GameSoundHandler.SoundHandler.SoundAssetChange("EU4");
                 MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
                 MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameMode);
-            } else
+            }
+            else
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
             }
