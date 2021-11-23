@@ -111,7 +111,6 @@ namespace Paradox_Editor
 
 
 
-        ///----------FUNKY CODE FOR COLOUR PICKING ABOVE---------!
 
         public void MouseMove(object sender, MouseEventArgs e)
         {
