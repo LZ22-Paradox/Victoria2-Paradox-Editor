@@ -6,12 +6,17 @@ using Point = System.Windows.Point;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using System.Diagnostics;
 using System.Drawing;
 using Image = System.Windows.Controls.Image;
-using System.Drawing.Imaging;
 using System.IO;
 using Paradox_Editor.C_Window_Functions;
+using Cursors = System.Windows.Input.Cursors;
+using Application = System.Windows.Application;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Control = System.Windows.Forms.Control;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using System.Diagnostics;
 
 namespace Paradox_Editor
 {
@@ -32,69 +37,88 @@ namespace Paradox_Editor
             return this;
         }
 
-        public void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ReleaseMouseCapture();
-        }
         public void MouseLeave(object sender, MouseEventArgs e)
         {
             ReleaseMouseCapture();
         }
 
-        private void ReleaseMouseCapture()
+        public void ReleaseMouseCapture()
         {
             Canvas.ReleaseMouseCapture();
             Canvas.Cursor = Cursors.Arrow;
         }
 
-        public void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (Canvas.IsMouseCaptured) return;
             Canvas.Cursor = Cursors.ScrollAll;
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
+        }
 
-            if (Keyboard.IsKeyDown(Key.LeftAlt) && FolderSelect.IsMapLoaded == true)
+        public void KeyPressed(object sender, KeyEventArgs e) {
+            ///WORKING ON KEYBOARD CONTROLS || FINISH THE REST
+            Images.ForEach(image =>
             {
-                //make WriteableBitmap Class
-                var MainWindow = (MainWindow)Application.Current.MainWindow;
+                var matrix = image.RenderTransform.Value;
 
-                var image = (Image)sender;
+                var movementIntensity = 10;
+                if (e.Key is Key.W)
+                {
+                    Debug.WriteLine("W");
+                    matrix.Translate(0, Math.Abs(movementIntensity));
 
-                var source = (BitmapSource)MainWindow.mapProvinces.Source;
-                var mousePos = e.GetPosition(image);
+                }
+                if (e.Key is Key.A)
+                {
+                    Debug.WriteLine("A");
+                }
+                if (e.Key is Key.S)
+                {
+                    Debug.WriteLine("S");
+                    matrix.Translate(0, -Math.Abs(movementIntensity));
+                }
+                if (e.Key is Key.D)
+                {
+                    Debug.WriteLine("D");
+                }
 
-                var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
-                var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
+                image.RenderTransform = new MatrixTransform(matrix);
+            });
+        }
 
-                var bitmap = BitmapFromSource(source);
-                var pixelColor = bitmap.GetPixel(pixelX, pixelY);
+        public void MouseLeftClick(object sender, MouseButtonEventArgs e)
+        {
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
+            var image = (Image)sender;
+            var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
+            var mousePos = e.GetPosition(image);
+            var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
+            var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
+            var bitmap = BitmapFromSource(source);
+            var pixelColor = bitmap.GetPixel(pixelX, pixelY);
 
-                Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixelColor);
-
+            if (FolderSelect.IsMapLoaded)
+            {
                 var windowPos = e.GetPosition(MainWindow);
+                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
+                //Get positioning right. Also add animation?
 
-                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 25), 0, 0);
                 MainWindow.FileInterface.Visibility = Visibility.Visible;
                 MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
+
+                MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(pixelColor);
+
+                var fart = MainWindow.SelectMap.StoredGameDirectory;
+                var dunt = MainWindow.SelectMap.StoredProvinceColorToID;
+
+                var poop = MainWindow.ProvinceData;
+                var cipple = MainWindow.SelectMap.StoredTagToCountryName;
+                //MAKE NEW INSTANCE OF CLASS OR USE OLD CLASS FOR RECOVERING DATA FROM THIS INFORMATION?
+
             }
         }
 
-        BitmapImage BitmapToImageSource(Bitmap bitmap)
-        {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
-
-                return bitmapimage;
-            }
-        }
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {
@@ -108,9 +132,6 @@ namespace Paradox_Editor
             }
             return bitmap;
         }
-
-
-
 
         public void MouseMove(object sender, MouseEventArgs e)
         {

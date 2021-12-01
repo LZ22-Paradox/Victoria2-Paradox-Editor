@@ -103,7 +103,7 @@
             </Grid>
         </Expander>
 
-        <ComboBox x:Name="ControlSelect" HorizontalAlignment="Center" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0">
+        <ComboBox x:Name="ControlSelect" HorizontalAlignment="Center" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ControlChange">
             <ListBoxItem x:Name="Standard" Content="Standard">
             </ListBoxItem>
             <ListBoxItem x:Name="PDN" Content="Paint.NET">
@@ -118,7 +118,7 @@
                 <Canvas x:Name="mapCanvas" Background="Transparent" RenderTransformOrigin="0.5,0.5"
                            MouseMove="Map_MouseMove"
                            MouseWheel="Map_MouseWheel"
-                           MouseLeftButtonUp="Map_MouseLeftButtonUp"
+                           MouseUp="Map_MouseUp"
                            MouseLeave="Map_MouseLeave">
 
                     <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
@@ -126,7 +126,9 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both"
-                           MouseLeftButtonDown="Map_MouseLeftButtonDown">
+                           MouseDown="Map_MouseDown"
+                           
+                           >
                     </Image>
 
                     <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
