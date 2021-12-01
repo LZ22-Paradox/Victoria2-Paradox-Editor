@@ -6,12 +6,16 @@ using Point = System.Windows.Point;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using System.Diagnostics;
 using System.Drawing;
 using Image = System.Windows.Controls.Image;
-using System.Drawing.Imaging;
 using System.IO;
 using Paradox_Editor.C_Window_Functions;
+using Cursors = System.Windows.Input.Cursors;
+using Application = System.Windows.Application;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Control = System.Windows.Forms.Control;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Paradox_Editor
 {
@@ -32,69 +36,87 @@ namespace Paradox_Editor
             return this;
         }
 
-        public void MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ReleaseMouseCapture();
-        }
         public void MouseLeave(object sender, MouseEventArgs e)
         {
             ReleaseMouseCapture();
         }
 
-        private void ReleaseMouseCapture()
+        public void ReleaseMouseCapture()
         {
             Canvas.ReleaseMouseCapture();
             Canvas.Cursor = Cursors.Arrow;
         }
 
-        public void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (Canvas.IsMouseCaptured) return;
             Canvas.Cursor = Cursors.ScrollAll;
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
+        }
 
-            if (Keyboard.IsKeyDown(Key.LeftAlt) && FolderSelect.IsMapLoaded == true)
+        private bool nonNumberEntered = false;
+
+        public void KeyPressed(object sender, KeyEventArgs e) ///WORKING ON KEYBOARD CONTROLS || NOT WORKING
+        {
+            nonNumberEntered = false;
+            if (e.Key is < Key.D0 or > Key.D9)
             {
-                //make WriteableBitmap Class
-                var MainWindow = (MainWindow)Application.Current.MainWindow;
+                if (e.Key is < Key.NumPad0 or > Key.NumPad9)
+                {
+                    // Determine whether the keystroke is a backspace.
+                    if (e.Key != Key.Back)
+                    {
+                        // A non-numerical keystroke was pressed.
+                        // Set the flag to true and evaluate in KeyPress event.
+                        nonNumberEntered = true;
+                    }
+                }
+            }
 
-                var image = (Image)sender;
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                nonNumberEntered = true;
+            }
 
-                var source = (BitmapSource)MainWindow.mapProvinces.Source;
-                var mousePos = e.GetPosition(image);
+            if (nonNumberEntered == true)
+            {
+                e.Handled = true;
+            }
+        }
 
-                var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
-                var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
+        public void MouseLeftClick(object sender, MouseButtonEventArgs e)
+        {
+            var MainWindow = (MainWindow)Application.Current.MainWindow;
+            var image = (Image)sender;
+            var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
+            var mousePos = e.GetPosition(image);
+            var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
+            var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
+            var bitmap = BitmapFromSource(source);
+            var pixelColor = bitmap.GetPixel(pixelX, pixelY);
 
-                var bitmap = BitmapFromSource(source);
-                var pixelColor = bitmap.GetPixel(pixelX, pixelY);
-
-                Debug.WriteLine(Mouse.GetPosition(Mouse.DirectlyOver) + " Reading " + pixelColor);
-
+            if (FolderSelect.IsMapLoaded)
+            {
                 var windowPos = e.GetPosition(MainWindow);
+                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
+                //Get positioning right. Also add animation?
 
-                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 25), 0, 0);
                 MainWindow.FileInterface.Visibility = Visibility.Visible;
                 MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
+
+                MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(pixelColor);
+
+                var fart = MainWindow.SelectMap.StoredGameDirectory;
+                var dunt = MainWindow.SelectMap.StoredProvinceColorToID;
+
+                var poop = MainWindow.ProvinceData;
+                var cipple = MainWindow.SelectMap.StoredTagToCountryName;
+                //MAKE NEW INSTANCE OF CLASS OR USE OLD CLASS FOR RECOVERING DATA FROM THIS INFORMATION?
+
             }
         }
 
-        BitmapImage BitmapToImageSource(Bitmap bitmap)
-        {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, ImageFormat.Bmp);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
-
-                return bitmapimage;
-            }
-        }
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {
@@ -108,9 +130,6 @@ namespace Paradox_Editor
             }
             return bitmap;
         }
-
-
-
 
         public void MouseMove(object sender, MouseEventArgs e)
         {

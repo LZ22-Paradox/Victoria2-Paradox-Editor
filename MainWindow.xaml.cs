@@ -21,9 +21,11 @@ namespace Paradox_Editor
     public partial class MainWindow : Window
     {
         private NavigationHandler Navigator;
-        private FolderSelect SelectMap;
+        public FolderSelect SelectMap;
 
         public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
 
         public MainWindow()
@@ -38,16 +40,16 @@ namespace Paradox_Editor
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
         }
-        
+
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
             MapModesControl.UpdateMapModeVisibility(1, MapModesControl.CurrentGameMode);
         }
 
-        public void Map_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        public void Map_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Navigator.MouseLeftButtonUp(sender, e);
+            Navigator.ReleaseMouseCapture();
         }
 
         public void Map_MouseLeave(object sender, MouseEventArgs e)
@@ -55,9 +57,25 @@ namespace Paradox_Editor
             Navigator.MouseLeave(sender, e);
         }
 
-        public void Map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void Map_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Navigator.MouseLeftButtonDown(sender, e);
+            if (CurrentControlMode == 0)
+            {
+                if (e.MiddleButton == MouseButtonState.Pressed)
+                {
+                    Navigator.MouseDown(sender, e);
+                }
+                else if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    Navigator.MouseLeftClick(sender, e);
+                }
+            }
+
+        }
+
+        private void KeyPressed(object sender, KeyEventArgs e)
+        {
+            Navigator.KeyPressed(sender, e);
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -112,5 +130,13 @@ namespace Paradox_Editor
             }
             GameSoundHandler.SoundHandler.PlayConnectingSound();
         }
+
+        private void ControlChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            CurrentControlMode = ControlSelect.SelectedIndex;
+
+        }
+
+
     }
 }
