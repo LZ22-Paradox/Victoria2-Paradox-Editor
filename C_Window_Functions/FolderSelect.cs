@@ -18,10 +18,13 @@ namespace Paradox_Editor.C_Window_Functions
     {
         public static bool IsMapLoaded;
 
-        public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
+        //public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         public string StoredGameDirectory { get; set; }
         public Dictionary<string,string> StoredProvinceColorToID { get; set; }
         public Dictionary<string, string> StoredTagToCountryName { get; set; }
+
+        public ProvinceOutputData StoredProvIDToDataDictionaries { get; set; }
+
 
         private Canvas Canvas;
         private Image Image1;
@@ -58,10 +61,12 @@ namespace Paradox_Editor.C_Window_Functions
 
             var provinceColorToID = dataAcquisitionInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
             StoredProvinceColorToID = provinceColorToID;
+
+            var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
+            StoredProvIDToDataDictionaries = provinceIDToDataDictionaries;
+
             var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
             StoredTagToCountryName = tagToCountryName;
-            var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
-
 
             CountryNameToColor CountryNameToColorConverter = new();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);

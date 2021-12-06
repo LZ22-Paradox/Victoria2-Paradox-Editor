@@ -6,6 +6,7 @@
 
 ----====Must Do====----
 1. Fix map loading to allow OTHER mods besides DoD
+    - provinceIDToDataDictionaries :: Fix IDToCores
     - OLD IDEA: IMPLIMENT IGNORE LINES WITH A HASHTAG "4" [TextFileExtractor.cs]
         o NEW IDEA: CUT PAST THE #, DON'T DELETE THE ENTIRE LINE
             * Potentially may need to rewrite the etnire CSV extraction code

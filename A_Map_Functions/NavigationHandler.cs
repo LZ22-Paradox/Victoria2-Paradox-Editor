@@ -56,31 +56,37 @@ namespace Paradox_Editor
             Canvas.CaptureMouse();
         }
 
-        public void KeyPressed(object sender, KeyEventArgs e) {
-            ///WORKING ON KEYBOARD CONTROLS || FINISH THE REST
+        public void MoveTimer_Tick(object sender, EventArgs e) //Add compatibility for alternate control mode
+        {
+            double velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
+            var flipCheck = 1;
+            if (MainWindow.IsImageFlipped == true)
+            {
+                flipCheck = -1;
+            }
+
             Images.ForEach(image =>
             {
                 var matrix = image.RenderTransform.Value;
 
-                var movementIntensity = 10;
-                if (e.Key is Key.W)
+                if (Keyboard.IsKeyDown(Key.W))
                 {
                     Debug.WriteLine("W");
-                    matrix.Translate(0, Math.Abs(movementIntensity));
+                    matrix.Translate(0, flipCheck * Math.Abs(velocity));
 
                 }
-                if (e.Key is Key.A)
+                if (Keyboard.IsKeyDown(Key.A))
                 {
-                    Debug.WriteLine("A");
+                    matrix.Translate(Math.Abs(velocity), 0);
                 }
-                if (e.Key is Key.S)
+                if (Keyboard.IsKeyDown(Key.S))
                 {
                     Debug.WriteLine("S");
-                    matrix.Translate(0, -Math.Abs(movementIntensity));
+                    matrix.Translate(0, -flipCheck * Math.Abs(velocity));
                 }
-                if (e.Key is Key.D)
+                if (Keyboard.IsKeyDown(Key.D))
                 {
-                    Debug.WriteLine("D");
+                    matrix.Translate(-Math.Abs(velocity), 0);
                 }
 
                 image.RenderTransform = new MatrixTransform(matrix);
@@ -109,14 +115,28 @@ namespace Paradox_Editor
 
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(pixelColor);
 
-                var fart = MainWindow.SelectMap.StoredGameDirectory;
-                var dunt = MainWindow.SelectMap.StoredProvinceColorToID;
+                var storedColorToID = MainWindow.SelectMap.StoredProvinceColorToID;
+
+                //var fart = MainWindow.SelectMap.StoredGameDirectory;
 
                 var poop = MainWindow.ProvinceData;
                 var cipple = MainWindow.SelectMap.StoredTagToCountryName;
                 //MAKE NEW INSTANCE OF CLASS OR USE OLD CLASS FOR RECOVERING DATA FROM THIS INFORMATION?
 
-            }
+                /*Dictionary1 = dictionary1; //colorToProvinceId
+                Dictionary2 = dictionary2; //provinceIDToOwnerTAG
+                Dictionary3 = dictionary3; //countryTAGToCountryName
+                Dictionary4 = dictionary4; //countryToColor*/
+
+                if (1 == 1)
+                //storedColorToID.TryGetValue(pixelColor.R + " " + pixelColor.G + " " + pixelColor.B, out var ProvinceID) &&
+                //Dictionary2.TryGetValue(pixelColor, out var countryTAG) &&
+                //Dictionary3.TryGetValue(countryTAG, out var countryName) &&
+                //Dictionary4.TryGetValue(countryName, out var countryColor))
+                {
+                }
+
+                }
         }
 
 

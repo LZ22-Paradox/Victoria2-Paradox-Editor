@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Class_Types;
@@ -24,6 +25,7 @@ namespace Paradox_Editor
         public FolderSelect SelectMap;
 
         public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public static bool IsImageFlipped { get; set; } = false;
         public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
@@ -40,8 +42,10 @@ namespace Paradox_Editor
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
 
-            this.KeyDown += new KeyEventHandler(Navigator.KeyPressed);
-            //The above May be changed from map provinces to grid.
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(0.01);
+            timer.Tick += new EventHandler(Navigator.MoveTimer_Tick);
+            timer.Start();
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -73,7 +77,6 @@ namespace Paradox_Editor
                     Navigator.MouseLeftClick(sender, e);
                 }
             }
-
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -88,7 +91,8 @@ namespace Paradox_Editor
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
-            /*            Task taskboi = new Task(SelectMap.SelectMainFolder); //Not entirely functional. Fix.
+            /*            Task taskboi = new Task(SelectMap.SelectMainFolder);
+             *            //Not entirely functional. Should Fix.
                         taskboi.Start();*/
             SelectMap.SelectMainFolder();
         }

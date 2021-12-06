@@ -41,6 +41,8 @@
 
         <local:FileInterface x:Name="FileInterface" Visibility="Visible" HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Column="1" Panel.ZIndex="5" Margin="0,0,0,0" Height="267" Width="372"/>
 
+        <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Background="Purple" Panel.ZIndex="2" Height="56" Margin="417,0,310,0"/>
+
         <Button x:Name="button" Content="SEL" HorizontalAlignment="Left" VerticalAlignment="Top"
         Width="21" Height="25" Click="SelectMasterFolder_Click" Margin="20,15,0,0" Grid.Column="0" Panel.ZIndex="1"/>
 
@@ -127,7 +129,6 @@
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both"
                            MouseDown="Map_MouseDown"
-                           
                            >
                     </Image>
 

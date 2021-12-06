@@ -17,7 +17,7 @@ namespace Paradox_Editor.B_Map_Functions
         public Dictionary<string, HistoryFile> provinceIDToHistoryFileDictionary;
         public Dictionary<string, string> provinceIDToControllerDictionary;
 
-        public ObservableCollection<HistoryFile> historyFileData { get; set; } = new ObservableCollection<HistoryFile>();
+        public ObservableCollection<HistoryFile> HistoryFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
         public TextFileExtractor(string[] filepath, ObservableCollection<ProvinceFile> datasend)
         {
@@ -152,7 +152,7 @@ namespace Paradox_Editor.B_Map_Functions
                     Naval_Base = navalBaseList
                 };
 
-                historyFileData.Add(historyFile);
+                HistoryFileData.Add(historyFile);
 
                 if (!provinceIDToHistoryFileDictionary.ContainsKey(Convert.ToString(IDValue)))
                     provinceIDToHistoryFileDictionary.Add(Convert.ToString(IDValue), historyFile); //duplicates entries. This is not needed.

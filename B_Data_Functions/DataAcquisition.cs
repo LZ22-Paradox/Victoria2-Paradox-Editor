@@ -102,17 +102,16 @@ namespace Paradox_Editor
 
         public ProvinceOutputData GetProvinceIDToData(string[] pathToHistoryFile)
         {
+
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
+            var ExtractedData = new TextFileExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
+
+            var provinceIDToCoreTAGs = new Dictionary<string, string>();
+
             var provinceIDToOwnerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
-
-            /*var provinceIDToCoreTAG = new Dictionary<string, string>();*/ /*|||UNUSED|||*/ //Stripey Green Lines; Core from a country
             var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
-
-            var Text = new TextFileExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile);
-            var ExtractedData = Text.ExtractForDictionary();
-
             foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
             {
                 if (entry.Value.Controller.Count != 0)
@@ -126,13 +125,27 @@ namespace Paradox_Editor
                     provinceIDToControllerTAG.Add(entry.Key, "noController");
                 }
             }
+
+            foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
+            {
+                if (entry.Value.Core.Count != 0)
+                {
+                    provinceIDToCoreTAGs.Add(entry.Key, entry.Value.Core[0]);
+                }
+                else
+                {
+                    provinceIDToCoreTAGs.Add(entry.Key, "noCores");
+                }
+            }
+
             return new ProvinceOutputData()
             {
                 IDToFile = ExtractedData.ToFile,
                 IDToName = ExtractedData.ToName,
                 IDToHistory = ExtractedData.ToHistoryFile, //IDToCores = Text.provinceIDToCoresDictionary,
                 IDToOwner = provinceIDToOwnerTAG,
-                IDToController = provinceIDToControllerTAG
+                IDToController = provinceIDToControllerTAG,
+                IDToCores = provinceIDToCoreTAGs
             };
         }
 
