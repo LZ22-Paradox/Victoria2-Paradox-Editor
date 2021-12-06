@@ -17,11 +17,16 @@ using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Control = System.Windows.Forms.Control;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Paradox_Editor.B_Data_Functions;
+using System.Linq;
 
 namespace Paradox_Editor
 {
     public class NavigationHandler
     {
+
         private Point start;
         private List<Image> Images = new List<Image>();
         private Canvas Canvas;
@@ -116,27 +121,40 @@ namespace Paradox_Editor
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(pixelColor);
 
                 var storedColorToID = MainWindow.SelectMap.StoredProvinceColorToID;
+                var storedProvinceIDToData = MainWindow.SelectMap.StoredProvinceIDToDataDictionaries;
+                var storedTagToCountryName = MainWindow.SelectMap.StoredTagToCountryName;
 
-                //var fart = MainWindow.SelectMap.StoredGameDirectory;
 
-                var poop = MainWindow.ProvinceData;
-                var cipple = MainWindow.SelectMap.StoredTagToCountryName;
-                //MAKE NEW INSTANCE OF CLASS OR USE OLD CLASS FOR RECOVERING DATA FROM THIS INFORMATION?
-
-                /*Dictionary1 = dictionary1; //colorToProvinceId
-                Dictionary2 = dictionary2; //provinceIDToOwnerTAG
-                Dictionary3 = dictionary3; //countryTAGToCountryName
-                Dictionary4 = dictionary4; //countryToColor*/
-
-                if (1 == 1)
-                //storedColorToID.TryGetValue(pixelColor.R + " " + pixelColor.G + " " + pixelColor.B, out var ProvinceID) &&
-                //Dictionary2.TryGetValue(pixelColor, out var countryTAG) &&
-                //Dictionary3.TryGetValue(countryTAG, out var countryName) &&
-                //Dictionary4.TryGetValue(countryName, out var countryColor))
+                if (storedColorToID.TryGetValue(pixelColor.R + " " + pixelColor.G + " " + pixelColor.B, out var ProvinceID))
                 {
-                }
+                    MainWindow.FileInterface.PROVIDBOX.Text = Convert.ToString(ProvinceID);
+                    if (storedProvinceIDToData.IDToName.TryGetValue(ProvinceID, out var ProvinceName))
+                    ///THE PROVINCE NAME IS READ AS THE NAME OF THE FILE ; CHANGE TO READ CSV PROPER NAME
+                    {
+                        MainWindow.FileInterface.NAMEBOX.Text = Convert.ToString(ProvinceName);
+                    }
+                    if (storedProvinceIDToData.IDToOwner.TryGetValue(ProvinceID, out var ownerTAG))
+                    {
+                        MainWindow.FileInterface.OWNERBOX.Text = Convert.ToString(ownerTAG);
+                    }
+                    if (storedProvinceIDToData.IDToController.TryGetValue(ProvinceID, out var controllerTAG))
+                    {
+                        MainWindow.FileInterface.CONTROLLERBOX.Text = Convert.ToString(controllerTAG);
+                    }
+
+                    if (storedProvinceIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCore))
+                    {
+
+                        string aa = "aa,xx,cc,vv,bbb,hh,gg,rr,tt,yy,uu,ooo";
+                        MainWindow.TestCoreList.Add(aa);
+                        //MainWindow.FileInterface.COREGRID.Items.Add(aa.Split(',').Select(x => new MyItem() { Id = x }));
+                        //Getting cores to display
+
+                    }
 
                 }
+
+            }
         }
 
 

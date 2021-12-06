@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:local="clr-namespace:Paradox_Editor"
+             xmlns:local1="clr-namespace:Paradox_Editor.B_Data_Functions"
              StartupUri="MainWindow.xaml">
 
 
-    <Application.Resources>
-         
-    </Application.Resources>
 </Application>

@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Class_Types;
-using Point = System.Drawing.Point;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -24,11 +19,13 @@ namespace Paradox_Editor
         private NavigationHandler Navigator;
         public FolderSelect SelectMap;
 
-        public static ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public static bool IsImageFlipped { get; set; } = false;
         public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
+        
+        public static ObservableCollection<string> TestCoreList = new ObservableCollection<string>();
 
         public MainWindow()
         {
@@ -46,6 +43,7 @@ namespace Paradox_Editor
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimer_Tick);
             timer.Start();
+
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)

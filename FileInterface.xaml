@@ -23,16 +23,16 @@
             <RowDefinition Height="17*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Name="ProvID" Text="ProvID" Grid.Row="1" Grid.Column="0"
+        <TextBlock Name="PROVIDBOX" Text="PR-ID" Grid.Row="1" Grid.Column="0"
                  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial Black"
                  Background="{x:Null}" Foreground="Black" Height="16"
                  TextAlignment="Center" FontSize="10" Margin="0,5,0,0"/>
 
-        <TextBox Text="The Helmsman's Wall" Grid.Row="1" Grid.Column="1"
+        <TextBlock Name="NAMEBOX" Text="Province Name" Grid.Row="1" Grid.Column="1"
                  HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Arial Black"
-                 Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" Height="16"
+                 Background="{x:Null}" Foreground="Black" Height="16"
                  Width="252" TextAlignment="Center" FontSize="11"/>
-        
+
         <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0" BorderThickness="2,1,0,1" Margin="36,20,5,10"
                 Padding="1,1,1,1" Background="{x:Null}" Click="ExitClicked">
             <Image Source="/Preloaded_Assets/VIC2/Icons/VIC2_Exit.png" Stretch="Uniform" Margin="0,0,0,0"/>
@@ -42,14 +42,6 @@
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -66,10 +58,9 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="COLORRGB" Text="255,255,255" Grid.Column="1" Grid.Row="0"
-                         FontFamily="Arial" Background="{x:Null}" BorderBrush="{x:Null}"
-                         Foreground="Black" Height="20" TextAlignment="Center" FontSize="14"
-                         IsTabStop="False" IsReadOnly="True" Margin="-65,0,-75,0"/>
+                <TextBlock x:Name="COLORRGB" Text="255,255,255" Grid.Column="1" Grid.Row="0"
+                         FontFamily="Arial" Background="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" Margin="-65,0,-75,0"/>
 
                 <TextBlock Text="Owner" Grid.Row="1" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -87,12 +78,37 @@
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
 
-                <DataGrid Name="Info_Grid" Background="{x:Null}" ScrollViewer.CanContentScroll="True" Width="279" BorderBrush="#FF688CAF" Margin="2,34,2,48">
+                <TextBlock Text="Core(s)" Grid.Row="3" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                
+                
+                <!--This datagrid is a pain. Loading list of cores into.-->
+                <DataGrid x:Name="COREGRID" Grid.Column="1" Grid.RowSpan="2" Grid.Row="3"
+                          Background="{x:Null}" BorderBrush="{x:Null}" AlternationCount="2" Width="170"
+                          Margin="0,0,0,-149" HorizontalAlignment="Center"
+                          HorizontalContentAlignment="Center" Focusable="False" AllowDrop="False"
+                          SelectionMode="Single" HeadersVisibility="None"
+                          ItemsSource="{Binding TestCoreList}">
+
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="CORES" x:Name="CORES_COLUMN" Width="*"/>
-                        <DataGridTextColumn Header="TAG" x:Name="TAG_COLUMN" Width="*"/>
+                        <DataGridTextColumn Header="TAG"/>
                     </DataGrid.Columns>
+
+                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
+                                  HorizontalAlignment="Center"/>
+                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
+                                  HorizontalAlignment="Center"/>
+                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
+                                  HorizontalAlignment="Center"/>
+ 
+
                 </DataGrid>
+
+                <!-- DataGrid of death Ends Here.-->
+
+
             </Grid>
 
         </ScrollViewer>

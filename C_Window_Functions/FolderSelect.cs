@@ -5,31 +5,29 @@ using Paradox_Editor.B_Map_Functions;
 using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.A_Map_Functions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using Paradox_Editor.D_Class_Types;
-using System.Collections.ObjectModel;
 
 namespace Paradox_Editor.C_Window_Functions
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 
     public class FolderSelect
     {
         public static bool IsMapLoaded;
 
         //public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
+        //Stored opener is subject to change for user convienence
         public string StoredGameDirectory { get; set; }
         public Dictionary<string,string> StoredProvinceColorToID { get; set; }
         public Dictionary<string, string> StoredTagToCountryName { get; set; }
-
-        public ProvinceOutputData StoredProvIDToDataDictionaries { get; set; }
-
+        public Dictionary<string, Color> StoredCountryNameToColor { get; private set; }
+        public ProvinceOutputData StoredProvinceIDToDataDictionaries { get; private set; }
 
         private Canvas Canvas;
         private Image Image1;
         private Image Image2;
-        //Stored opener will be subject to change for user convienence
 
         public FolderSelect(Canvas canvas, Image image1, Image image2)
         {
@@ -39,7 +37,6 @@ namespace Paradox_Editor.C_Window_Functions
         }
 
         public FolderSelect() { }
-
 
         //GameSoundHandler.SoundHandler.PlayConnectingSound();
 
@@ -63,13 +60,14 @@ namespace Paradox_Editor.C_Window_Functions
             StoredProvinceColorToID = provinceColorToID;
 
             var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
-            StoredProvIDToDataDictionaries = provinceIDToDataDictionaries;
+            StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
 
             var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
             StoredTagToCountryName = tagToCountryName;
 
             CountryNameToColor CountryNameToColorConverter = new();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
+            StoredCountryNameToColor = countryNameToColor;
 
             var provinceDataCollection = new TextFileExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
             MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
@@ -90,7 +88,7 @@ namespace Paradox_Editor.C_Window_Functions
             var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
                 provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
                 tagToCountryName, countryNameToColor);
-            ColorMap.Drawing();
+            ColorMap.DrawProvinceMap();
             MainWindow.mapPolitical.Source = ColorMap.SizeReference;
             ///---------------------------------------------------------------
         }

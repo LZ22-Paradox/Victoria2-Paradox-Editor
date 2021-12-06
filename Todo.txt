@@ -4,23 +4,34 @@
 [Definition.csv] - province;red;green;blue;provincename;x
 * FolderSelect is the master folder that executes the methods needed
 
-----====Must Do====----
-1. Fix map loading to allow OTHER mods besides DoD
-    - provinceIDToDataDictionaries :: Fix IDToCores
-    - OLD IDEA: IMPLIMENT IGNORE LINES WITH A HASHTAG "4" [TextFileExtractor.cs]
-        o NEW IDEA: CUT PAST THE #, DON'T DELETE THE ENTIRE LINE
-            * Potentially may need to rewrite the etnire CSV extraction code
+Theorie suggests that the program may need to create it's own text files, as opposed
+to editing them directly; which may cause more complications than necessary.
 
-2. Impliment basic province interfacing (click a province, get the file)
+D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
+    O_ CREATE NEW TEXT FILE
+        * Upsides:
+
+        * Downsides:
+    
+    O_ EDIT EXISTING TEXT FILE ENTRIES
+        * Upsides:
+    
+        * Downsides:
+
+
+
+----====Must Do====----
+        o NEW IDEA: CUT PAST THE # IN TEXT FILES, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
+
+1. Impliment basic province interfacing (click a province, get the file)
+    - Fix Issue with cutoff
+    - Fix Core Listing on FileInterface
+    - Combine a couple lists. [ie. ToName into the main IDTo (If applicable)]
+            (ProvinceIDDictioanries may be worthless)
 
 3. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
-
-4. Make map mode Icons dynamic depending on the game selected
-    - Apply this to the backgrounds of FileInterface & the map mode selector itself
-        o Fix FileInterface initial background
-            * Set FileInterface to coordinate with static background sources (Compatability with multiple instances.)
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
@@ -31,7 +42,7 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
             * See ways for specific replacement
     - Merge data variables
         o Try to merge some dictionaries that may not be needed when left alone, if possible.
-            * This requires a searchthrough for every dictionary
+            * This requires a search-through for every dictionary
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.
@@ -40,7 +51,16 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
         o Dig in game files
 
 
-#. Impliment In-program file editing (for ease of GUI convienence)
+#. Game-tester button to open the respective game with the mod
+    /// "v2game.exe" -mod=mod/GSGVickyMod.mod
+    /// "eu4.exe"    -mod=mod/Mod1Name.mod -mod=mod/Mod2Name.mod
+
+#. Add support for EU4
+    - Make map mode Icons dynamic depending on the game selected
+        o Apply this to the backgrounds of FileInterface & the map mode selector itself
+            * Fix FileInterface initial background
+                [] Set FileInterface to coordinate with static background sources (Compatability with multiple instances.)
+
 
 #. Impliment toggle-able layer of edges between provinces. (Togglable Borders)
 
@@ -50,10 +70,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
-
-#. Game-tester button to open the respective game with the mod
-    /// "v2game.exe" -mod=mod/GSGVickyMod.mod
-    /// "eu4.exe"    -mod=mod/Mod1Name.mod -mod=mod/Mod2Name.mod
 
 
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.

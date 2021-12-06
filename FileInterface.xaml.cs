@@ -1,6 +1,8 @@
 ﻿using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.D_Class_Types;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,7 +22,9 @@ namespace Paradox_Editor
 
     public partial class FileInterface : UserControl
     {
-        //public static FileInterface InterFace { get; set; } = new FileInterface();
+
+        //public ObservableCollection<string> CoreDisplay { get; set; } = new ObservableCollection<string>();
+
 
         private Point start;
 

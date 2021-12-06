@@ -31,7 +31,7 @@ namespace Paradox_Editor.A_Map_Navigation
             //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
         }
         
-        public void Drawing()
+        public void DrawProvinceMap()
         {
             for (int x = 0; x < FirstLayer.PixelWidth - 1; x++)
             {
@@ -61,6 +61,21 @@ namespace Paradox_Editor.A_Map_Navigation
                 }
 
             }
+
+        }
+
+        public void DrawStateMap()
+        {
+
+        }
+
+        public void DrawCultureMap()
+        {
+
+        }
+
+        public void DrawPopulationMap()
+        {
 
         }
 

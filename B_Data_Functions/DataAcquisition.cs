@@ -108,7 +108,7 @@ namespace Paradox_Editor
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
             var ExtractedData = new TextFileExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
 
-            var provinceIDToCoreTAGs = new Dictionary<string, string>();
+            var provinceIDToCoreTAGs = new Dictionary<string, List<string>>();
 
             var provinceIDToOwnerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
             var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
@@ -126,16 +126,27 @@ namespace Paradox_Editor
                 }
             }
 
+
             foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
             {
                 if (entry.Value.Core.Count != 0)
                 {
-                    provinceIDToCoreTAGs.Add(entry.Key, entry.Value.Core[0]);
+                    var coreList = new List<string>();
+
+
+                    for (int i = 0; i < entry.Value.Core.Count; i++)
+                    {
+                        coreList.Add(entry.Value.Core[i]);
+                    }
+
+                    provinceIDToCoreTAGs.Add(entry.Key, coreList);
+                    
                 }
                 else
                 {
-                    provinceIDToCoreTAGs.Add(entry.Key, "noCores");
+                    provinceIDToCoreTAGs.Add(entry.Key, null);
                 }
+
             }
 
             return new ProvinceOutputData()
