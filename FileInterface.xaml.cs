@@ -24,6 +24,7 @@ namespace Paradox_Editor
     {
 
         //public ObservableCollection<string> CoreDisplay { get; set; } = new ObservableCollection<string>();
+        public static ObservableCollection<string> TestCoreList = new ObservableCollection<string>();
 
 
         private Point start;

@@ -14,6 +14,8 @@ namespace Paradox_Editor
 {
     public class DataAcquisition
     {
+
+
         public DataAcquisition()
         {
         }
@@ -121,7 +123,7 @@ namespace Paradox_Editor
                 }
                 else
                 {
-                    provinceIDToOwnerTAG.Add(entry.Key, "noOwner");
+                    provinceIDToOwnerTAG.Add(entry.Key, "nOwner");
                     provinceIDToControllerTAG.Add(entry.Key, "noController");
                 }
             }

@@ -21,6 +21,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Paradox_Editor.B_Data_Functions;
 using System.Linq;
+using System.Windows.Data;
 
 namespace Paradox_Editor
 {
@@ -61,7 +62,7 @@ namespace Paradox_Editor
             Canvas.CaptureMouse();
         }
 
-        public void MoveTimer_Tick(object sender, EventArgs e) //Add compatibility for alternate control mode
+        public void MoveTimerTick(object sender, EventArgs e) //Add compatibility for alternate control mode
         {
             double velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
             var flipCheck = 1;
@@ -109,54 +110,22 @@ namespace Paradox_Editor
             var bitmap = BitmapFromSource(source);
             var pixelColor = bitmap.GetPixel(pixelX, pixelY);
 
-            if (FolderSelect.IsMapLoaded)
-            {
-                var windowPos = e.GetPosition(MainWindow);
-                MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
-                //Get positioning right. Also add animation?
+            var windowPos = e.GetPosition(MainWindow);
+            MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
+            //Get positioning right. Also add animation?
 
-                MainWindow.FileInterface.Visibility = Visibility.Visible;
-                MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
+            MainWindow.FileInterface.Visibility = Visibility.Visible;
+            MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
 
-                MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(pixelColor);
+            var boxBinding = new InterfaceHistoryfileBinding(MainWindow, pixelColor,
+                MainWindow.SelectMap.StoredProvinceColorToID,
+                MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
+                MainWindow.SelectMap.StoredTagToCountryName);
+            boxBinding.PutTAGDataIntoInferface();
+            boxBinding.PutOtherDataIntoInferface();
 
-                var storedColorToID = MainWindow.SelectMap.StoredProvinceColorToID;
-                var storedProvinceIDToData = MainWindow.SelectMap.StoredProvinceIDToDataDictionaries;
-                var storedTagToCountryName = MainWindow.SelectMap.StoredTagToCountryName;
 
-
-                if (storedColorToID.TryGetValue(pixelColor.R + " " + pixelColor.G + " " + pixelColor.B, out var ProvinceID))
-                {
-                    MainWindow.FileInterface.PROVIDBOX.Text = Convert.ToString(ProvinceID);
-                    if (storedProvinceIDToData.IDToName.TryGetValue(ProvinceID, out var ProvinceName))
-                    ///THE PROVINCE NAME IS READ AS THE NAME OF THE FILE ; CHANGE TO READ CSV PROPER NAME
-                    {
-                        MainWindow.FileInterface.NAMEBOX.Text = Convert.ToString(ProvinceName);
-                    }
-                    if (storedProvinceIDToData.IDToOwner.TryGetValue(ProvinceID, out var ownerTAG))
-                    {
-                        MainWindow.FileInterface.OWNERBOX.Text = Convert.ToString(ownerTAG);
-                    }
-                    if (storedProvinceIDToData.IDToController.TryGetValue(ProvinceID, out var controllerTAG))
-                    {
-                        MainWindow.FileInterface.CONTROLLERBOX.Text = Convert.ToString(controllerTAG);
-                    }
-
-                    if (storedProvinceIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCore))
-                    {
-
-                        string aa = "aa,xx,cc,vv,bbb,hh,gg,rr,tt,yy,uu,ooo";
-                        MainWindow.TestCoreList.Add(aa);
-                        //MainWindow.FileInterface.COREGRID.Items.Add(aa.Split(',').Select(x => new MyItem() { Id = x }));
-                        //Getting cores to display
-
-                    }
-
-                }
-
-            }
         }
-
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)
         {

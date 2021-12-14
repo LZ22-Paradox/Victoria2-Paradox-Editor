@@ -28,7 +28,8 @@
 
     <Grid x:Name="mainWindowGrid">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="73*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="270*"/>
@@ -36,19 +37,20 @@
         </Grid.ColumnDefinitions>
 
 
-        <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,20" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212">
-        </local:MapModesControl>
+        <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+        Margin="0,0,18,15" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212" Grid.Row="1"/>
 
-        <local:FileInterface x:Name="FileInterface" Visibility="Visible" HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Column="1" Panel.ZIndex="5" Margin="0,0,0,0" Height="267" Width="372"/>
+        <local:FileInterface x:Name="FileInterface" Visibility="Visible" HorizontalAlignment="Left"  VerticalAlignment="Top"
+        Grid.Column="1" Panel.ZIndex="5" Margin="0,25,0,0" Grid.Row="1"  Height="267" Width="372" Grid.RowSpan="2"/>
 
-        <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Background="Purple" Panel.ZIndex="2" Height="56" Margin="417,0,310,0"/>
+        <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" VerticalAlignment="Top" Background="Purple" Width="200" Panel.ZIndex="2" Height="40" Margin="400,25,0,0" Grid.Row="1"/>
 
-        <Button x:Name="button" Content="SEL" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="21" Height="25" Click="SelectMasterFolder_Click" Margin="20,15,0,0" Grid.Column="0" Panel.ZIndex="1"/>
+        <Button x:Name="button" Content="SELECT" HorizontalAlignment="Left" VerticalAlignment="Top"
+        Width="50" Height="25" Click="SelectMasterFolder_Click" Margin="20,15,0,0" Grid.Column="0" Panel.ZIndex="1" Grid.RowSpan="2"/>
 
-        <DataGrid x:Name="fileListView" Margin="20,15,0,10" AlternatingRowBackground="#FFE2E2E2"
+        <DataGrid x:Name="fileListView" Margin="20,15,0,9" AlternatingRowBackground="#FFE2E2E2"
                   ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}"
-                  AutoGenerateColumns="False" CanUserAddRows="False">
+                  AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible" Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn/>
                 <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID}"/>
@@ -63,7 +65,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="GameSelected">
+        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="15,12,0,0"
+                  VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="GameSelected" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Vic2" Content="N/A">
             </ListBoxItem>
             <ListBoxItem Content="Victoria II" FontFamily="18thCentury" FontSize="20" FontWeight="Bold">
@@ -79,7 +82,8 @@
         </ComboBox>
 
 
-        <Expander x:Name="ControlsExpander" Grid.Column="1" VerticalAlignment="Top" Header="Controls" Height="200" Margin="700,0,0,480" Width="200" IsExpanded="False" Panel.ZIndex="2">
+        <Expander x:Name="ControlsExpander" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Header="Controls"
+                  Height="200" Margin="0,12,20,0" Width="200" HorizontalAlignment="Right" IsExpanded="False" Panel.ZIndex="2" Grid.RowSpan="2">
             <Grid Background="#FFE5E5E5">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -105,15 +109,15 @@
             </Grid>
         </Expander>
 
-        <ComboBox x:Name="ControlSelect" HorizontalAlignment="Center" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="15,0,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ControlChange">
+        <ComboBox x:Name="ControlMode" HorizontalAlignment="Left" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="178,12,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ControlChange" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Standard" Content="Standard">
             </ListBoxItem>
             <ListBoxItem x:Name="PDN" Content="Paint.NET">
             </ListBoxItem>
         </ComboBox>
 
-        <Grid x:Name="mapGrid" Margin="16,20,20,10" Background="#FF909090" Grid.Column="1"
-              Panel.ZIndex="1">
+        <Grid x:Name="mapGrid" Margin="10,10,20,15" Background="Transparent" Grid.Column="1"
+              Panel.ZIndex="1" Grid.Row="1">
             <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto" AllowDrop="True">
 

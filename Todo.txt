@@ -9,14 +9,6 @@ to editing them directly; which may cause more complications than necessary.
 
 D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     O_ CREATE NEW TEXT FILE
-        * Upsides:
-
-        * Downsides:
-    
-    O_ EDIT EXISTING TEXT FILE ENTRIES
-        * Upsides:
-    
-        * Downsides:
 
 
 
@@ -25,13 +17,23 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with cutoff
-    - Fix Core Listing on FileInterface
-    - Combine a couple lists. [ie. ToName into the main IDTo (If applicable)]
-            (ProvinceIDDictioanries may be worthless)
+    - Fix Core (XPATH or PATH) being Two-Way
+    - Fix Map-Mode Switching to Political on First Mode-Switch
 
-3. Fix Two Problem Provinces [Vanilla Environment]
+2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
+
+#. Copy all pixels of certain color
+    - Invert
+        o make new bitmap
+            * Put on new layer 
+                [] Flicker when color selected
+
+    - Use Child Window for File Interface
+        * Copy File & Override the respective-line
+
+
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
@@ -43,6 +45,11 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - Merge data variables
         o Try to merge some dictionaries that may not be needed when left alone, if possible.
             * This requires a search-through for every dictionary
+
+
+
+
+
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.
@@ -63,8 +70,23 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 
 #. Impliment toggle-able layer of edges between provinces. (Togglable Borders)
+    * BORDER DRAWING ASSISTANCE [Cif3#8372 assisting]
+    have to do edge detection first
+    go thro the whole image x by y axis. IF the color changes then you know you are on the border, change the pixel to black
+    choose which color would look pixel on border when 2 color are aside each other 
+    there's a non-optimized dumb way for edge detection
+    you take any pixel, then goes full left / full right
+    (until the color change)
+    you note the extremity
+    that gives you a contigous line
+    then you foreach(poitn in line)
+    and you check the pixel UP and DOWN on that line
+    and you do it again <== and you have all your shape founds
+
 
 #. Add Fort Mapmode
+
+
 
 #. Add States Mapmode
 

@@ -17,6 +17,13 @@ namespace Paradox_Editor.B_Map_Functions
         public Dictionary<string, HistoryFile> provinceIDToHistoryFileDictionary;
         public Dictionary<string, string> provinceIDToControllerDictionary;
 
+        public class ProvinceIDDictionaries
+        {
+            public Dictionary<string, string> ToFile { get; set; }
+            public Dictionary<string, string> ToName { get; set; }
+            public Dictionary<string, HistoryFile> ToHistoryFile { get; set; }
+        }
+
         public ObservableCollection<HistoryFile> HistoryFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
         public TextFileExtractor(string[] filepath, ObservableCollection<ProvinceFile> datasend)

@@ -38,15 +38,22 @@
             <Image Source="/Preloaded_Assets/VIC2/Icons/VIC2_Exit.png" Stretch="Uniform" Margin="0,0,0,0"/>
         </Button>
 
-
+        
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
-            <Grid>
+            <Grid x:Name="ViewerGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
+
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
@@ -78,31 +85,58 @@
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
 
-                <TextBlock Text="Core(s)" Grid.Row="3" Grid.Column="0" FontFamily="Arial"
+                <TextBlock Text="Trade Good" Grid.Row="3" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                
-                
+                <TextBox x:Name="TRADEGOODBOX" Text="grain" Grid.Row="3" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+
+                <TextBlock Text="Life Rating" Grid.Row="4" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="LIFERATINGBOX" Text="35" Grid.Row="4" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+
+                <TextBlock Text="Colonial Level" Grid.Row="5" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="COLONIALBOX" Text="0" Grid.Row="5" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+
+                <TextBlock Text="Core(s)" Grid.Row="6" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+
+                <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                        Background="{x:Null}" Height="20" Width="20">
+                    <Image Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
+                </Button>
+
                 <!--This datagrid is a pain. Loading list of cores into.-->
-                <DataGrid x:Name="COREGRID" Grid.Column="1" Grid.RowSpan="2" Grid.Row="3"
-                          Background="{x:Null}" BorderBrush="{x:Null}" AlternationCount="2" Width="170"
-                          Margin="0,0,0,-149" HorizontalAlignment="Center"
-                          HorizontalContentAlignment="Center" Focusable="False" AllowDrop="False"
-                          SelectionMode="Single" HeadersVisibility="None"
-                          ItemsSource="{Binding TestCoreList}">
+                <DataGrid x:Name="COREGRID" Grid.Column="1" Grid.Row="5"
+                          Margin="30,30,29,-100"
+                          HeadersVisibility="None"
+                          DataContext="{StaticResource ItemCollectionViewSource}"
+                          ItemsSource="{Binding}"
+                          AutoGenerateColumns="False"
+                          Background="{x:Null}" FontSize="14" 
+                          FontFamily="Arial"
+                          Grid.RowSpan="2" FontWeight="Normal"
+                          >
+
+                    <!--System.InvalidOperationException: 'Two-way binding requires Path or XPath.'-->
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="TAG"/>
-                    </DataGrid.Columns>
 
-                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
-                                  HorizontalAlignment="Center"/>
-                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
-                                  HorizontalAlignment="Center"/>
-                    <TextBox Text="BUR" FontSize="14" FontFamily="Arial"
-                                  HorizontalAlignment="Center"/>
- 
+                        <DataGridTextColumn Header="TAG" Binding="{Binding Path=.}"/>
+                    </DataGrid.Columns>
 
                 </DataGrid>
 
@@ -112,8 +146,6 @@
             </Grid>
 
         </ScrollViewer>
-
-
 
         <Image x:Name="background" Source="/Preloaded_Assets/VIC2/Images/provinceInterface.png"
                Grid.RowSpan="6" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>

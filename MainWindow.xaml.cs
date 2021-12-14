@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -24,8 +25,7 @@ namespace Paradox_Editor
         public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
-        
-        public static ObservableCollection<string> TestCoreList = new ObservableCollection<string>();
+
 
         public MainWindow()
         {
@@ -39,9 +39,11 @@ namespace Paradox_Editor
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
 
+
+
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(0.01);
-            timer.Tick += new EventHandler(Navigator.MoveTimer_Tick);
+            timer.Tick += new EventHandler(Navigator.MoveTimerTick);
             timer.Start();
 
         }
@@ -70,7 +72,7 @@ namespace Paradox_Editor
                 {
                     Navigator.MouseDown(sender, e);
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed)
+                else if (e.LeftButton == MouseButtonState.Pressed && FolderSelect.IsMapLoaded)
                 {
                     Navigator.MouseLeftClick(sender, e);
                 }
@@ -133,7 +135,7 @@ namespace Paradox_Editor
 
         private void ControlChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            CurrentControlMode = ControlSelect.SelectedIndex;
+            CurrentControlMode = ControlMode.SelectedIndex;
 
         }
 
