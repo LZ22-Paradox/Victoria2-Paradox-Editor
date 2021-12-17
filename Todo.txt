@@ -16,8 +16,10 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         o NEW IDEA: CUT PAST THE # IN TEXT FILES, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
 
 1. Impliment basic province interfacing (click a province, get the file)
-    - Fix Issue with cutoff
+    - Fix Issue with interface cutoff
     - Fix Core (XPATH or PATH) being Two-Way
+    - Core list expanding the scrollable area as cores increase.
+        o See Interfacing Implimentation
     - Fix Map-Mode Switching to Political on First Mode-Switch
 
 2. Fix Two Problem Provinces [Vanilla Environment]
@@ -152,4 +154,4 @@ CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
 
-   //ZBAGI\\
+   //ZBAGI | SPR2\\

@@ -25,9 +25,9 @@ using System.Windows.Data;
 
 namespace Paradox_Editor
 {
+
     public class NavigationHandler
     {
-
         private Point start;
         private List<Image> Images = new List<Image>();
         private Canvas Canvas;

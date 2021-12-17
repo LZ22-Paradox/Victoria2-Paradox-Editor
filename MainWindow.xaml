@@ -50,7 +50,8 @@
 
         <DataGrid x:Name="fileListView" Margin="20,15,0,9" AlternatingRowBackground="#FFE2E2E2"
                   ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}"
-                  AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible" Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
+                  AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible"
+                  Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn/>
                 <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID}"/>

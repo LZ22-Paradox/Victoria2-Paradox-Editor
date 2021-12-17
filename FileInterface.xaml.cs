@@ -1,9 +1,11 @@
 ﻿using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Class_Types;
+using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,19 +24,24 @@ namespace Paradox_Editor
 
     public partial class FileInterface : UserControl
     {
-
-        //public ObservableCollection<string> CoreDisplay { get; set; } = new ObservableCollection<string>();
-        public static ObservableCollection<string> TestCoreList = new ObservableCollection<string>();
-
+        public ObservableCollection<CoreData> CoreDataCollection { get; }
 
         private Point start;
 
         public FileInterface()
         {
-            InitializeComponent();
+
+            CoreDataCollection = new ObservableCollection<CoreData>()
+            {
+                new CoreData("FRA"),
+                new CoreData("GER")
+            };
+
+
             this.MouseLeftButtonDown += new MouseButtonEventHandler(LeftButtonDown);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(LeftButtonUp);
             this.MouseMove += new MouseEventHandler(Grid_MouseMove);
+            InitializeComponent();
         }
 
         public void ExitClicked(object sender, EventArgs e)
@@ -69,6 +76,21 @@ namespace Paradox_Editor
             m.OffsetX -= start.X - end.X;
             m.OffsetY -= start.Y - end.Y;
             this.RenderTransform = new MatrixTransform(m);
+        }
+
+        public void RemoveCoreRow(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = COREGRID.SelectedItem;
+            COREGRID.Items.Remove(selectedItem);
+
+
+            Debug.WriteLine("Testremoved");
+        }
+
+        public void AddCoreRow(object sender, RoutedEventArgs e)
+        {
+            COREGRID.Items.Add("TESTADD"); //Doesn't work. See binding to Observeable.
+            Debug.WriteLine("Testadded");
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using Paradox_Editor.D_Class_Types;
+using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Data;
@@ -50,15 +52,20 @@ namespace Paradox_Editor.C_Window_Functions
                     MainWindow.FileInterface.CONTROLLERBOX.Text = Convert.ToString(controllerTAG);
                 }
 
-                if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCore))
+                if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
 
-                    CollectionViewSource itemCollectionViewSource;
-                    itemCollectionViewSource = (CollectionViewSource)Application.Current.FindResource("ItemCollectionViewSource");
-                    itemCollectionViewSource.Source = null;
-                    itemCollectionViewSource.Source = ProvinceCore;
-
+                    /*CoreData newData = new CoreData(ProvinceCores);
+                    CoreDataCollection.Add(newData);
+                    
+                     
+                     void Button_Click(object sender, RoutedEventArgs e) {
+  CoreData newData = new CoreData("New Tag");
+  Data.Add(newData);
+}*/
                 }
+
+
 
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(PixelColor.R + "," + PixelColor.G + "," + PixelColor.B);
 

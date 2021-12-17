@@ -4,20 +4,7 @@
                 xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:local="clr-namespace:Paradox_Editor"
              StartupUri="MainWindow.xaml">
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ResourceDictionary.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            
-            <CollectionViewSource x:Key="ItemCollectionViewSource" CollectionViewType="ListCollectionView"/>
-            
-        </ResourceDictionary>
-        
-    </Application.Resources>
     
-    
-
 </Application>
     
     
