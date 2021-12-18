@@ -17,16 +17,20 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
-    - Fix Core (XPATH or PATH) being Two-Way
     - Core list expanding the scrollable area as cores increase.
-        o See Interfacing Implimentation
+    - Add potential "Stored Data" of edited provinces
+        o See new class that saves what file was changed & its data
+    - Add Save-Icon Changing
+        o Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
+            * SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
+    - Make map non-navigatable by WASD if the map isn't selected
     - Fix Map-Mode Switching to Political on First Mode-Switch
 
 2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
-#. Copy all pixels of certain color
+#. Making & Flickering Province || Copy all pixels of certain color
     - Invert
         o make new bitmap
             * Put on new layer 
@@ -35,7 +39,9 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - Use Child Window for File Interface
         * Copy File & Override the respective-line
 
-
+#. Decorative Fixes
+    - Fix Save Icon & Visual Handler Compatibility
+    - Fix X-Icon & Visual Handler Compatibility
 
 #. Optimize for performance
     - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
@@ -44,13 +50,10 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
             * See ways for specific replacement
-    - Merge data variables
+    - Merge variables and classes
         o Try to merge some dictionaries that may not be needed when left alone, if possible.
             * This requires a search-through for every dictionary
-
-
-
-
+    - Speed up map navigation
 
 
 #. Impliment visibility for SIMPLE terrain map mode.
@@ -58,6 +61,7 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
         o Absolutely NO pixel manipulation required.
     - Simplified: Reads history files. Blank files give black output. Others give certain colours.
         o Dig in game files
+
 
 
 #. Game-tester button to open the respective game with the mod
@@ -87,8 +91,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 
 #. Add Fort Mapmode
-
-
 
 #. Add States Mapmode
 
@@ -154,4 +156,4 @@ CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
 
-   //ZBAGI | SPR2\\
+   //ZBAGI | SPR2(Unavailable for 2 weeks)\\

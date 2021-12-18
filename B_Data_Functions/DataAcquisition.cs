@@ -123,7 +123,7 @@ namespace Paradox_Editor
                 }
                 else
                 {
-                    provinceIDToOwnerTAG.Add(entry.Key, "nOwner");
+                    provinceIDToOwnerTAG.Add(entry.Key, "noOwner");
                     provinceIDToControllerTAG.Add(entry.Key, "noController");
                 }
             }

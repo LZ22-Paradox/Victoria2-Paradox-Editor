@@ -123,7 +123,7 @@ namespace Paradox_Editor
                 MainWindow.SelectMap.StoredTagToCountryName);
             boxBinding.PutTAGDataIntoInferface();
             boxBinding.PutOtherDataIntoInferface();
-
+            MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
 
         }
 

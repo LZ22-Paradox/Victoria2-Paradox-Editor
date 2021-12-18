@@ -142,13 +142,15 @@
                           Background="{x:Null}" FontSize="14" 
                           FontFamily="Arial"
                           Grid.RowSpan="4" FontWeight="Normal"
-                          Width="100"
+                          Width="81"
                           ItemsSource="{Binding CoreDataCollection}"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Visible"
                           >
                     <!--System.InvalidOperationException: 'Two-way binding requires Path or XPath.'-->
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="TAG" Binding="{Binding TAG}" Width="40"/>
+                        <DataGridTextColumn x:Name="TAG" Binding="{Binding TAG}" Width="40" />
                         
                         <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="22">
                             <DataGridTemplateColumn.CellTemplate>

@@ -1,42 +1,26 @@
 ﻿using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D_Class_Types;
 using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Paradox_Editor
 {
 
     public partial class FileInterface : UserControl
     {
-        public ObservableCollection<CoreData> CoreDataCollection { get; }
+        public ObservableCollection<CoreData> CoreDataCollection { get; set; } = new ObservableCollection<CoreData>();
 
         private Point start;
 
         public FileInterface()
         {
-
-            CoreDataCollection = new ObservableCollection<CoreData>()
-            {
-                new CoreData("FRA"),
-                new CoreData("GER")
-            };
-
 
             this.MouseLeftButtonDown += new MouseButtonEventHandler(LeftButtonDown);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(LeftButtonUp);
@@ -80,22 +64,36 @@ namespace Paradox_Editor
 
         public void RemoveCoreRow(object sender, RoutedEventArgs e)
         {
-            var selectedItem = COREGRID.SelectedItem;
-            COREGRID.Items.Remove(selectedItem);
-
-
-            Debug.WriteLine("Testremoved");
+            CoreDataCollection.RemoveAt(COREGRID.SelectedIndex); //Removes first entry, not selected entry
+            Debug.WriteLine("Removed Core");
         }
 
         public void AddCoreRow(object sender, RoutedEventArgs e)
         {
-            COREGRID.Items.Add("TESTADD"); //Doesn't work. See binding to Observeable.
-            Debug.WriteLine("Testadded");
+            CoreData core = new CoreData("");
+            CoreDataCollection.Add(core);
         }
 
+        public void AddExistingCores(object sender, RoutedEventArgs e, MainWindow MainWindow, System.Drawing.Color PixelColor)
+        {
+            CoreDataCollection.Clear();
+            var boxBinding = new InterfaceHistoryfileBinding(MainWindow, PixelColor,
+                MainWindow.SelectMap.StoredProvinceColorToID,
+                MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
+                MainWindow.SelectMap.StoredTagToCountryName);
 
-        //
+            var coresList = boxBinding.GetCoreList();
+            if (coresList != null) //Oceans don't have cores; they're null
+            {
+                foreach (var coreEntry in coresList) //SOURCE OF ERROR
+                                                     //Clicking on ocean province doesn't have anything good
+                {
+                    CoreData core = new CoreData(coreEntry);
+                    CoreDataCollection.Add(core);
+                }
+            }
 
+        }
 
     }
 }

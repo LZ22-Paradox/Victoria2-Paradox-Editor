@@ -55,21 +55,28 @@ namespace Paradox_Editor.C_Window_Functions
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
 
-                    /*CoreData newData = new CoreData(ProvinceCores);
-                    CoreDataCollection.Add(newData);
-                    
-                     
-                     void Button_Click(object sender, RoutedEventArgs e) {
-  CoreData newData = new CoreData("New Tag");
-  Data.Add(newData);
-}*/
+                    var outputCores = ProvinceCores;
                 }
-
 
 
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(PixelColor.R + "," + PixelColor.G + "," + PixelColor.B);
 
             }
+        }
+
+        public List<string> GetCoreList()
+        {
+
+            if (ColorToID.TryGetValue(PixelColor.R + " " + PixelColor.G + " " + PixelColor.B, out var ProvinceID))
+            {
+                if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
+                {
+                    var outputCores = ProvinceCores;
+                    return outputCores;
+                }
+                
+            }
+            return null;
         }
 
         public void PutOtherDataIntoInferface()
