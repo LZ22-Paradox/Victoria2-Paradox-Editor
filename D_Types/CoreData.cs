@@ -9,14 +9,17 @@ namespace Paradox_Editor.D_Types
 
     public class CoreData
     {
-        public CoreData(string tag) => TAG = tag;
+        public CoreData(string tag)
+        {
+            TAG = tag;
+        }
 
         private string tag { get; set; }
 
         public string TAG
         {
-            get { return tag; }
-            set { tag = value; }
+            get => tag;
+            set => tag = value;
         }
 
         /*public string TAG

@@ -17,7 +17,6 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
-    - Core list expanding the scrollable area as cores increase.
     - Add potential "Stored Data" of edited provinces
         o See new class that saves what file was changed & its data
     - Add Save-Icon Changing
@@ -25,6 +24,16 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
             * SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
     - Make map non-navigatable by WASD if the map isn't selected
     - Fix Map-Mode Switching to Political on First Mode-Switch
+    - Add Terrain Compatibility
+    - Add State_Building Compatibility
+    - Clicking "Exit" Saves data entered
+        o Opens a menu asking wether or not to save province data you entered
+    - Fix Map Location Difference
+    - Add Stripey Lines for Controllers (Owners are flat colour
+    - Remove the .txt of the Left-Panel & the FileInterface's Province-Name's field
+    - Click & Edit provinces in country map mode
+        o Have borders for all provinces to distinguish
+    - Add sound-effects to FileInterface buttons
 
 2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt

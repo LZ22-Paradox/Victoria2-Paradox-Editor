@@ -14,14 +14,7 @@ using Cursors = System.Windows.Input.Cursors;
 using Application = System.Windows.Application;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using Control = System.Windows.Forms.Control;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Paradox_Editor.B_Data_Functions;
-using System.Linq;
-using System.Windows.Data;
 
 namespace Paradox_Editor
 {
@@ -117,7 +110,7 @@ namespace Paradox_Editor
             MainWindow.FileInterface.Visibility = Visibility.Visible;
             MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
 
-            var boxBinding = new InterfaceHistoryfileBinding(MainWindow, pixelColor,
+            var boxBinding = new InterfaceHistoryfile(MainWindow, pixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);

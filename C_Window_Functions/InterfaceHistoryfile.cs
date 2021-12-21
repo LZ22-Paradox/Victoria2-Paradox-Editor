@@ -10,7 +10,7 @@ using System.Windows.Data;
 namespace Paradox_Editor.C_Window_Functions
 {
 
-    public class InterfaceHistoryfileBinding
+    public class InterfaceHistoryfile
     {
 
         private MainWindow MainWindow;
@@ -20,7 +20,7 @@ namespace Paradox_Editor.C_Window_Functions
         private Dictionary<string, string> TAGToName;
 
 
-        public InterfaceHistoryfileBinding(MainWindow mainWindow, Color pixelColor, Dictionary<string, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
+        public InterfaceHistoryfile(MainWindow mainWindow, Color pixelColor, Dictionary<string, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
         {
             PixelColor = pixelColor;
             ColorToID = storedColorToID;

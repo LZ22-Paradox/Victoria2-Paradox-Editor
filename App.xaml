@@ -4,7 +4,11 @@
                 xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
              xmlns:local="clr-namespace:Paradox_Editor"
              StartupUri="MainWindow.xaml">
-    
+
+    <Application.Resources>
+        <SolidColorBrush x:Key="theBackgroundBrush" Color="DeepPink" />
+        <SolidColorBrush x:Key="theForegroundBrush" Color="Black" />
+    </Application.Resources>
 </Application>
     
     

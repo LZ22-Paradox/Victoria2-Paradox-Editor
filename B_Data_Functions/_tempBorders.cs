@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Paradox_Editor.B_Data_Functions
 {
-    public class _tempCoreClass
+    public class _tempBorders
     {
         public string Id { get; set; }
 

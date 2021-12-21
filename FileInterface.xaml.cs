@@ -16,11 +16,14 @@ namespace Paradox_Editor
     public partial class FileInterface : UserControl
     {
         public ObservableCollection<CoreData> CoreDataCollection { get; set; } = new ObservableCollection<CoreData>();
+        public static InterfaceRowHandler InterfaceHandler { get; set; } = new InterfaceRowHandler();
+
 
         private Point start;
 
         public FileInterface()
         {
+            InterfaceHandler.MainWindow = (MainWindow)Application.Current.MainWindow;
 
             this.MouseLeftButtonDown += new MouseButtonEventHandler(LeftButtonDown);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(LeftButtonUp);
@@ -64,20 +67,32 @@ namespace Paradox_Editor
 
         public void RemoveCoreRow(object sender, RoutedEventArgs e)
         {
-            CoreDataCollection.RemoveAt(COREGRID.SelectedIndex); //Removes first entry, not selected entry
-            Debug.WriteLine("Removed Core");
+            CoreDataCollection.RemoveAt(COREGRID.SelectedIndex); //Removes Core
+            InterfaceHandler.RemoveRowFromCoreList();
+
         }
 
         public void AddCoreRow(object sender, RoutedEventArgs e)
         {
+
             CoreData core = new CoreData("");
-            CoreDataCollection.Add(core);
+            CoreDataCollection.Add(core); //Adds the Blank Core
+
+            InterfaceHandler.AddRowFromCoreList();
+
+        }
+
+        public void ResetCores(object sender, RoutedEventArgs e)
+        {
+            CoreDataCollection.Clear();
+            InterfaceHandler.ResetRowsFromCoreList();
         }
 
         public void AddExistingCores(object sender, RoutedEventArgs e, MainWindow MainWindow, System.Drawing.Color PixelColor)
         {
             CoreDataCollection.Clear();
-            var boxBinding = new InterfaceHistoryfileBinding(MainWindow, PixelColor,
+            InterfaceHandler.ResetRowsFromCoreList();
+            var boxBinding = new InterfaceHistoryfile(MainWindow, PixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);
@@ -85,11 +100,12 @@ namespace Paradox_Editor
             var coresList = boxBinding.GetCoreList();
             if (coresList != null) //Oceans don't have cores; they're null
             {
-                foreach (var coreEntry in coresList) //SOURCE OF ERROR
-                                                     //Clicking on ocean province doesn't have anything good
+                foreach (var coreEntry in coresList)
                 {
                     CoreData core = new CoreData(coreEntry);
                     CoreDataCollection.Add(core);
+
+                    InterfaceHandler.AddRowFromCoreList();
                 }
             }
 
