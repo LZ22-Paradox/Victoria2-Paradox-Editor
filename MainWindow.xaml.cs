@@ -40,7 +40,6 @@ namespace Paradox_Editor
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
 
 
-
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
@@ -50,8 +49,8 @@ namespace Paradox_Editor
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
-            MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
-            MapModesControl.UpdateMapModeVisibility(1, MapModesControl.CurrentGameMode);
+            MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+            MapModesControl.UpdateMapModeVisibility(1, MapModesControl.CurrentGameAssets.MapModeIconSet);
         }
 
         public void Map_MouseUp(object sender, MouseButtonEventArgs e)
@@ -116,18 +115,22 @@ namespace Paradox_Editor
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
-                MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
-
-                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameMode);
+                MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+                
+                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
+                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2"));
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("EU4");
-                MapModesControl.CurrentGameMode = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
-                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameMode);
+                MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
+                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("EU4"));
+
+                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
             }
             else
             {
+                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2"));
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
             }
             GameSoundHandler.SoundHandler.PlayConnectingSound();

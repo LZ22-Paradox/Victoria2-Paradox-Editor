@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media.Imaging;
 
-namespace Paradox_Editor.D__Static_Classes_Types
+namespace Paradox_Editor.D_Types
 {
     public class MapMode_IconSet
     {

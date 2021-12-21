@@ -20,7 +20,9 @@
     <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />
     <None Remove="Preloaded_Assets\EU4\Icons\button_add.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\button_exit.png" />
     <None Remove="Preloaded_Assets\EU4\Icons\button_remove.png" />
+    <None Remove="Preloaded_Assets\EU4\Icons\button_reset.png" />
     <None Remove="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOff.png" />
     <None Remove="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOn.png" />
     <None Remove="Preloaded_Assets\EU4\Icons\mapmode_TerrainOff.png" />
@@ -31,7 +33,9 @@
     <None Remove="Preloaded_Assets\EU4\Sounds\connecting.wav" />
     <None Remove="Preloaded_Assets\EU4\Sounds\validClick.wav" />
     <None Remove="Preloaded_Assets\VIC2\Icons\button_add.png" />
+    <None Remove="Preloaded_Assets\VIC2\Icons\button_exit.png" />
     <None Remove="Preloaded_Assets\VIC2\Icons\button_remove.png" />
+    <None Remove="Preloaded_Assets\VIC2\Icons\button_reset.png" />
     <None Remove="Preloaded_Assets\VIC2\Icons\VIC2_Exit.png" />
     <None Remove="Preloaded_Assets\VIC2\Images\main_bg.png" />
     <None Remove="Preloaded_Assets\VIC2\Images\provinceInterface.png" />
@@ -69,7 +73,9 @@
     <Resource Include="Preloaded_Assets\blank_world_map.png" />
     <Resource Include="Preloaded_Assets\BackgroundSelectVIC2.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\button_add.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\button_exit.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\button_remove.png" />
+    <Resource Include="Preloaded_Assets\EU4\Icons\button_reset.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOff.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_PoliticalOn.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_ProvincesOff.png" />
@@ -78,7 +84,9 @@
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_TerrainOn.png" />
     <Resource Include="Preloaded_Assets\EU4\Images\provinceInterface.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\button_add.png" />
+    <Resource Include="Preloaded_Assets\VIC2\Icons\button_exit.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\button_remove.png" />
+    <Resource Include="Preloaded_Assets\VIC2\Icons\button_reset.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_PoliticalOff.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_PoliticalOn.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\mapmode_ProvincesOff.png" />

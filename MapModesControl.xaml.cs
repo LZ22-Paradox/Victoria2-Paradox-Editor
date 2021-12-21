@@ -1,6 +1,5 @@
-﻿using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D__Static_Classes_Types;
+﻿using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.D_Types;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,26 +15,26 @@ namespace Paradox_Editor
         }
 
         public static int CurrentMapMode;//Political(0), Provinces(1), Terrain(2)
-        public static MapMode_IconSet CurrentGameMode;
+        public static HandledAssets CurrentGameAssets;
         
         private void MapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 0;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameMode);
+            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
             GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
         private void MapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameMode);
+            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
             GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameMode);
+            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
             GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
