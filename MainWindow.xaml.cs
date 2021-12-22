@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -45,7 +46,10 @@ namespace Paradox_Editor
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
             timer.Start();
 
+
         }
+
+
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
@@ -141,7 +145,5 @@ namespace Paradox_Editor
             CurrentControlMode = ControlMode.SelectedIndex;
 
         }
-
-
     }
 }

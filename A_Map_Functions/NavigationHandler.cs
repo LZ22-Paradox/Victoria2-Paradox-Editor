@@ -16,6 +16,7 @@ using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using System.Diagnostics;
 
+
 namespace Paradox_Editor
 {
 
@@ -24,6 +25,8 @@ namespace Paradox_Editor
         private Point start;
         private List<Image> Images = new List<Image>();
         private Canvas Canvas;
+        public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
+
 
         public NavigationHandler(Canvas canvas)
         {
@@ -57,6 +60,7 @@ namespace Paradox_Editor
 
         public void MoveTimerTick(object sender, EventArgs e) //Add compatibility for alternate control mode
         {
+            //Debug.WriteLine(Keyboard.FocusedElement + " is Focused");
             double velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
             var flipCheck = 1;
             if (MainWindow.IsImageFlipped == true)
@@ -64,37 +68,38 @@ namespace Paradox_Editor
                 flipCheck = -1;
             }
 
-            Images.ForEach(image =>
+            if (MainWindow.scrollViewer.IsFocused && MainWindow.ControlMode.SelectedItem.Equals(MainWindow.Mode_Modern))
             {
-                var matrix = image.RenderTransform.Value;
+                Images.ForEach(image =>
+                {
+                    var matrix = image.RenderTransform.Value;
 
-                if (Keyboard.IsKeyDown(Key.W))
-                {
-                    Debug.WriteLine("W");
-                    matrix.Translate(0, flipCheck * Math.Abs(velocity));
+                    if (Keyboard.IsKeyDown(Key.W) || Keyboard.IsKeyDown(Key.Up)) //UP
+                    {
+                        matrix.Translate(0, flipCheck * Math.Abs(velocity));
+                    }
+                    if (Keyboard.IsKeyDown(Key.A) || Keyboard.IsKeyDown(Key.Left)) //LEFT
+                    {
+                        matrix.Translate(Math.Abs(velocity), 0);
+                    }
+                    if (Keyboard.IsKeyDown(Key.S) || Keyboard.IsKeyDown(Key.Down)) //DOWN
+                    {
+                        matrix.Translate(0, -flipCheck * Math.Abs(velocity));
+                    }
+                    if (Keyboard.IsKeyDown(Key.D) || Keyboard.IsKeyDown(Key.Right)) //RIGHT
+                    {
+                        matrix.Translate(-Math.Abs(velocity), 0);
+                    }
 
-                }
-                if (Keyboard.IsKeyDown(Key.A))
-                {
-                    matrix.Translate(Math.Abs(velocity), 0);
-                }
-                if (Keyboard.IsKeyDown(Key.S))
-                {
-                    Debug.WriteLine("S");
-                    matrix.Translate(0, -flipCheck * Math.Abs(velocity));
-                }
-                if (Keyboard.IsKeyDown(Key.D))
-                {
-                    matrix.Translate(-Math.Abs(velocity), 0);
-                }
+                    image.RenderTransform = new MatrixTransform(matrix);
+                });
 
-                image.RenderTransform = new MatrixTransform(matrix);
-            });
+            }
+
         }
 
         public void MouseLeftClick(object sender, MouseButtonEventArgs e)
         {
-            var MainWindow = (MainWindow)Application.Current.MainWindow;
             var image = (Image)sender;
             var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
             var mousePos = e.GetPosition(image);
@@ -117,7 +122,6 @@ namespace Paradox_Editor
             boxBinding.PutTAGDataIntoInferface();
             boxBinding.PutOtherDataIntoInferface();
             MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
-
         }
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)
@@ -163,6 +167,7 @@ namespace Paradox_Editor
                 //make a translation matrix that matches the translation STATE of the image, apply current scaling
                 //factor and apply scaling factor to the translation. Apply scale to current translation
                 //m.gettranslation or something similar | bump down or so the translation state
+
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
                     if (e.Delta > 0)
@@ -178,35 +183,43 @@ namespace Paradox_Editor
                 }
                 else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
-                    if (e.Delta > 0)
+                    if (MainWindow.IsImageFlipped == true)
                     {
-                        matrix.Translate(0, -Math.Abs(e.Delta));
+                        if (e.Delta > 0)
+                        {
+                            matrix.Translate(0, -Math.Abs(e.Delta));
+                        }
+                        else
+                        {
+                            matrix.Translate(0, Math.Abs(e.Delta));
+                        }
                     }
                     else
                     {
-                        matrix.Translate(0, Math.Abs(e.Delta));
+                        if (e.Delta > 0)
+                        {
+                            matrix.Translate(0, Math.Abs(e.Delta));
+                        }
+                        else
+                        {
+                            matrix.Translate(0, -Math.Abs(e.Delta));
+                        }
                     }
-
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
                 else
-
                 {
                     if (e.Delta > 0) //adjusting scaling factor
                     {
                         matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
                     }
-                    //a translate may need to be included in order to get scale in order to match
-                    //m.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
-                    //the 1.1 values and hardcoded scale X&Y may need ot be changed at a later time
-
                     else
                     {
                         matrix.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
                     }
-
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
+
             });
         }
     }
