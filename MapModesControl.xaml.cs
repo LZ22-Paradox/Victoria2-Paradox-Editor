@@ -14,7 +14,7 @@ namespace Paradox_Editor
             InitializeComponent();
         }
 
-        public static int CurrentMapMode;//Political(0), Provinces(1), Terrain(2)
+        public int CurrentMapMode = 1;//Political(0), Provinces(1), Terrain(2)
         public static HandledAssets CurrentGameAssets;
         
         private void MapmodeButton_Political_Click(object sender, RoutedEventArgs e)

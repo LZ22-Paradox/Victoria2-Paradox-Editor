@@ -48,6 +48,7 @@
     <None Remove="Preloaded_Assets\VIC2\Sounds\connecting.wav" />
     <None Remove="provinces.bmp" />
     <None Remove="provinces.png" />
+    <None Remove="save_warning_button.gif" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +56,7 @@
     <PackageReference Include="Hangfire.Core" Version="1.7.24" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
@@ -100,6 +102,7 @@
     <Resource Include="Preloaded_Assets\EU4\Sounds\validClick.wav" />
     <Resource Include="Preloaded_Assets\VIC2\Sounds\connecting.wav" />
     <Resource Include="Preloaded_Assets\VIC2\Sounds\validClick.wav" />
+    <Resource Include="Preloaded_Assets\save_warning_button.gif" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,23 +13,33 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 
 ----====Must Do====----
-        o NEW IDEA: CUT PAST THE # IN TEXT FILES, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
+        o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
+
+                        >>>> 0. RE-SEPERATE TODO LIST IN MANAGABLE STEPS <<<
 
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
+        o Perhaps use VisualOffset instead of RenderTransform
     - Add potential "Stored Data" of edited provinces
         o See new class that saves what file was changed & its data
-    - Add Save-Icon Changing
-        o Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
-            * SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
+    - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
+    
+    - ADD FORT COMPATIBILITY
+    - GET HOTSPOT DEBUGGING
+    - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
+        o SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
+            * Add Save-Icon Changing
+                [] Create the "Saved" notif Icon
+                [] Add flashing for save icon
+
     - Make map non-navigatable by WASD if the map isn't selected
     - Fix Map-Mode Switching to Political on First Mode-Switch
     - Add Terrain Compatibility
     - Add State_Building Compatibility
     - Clicking "Exit" Saves data entered
         o Opens a menu asking wether or not to save province data you entered
-    - Fix Map Location Difference
-    - Add Stripey Lines for Controllers (Owners are flat colour
+    - Fix Province-Political Maps Location/Size Difference
+    - Add Stripey Lines for Controllers (Owners are the flat colour)
     - Remove the .txt of the Left-Panel & the FileInterface's Province-Name's field
     - Click & Edit provinces in country map mode
         o Have borders for all provinces to distinguish
@@ -165,4 +175,4 @@ CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
 
-   //ZBAGI | SPR2(Unavailable for 2 weeks)\\
+   //ZBAGI | SPR2(Unavailable for 2 weeks) | tannergooding (PERFORMANCE)\\

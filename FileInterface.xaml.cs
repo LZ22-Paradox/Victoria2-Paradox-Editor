@@ -28,6 +28,9 @@ namespace Paradox_Editor
             this.MouseLeftButtonDown += new MouseButtonEventHandler(LeftButtonDown);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(LeftButtonUp);
             this.MouseMove += new MouseEventHandler(Grid_MouseMove);
+
+            //
+
             InitializeComponent();
         }
 
@@ -62,7 +65,7 @@ namespace Paradox_Editor
             var m = this.RenderTransform.Value;
             m.OffsetX -= start.X - end.X;
             m.OffsetY -= start.Y - end.Y;
-            this.RenderTransform = new MatrixTransform(m);
+            this.RenderTransform = new MatrixTransform(m); //See VisualOffset for future alterations
         }
 
         public void RemoveCoreRow(object sender, RoutedEventArgs e)

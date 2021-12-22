@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -19,13 +20,12 @@ namespace Paradox_Editor
     {
         private NavigationHandler Navigator;
         public FolderSelect SelectMap;
-
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public static bool IsImageFlipped { get; set; } = false;
         public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public int CurrentGameMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
-
 
         public MainWindow()
         {
@@ -44,8 +44,8 @@ namespace Paradox_Editor
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
             timer.Start();
-
         }
+
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
@@ -65,17 +65,30 @@ namespace Paradox_Editor
 
         public void Map_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (CurrentControlMode == 0)
+
+            if (e.MiddleButton.Equals(MouseButtonState.Pressed)) //This is for the alternate types of interactions w. the map
             {
-                if (e.MiddleButton == MouseButtonState.Pressed)
+                if (mapModeButtons.CurrentMapMode == 0) //Political Mapmode
+                {
+                    //null
+                }
+                if (mapModeButtons.CurrentMapMode == 1) //Province Mapmode
                 {
                     Navigator.MouseDown(sender, e);
                 }
-                else if (e.LeftButton == MouseButtonState.Pressed && FolderSelect.IsMapLoaded)
+            }
+            else if (e.LeftButton.Equals(MouseButtonState.Pressed) && FolderSelect.IsMapLoaded)
+            {
+                if (mapModeButtons.CurrentMapMode == 0) //Political Mapmode
+                {
+                    //null
+                }
+                if (mapModeButtons.CurrentMapMode == 1) //Province Mapmode
                 {
                     Navigator.MouseLeftClick(sender, e);
                 }
             }
+
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -116,8 +129,8 @@ namespace Paradox_Editor
             {
                 GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
                 MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
-                
-                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
+
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
                 VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2"));
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
@@ -126,7 +139,7 @@ namespace Paradox_Editor
                 MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
                 VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("EU4"));
 
-                MapModesControl.UpdateMapModeVisibility(MapModesControl.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
             }
             else
             {
@@ -141,7 +154,5 @@ namespace Paradox_Editor
             CurrentControlMode = ControlMode.SelectedIndex;
 
         }
-
-
     }
 }
