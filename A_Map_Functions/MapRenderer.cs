@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Threading.Tasks;
 
 namespace Paradox_Editor.A_Map_Navigation
 {
@@ -12,13 +13,13 @@ namespace Paradox_Editor.A_Map_Navigation
         public WriteableBitmap FirstLayer;
         public WriteableBitmap SizeReference { get; set; }
 
-        private Dictionary<string, string> Dictionary1;
+        private Dictionary<uint, string> Dictionary1;
         private Dictionary<string, string> Dictionary2;
         private Dictionary<string, string> Dictionary3;
         private Dictionary<string, Color> Dictionary4;
 
 
-        public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, Color> dictionary4)
+        public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<uint, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, string> dictionary3, Dictionary<string, Color> dictionary4)
         {
             Image = image;
             FirstLayer = firstlayer;
@@ -31,37 +32,39 @@ namespace Paradox_Editor.A_Map_Navigation
             //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
         }
         
-        public void DrawProvinceMap()
+        public unsafe void DrawProvinceMap()
         {
-            for (int x = 0; x < FirstLayer.PixelWidth - 1; x++)
+            FirstLayer.Lock();
+            var pixels = (uint*)FirstLayer.BackBuffer;
+
+            var pixelCount = FirstLayer.PixelWidth * FirstLayer.PixelHeight;
+
+            Parallel.For(0, pixelCount, (index) =>
             {
-                for (int y = 0; y < FirstLayer.PixelHeight - 1; y++)
+                var rawPixel = pixels[index];
+
+                if (
+                    Dictionary1.TryGetValue(rawPixel, out var provinceID) &&
+                    Dictionary2.TryGetValue(provinceID, out var countryTAG) &&
+                    Dictionary3.TryGetValue(countryTAG, out var countryName) &&
+                    Dictionary4.TryGetValue(countryName, out var countryColor))
                 {
-                    var pixel = FirstLayer.GetPixel(x, y); //Error is thrown here
-                    if (
-                        Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var provinceID) &&
-                        Dictionary2.TryGetValue(provinceID, out var countryTAG) &&
-                        Dictionary3.TryGetValue(countryTAG, out var countryName) &&
-                        Dictionary4.TryGetValue(countryName, out var countryColor))
-                    {
-                        SizeReference.FillRectangle(x, y, x + 1, y + 1, countryColor); //Draws the country colors
-                    }
-                    else if(Dictionary1.TryGetValue(pixel.R + " " + pixel.G + " " + pixel.B, out var UncolonizedID)
-                        && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
-                    {
-                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(255, 255, 255)); //Draw missing data in black
-                    }
-                    else
-                    {
-                        SizeReference.FillRectangle(x, y, x + 1, y + 1, Color.FromRgb(0, 0, 0)); //Draw missing data in white
-                    }
-
-                    ///This is the area for significant change; different modes.
-
+                    pixels[index] = (0xFFu << 24) | ((uint)countryColor.R << 16) | ((uint)countryColor.G << 8) | ((uint)countryColor.B);
+                }
+                else if (Dictionary1.TryGetValue(rawPixel, out var UncolonizedID)
+                    && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
+                {
+                    pixels[index] = uint.MaxValue;
+                }
+                else
+                {
+                    pixels[index] = 0xFF000000u;
                 }
 
-            }
+                ///This is the area for significant change; different modes.
+            });
 
+            FirstLayer.Unlock();
         }
 
         public void DrawStateMap()

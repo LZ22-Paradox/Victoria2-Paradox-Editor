@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Paradox_Editor
 {
@@ -48,9 +49,9 @@ namespace Paradox_Editor
             };
         }
 
-        public Dictionary<string, string> GetProvinceColorToID(string pathToCSVFile)
+        public Dictionary<uint, string> GetProvinceColorToID(string pathToCSVFile)
         {
-            var colorToProvinceId = new Dictionary<string, string>();
+            var colorToProvinceId = new Dictionary<uint, string>();
 
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -61,9 +62,9 @@ namespace Paradox_Editor
             using (var csv = new CsvReader(reader, cfg))
             {
                 csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
-                var records = csv.GetRecords<ProvinceDefinition>();
+                var records = csv.GetRecords<ProvinceDefinition>().Skip(1);
                 {
-                    colorToProvinceId = csv.GetRecords<ProvinceDefinition>().ToDictionary(c => c.red + " " + c.green + " " + c.blue, c => c.province); //The source of error
+                    colorToProvinceId = records.ToDictionary(c => (0xFFu << 24) | ((uint.Parse(c.red) & 0xFF) << 16) | ((uint.Parse(c.green) & 0xFF) << 8) | (uint.Parse(c.blue) & 0xFF), c => c.province); //The source of error
                 }
             }
             return colorToProvinceId;
