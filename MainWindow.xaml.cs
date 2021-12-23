@@ -47,6 +47,8 @@ namespace Paradox_Editor
         }
 
 
+
+
         private void MainWindow_Load(object _1, EventArgs _2)
         {
             MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");

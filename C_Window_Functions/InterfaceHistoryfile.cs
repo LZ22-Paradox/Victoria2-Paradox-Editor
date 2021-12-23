@@ -15,12 +15,12 @@ namespace Paradox_Editor.C_Window_Functions
 
         private MainWindow MainWindow;
         private Color PixelColor;
-        private Dictionary<string, string> ColorToID;
+        private Dictionary<uint, string> ColorToID;
         private ProvinceOutputData ProvIDToData;
         private Dictionary<string, string> TAGToName;
 
 
-        public InterfaceHistoryfile(MainWindow mainWindow, Color pixelColor, Dictionary<string, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
+        public InterfaceHistoryfile(MainWindow mainWindow, Color pixelColor, Dictionary<uint, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
         {
             PixelColor = pixelColor;
             ColorToID = storedColorToID;
@@ -33,7 +33,7 @@ namespace Paradox_Editor.C_Window_Functions
         public void PutTAGDataIntoInferface()
         {
 
-            if (ColorToID.TryGetValue(PixelColor.R + " " + PixelColor.G + " " + PixelColor.B, out var ProvinceID))
+            if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
                 MainWindow.FileInterface.PROVIDBOX.Text = ProvinceID;
 
@@ -67,7 +67,7 @@ namespace Paradox_Editor.C_Window_Functions
         public List<string> GetCoreList()
         {
 
-            if (ColorToID.TryGetValue(PixelColor.R + " " + PixelColor.G + " " + PixelColor.B, out var ProvinceID))
+            if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
@@ -82,7 +82,7 @@ namespace Paradox_Editor.C_Window_Functions
         public void PutOtherDataIntoInferface()
             //need to make into a 2-way observable collection that correlates w. the rest of the data
         {
-            if (ColorToID.TryGetValue(PixelColor.R + " " + PixelColor.G + " " + PixelColor.B, out var ProvinceID))
+            if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
                 if (ProvIDToData.IDToHistory.TryGetValue(ProvinceID, out var historyData))
                 {

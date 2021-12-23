@@ -20,7 +20,7 @@ namespace Paradox_Editor.C_Window_Functions
         //public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         //Stored opener is subject to change for user convienence
         public string StoredGameDirectory { get; set; }
-        public Dictionary<string,string> StoredProvinceColorToID { get; set; }
+        public Dictionary<uint, string> StoredProvinceColorToID { get; set; }
         public Dictionary<string, string> StoredTagToCountryName { get; set; }
         public Dictionary<string, Color> StoredCountryNameToColor { get; private set; }
         public ProvinceOutputData StoredProvinceIDToDataDictionaries { get; private set; }
