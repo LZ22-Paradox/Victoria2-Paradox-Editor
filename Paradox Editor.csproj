@@ -5,6 +5,8 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>Paradox_Editor</RootNamespace>
     <UseWPF>true</UseWPF>
+	<UseWindowsForms>true</UseWindowsForms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -59,15 +61,6 @@
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client\System.Windows.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsFormsIntegration">
-      <HintPath>..\..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\v3.0\WindowsFormsIntegration.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

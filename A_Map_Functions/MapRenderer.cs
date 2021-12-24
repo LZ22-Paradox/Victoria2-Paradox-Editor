@@ -31,6 +31,11 @@ namespace Paradox_Editor.A_Map_Navigation
 
             //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
         }
+
+        static uint GetRawColor(Color color)
+        {
+            return (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
+        }
         
         public unsafe void DrawProvinceMap()
         {
@@ -49,16 +54,16 @@ namespace Paradox_Editor.A_Map_Navigation
                     Dictionary3.TryGetValue(countryTAG, out var countryName) &&
                     Dictionary4.TryGetValue(countryName, out var countryColor))
                 {
-                    pixels[index] = (0xFFu << 24) | ((uint)countryColor.R << 16) | ((uint)countryColor.G << 8) | ((uint)countryColor.B);
+                    pixels[index] = GetRawColor(countryColor);
                 }
                 else if (Dictionary1.TryGetValue(rawPixel, out var UncolonizedID)
                     && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
                 {
-                    pixels[index] = uint.MaxValue;
+                    pixels[index] = GetRawColor(Colors.Black);
                 }
                 else
                 {
-                    pixels[index] = 0xFF000000u;
+                    pixels[index] = GetRawColor(Colors.White);
                 }
 
                 ///This is the area for significant change; different modes.
