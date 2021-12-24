@@ -64,7 +64,14 @@ namespace Paradox_Editor
                 csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
                 var records = csv.GetRecords<ProvinceDefinition>().Skip(1);
                 {
-                    colorToProvinceId = records.ToDictionary(c => (0xFFu << 24) | ((uint.Parse(c.red) & 0xFF) << 16) | ((uint.Parse(c.green) & 0xFF) << 8) | (uint.Parse(c.blue) & 0xFF), c => c.province); //The source of error
+                    foreach (var record in records)
+                    {
+                        if (uint.TryParse(record.red, out var red) && uint.TryParse(record.green, out var green) && uint.TryParse(record.blue, out var blue))
+                        {
+                            var color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
+                            colorToProvinceId.Add(color, record.province);
+                        }
+                    }
                 }
             }
             return colorToProvinceId;
