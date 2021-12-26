@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WpfAnimatedGif;
 
 namespace Paradox_Editor
 {
@@ -56,6 +59,11 @@ namespace Paradox_Editor
             this.Cursor = Cursors.ScrollAll;
             start = e.MouseDevice.GetPosition(this);
             this.CaptureMouse();
+
+            //---------Changes the Save Icon to Warning Gif----------------
+            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif", UriKind.Relative));
+            ImageBehavior.SetAnimatedSource(Save_Button, newGif);
+            //-------------------------------------------------------------
         }
 
         private void Grid_MouseMove(object sender, MouseEventArgs e)

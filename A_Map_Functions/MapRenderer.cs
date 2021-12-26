@@ -59,17 +59,18 @@ namespace Paradox_Editor.A_Map_Navigation
                 else if (Dictionary1.TryGetValue(rawPixel, out var UncolonizedID)
                     && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
                 {
-                    pixels[index] = GetRawColor(Colors.Black);
+                    pixels[index] = GetRawColor(Colors.White);
                 }
                 else
                 {
-                    pixels[index] = GetRawColor(Colors.White);
+                    pixels[index] = GetRawColor(Colors.Black);
                 }
 
                 ///This is the area for significant change; different modes.
             });
 
             FirstLayer.Unlock();
+            SizeReference = FirstLayer;
         }
 
         public void DrawStateMap()

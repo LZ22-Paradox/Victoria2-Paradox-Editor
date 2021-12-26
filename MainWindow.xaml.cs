@@ -70,14 +70,7 @@ namespace Paradox_Editor
 
             if (e.MiddleButton.Equals(MouseButtonState.Pressed)) //This is for the alternate types of interactions w. the map
             {
-                if (mapModeButtons.CurrentMapMode == 0) //Political Mapmode
-                {
-                    //null
-                }
-                if (mapModeButtons.CurrentMapMode == 1) //Province Mapmode
-                {
-                    Navigator.MouseDown(sender, e);
-                }
+                Navigator.MouseDown(sender, e);
             }
             else if (e.LeftButton.Equals(MouseButtonState.Pressed) && FolderSelect.IsMapLoaded)
             {

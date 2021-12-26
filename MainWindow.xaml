@@ -129,30 +129,34 @@
                            MouseMove="Map_MouseMove"
                            MouseWheel="Map_MouseWheel"
                            MouseUp="Map_MouseUp"
-                           MouseLeave="Map_MouseLeave">
+                           MouseLeave="Map_MouseLeave"
+                           >
 
                     <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
-                           ClipToBounds="True" StretchDirection="Both"
+                           ClipToBounds="True" StretchDirection="Both"   
                            MouseDown="Map_MouseDown"
-                           
                            >
+                        
                     </Image>
 
                     <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"/>
+                           StretchDirection="Both"
+                           MouseDown="Map_MouseDown"
+                           />
 
 
                     <Image x:Name="mapTerrain" Height="700" Width="1446" 
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"/>
+                           StretchDirection="Both"
+                           MouseDown="Map_MouseDown"/>
 
                     <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
 

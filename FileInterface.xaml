@@ -38,9 +38,9 @@
                  Width="252" TextAlignment="Center" FontSize="11"/>
 
         <Button Name="STATUSBOX" Grid.Row="1" Grid.Column="2"
-                 FontFamily="Impact" Foreground="Black"
-                 Height="20" Width="20" Margin="0,0,10,0">
-            <Image                  />
+                 FontFamily="Impact" Foreground="{x:Null}"
+                 Height="20" Width="20" Margin="0,0,10,0" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="Preloaded_Assets/save_confirm_button.gif"/>
         </Button>
 
         <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0"

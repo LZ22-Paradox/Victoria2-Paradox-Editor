@@ -24,7 +24,6 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         o See new class that saves what file was changed & its data
     - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
     
-    - ADD FORT COMPATIBILITY
     - GET HOTSPOT DEBUGGING
     - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
         o SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
@@ -32,10 +31,6 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
                 [] Create the "Saved" notif Icon
                 [] Add flashing for save icon
 
-    - Make map non-navigatable by WASD if the map isn't selected
-    - Fix Map-Mode Switching to Political on First Mode-Switch
-    - Add Terrain Compatibility
-    - Add State_Building Compatibility
     - Clicking "Exit" Saves data entered
         o Opens a menu asking wether or not to save province data you entered
     - Fix Province-Political Maps Location/Size Difference
@@ -44,6 +39,12 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     - Click & Edit provinces in country map mode
         o Have borders for all provinces to distinguish
     - Add sound-effects to FileInterface buttons
+
+
+#. Compatibilities
+    - ADD FORT COMPATIBILITY
+    - Add Terrain Compatibility
+    - Add State_Building Compatibility
 
 2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
@@ -63,9 +64,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - Fix X-Icon & Visual Handler Compatibility
 
 #. Optimize for performance
-    - See Async & Asyncronous methods, allowing multiple things to be done on more than one thread.
-        o See Threads & Tasks (Asyncronous or Otherwise)
-        o See potential of memory streams
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
             * See ways for specific replacement
@@ -73,6 +71,7 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
         o Try to merge some dictionaries that may not be needed when left alone, if possible.
             * This requires a search-through for every dictionary
     - Speed up map navigation
+    - See the tiny compatibility error (see DataAcquisition "...")
 
 
 #. Impliment visibility for SIMPLE terrain map mode.

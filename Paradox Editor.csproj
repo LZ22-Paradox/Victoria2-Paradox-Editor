@@ -34,6 +34,8 @@
     <None Remove="Preloaded_Assets\EU4\mapmode_ProvincesOn.png" />
     <None Remove="Preloaded_Assets\EU4\Sounds\connecting.wav" />
     <None Remove="Preloaded_Assets\EU4\Sounds\validClick.wav" />
+    <None Remove="Preloaded_Assets\save_confirm_button.gif" />
+    <None Remove="Preloaded_Assets\save_notif_button.png" />
     <None Remove="Preloaded_Assets\VIC2\Icons\button_add.png" />
     <None Remove="Preloaded_Assets\VIC2\Icons\button_exit.png" />
     <None Remove="Preloaded_Assets\VIC2\Icons\button_remove.png" />
@@ -78,6 +80,8 @@
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_TerrainOff.png" />
     <Resource Include="Preloaded_Assets\EU4\Icons\mapmode_TerrainOn.png" />
     <Resource Include="Preloaded_Assets\EU4\Images\provinceInterface.png" />
+    <Resource Include="Preloaded_Assets\save_confirm_button.gif" />
+    <Resource Include="Preloaded_Assets\save_notif_button.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\button_add.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\button_exit.png" />
     <Resource Include="Preloaded_Assets\VIC2\Icons\button_remove.png" />

@@ -66,7 +66,9 @@ namespace Paradox_Editor
                 {
                     foreach (var record in records)
                     {
-                        if (uint.TryParse(record.red, out var red) && uint.TryParse(record.green, out var green) && uint.TryParse(record.blue, out var blue))
+                        if (uint.TryParse(record.red, out var red) &&
+                            uint.TryParse(record.green, out var green) &&
+                            uint.TryParse(record.blue, out var blue))
                         {
                             var color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
                             colorToProvinceId.Add(color, record.province);
@@ -131,8 +133,8 @@ namespace Paradox_Editor
                 }
                 else
                 {
-                    provinceIDToOwnerTAG.Add(entry.Key, "noOwner");
-                    provinceIDToControllerTAG.Add(entry.Key, "noController");
+                    provinceIDToOwnerTAG.Add(entry.Key, "");
+                    provinceIDToControllerTAG.Add(entry.Key, "");
                 }
             }
 
@@ -150,7 +152,7 @@ namespace Paradox_Editor
                     }
 
                     provinceIDToCoreTAGs.Add(entry.Key, coreList);
-                    
+
                 }
                 else
                 {
