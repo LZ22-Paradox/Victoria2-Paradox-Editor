@@ -39,7 +39,8 @@
 
         <Button Name="STATUSBOX" Grid.Row="1" Grid.Column="2"
                  FontFamily="Impact" Foreground="{x:Null}"
-                 Height="20" Width="20" Margin="0,0,10,0" Background="{x:Null}" BorderBrush="{x:Null}">
+                 Height="20" Width="20" Margin="0,0,10,0" Background="{x:Null}" BorderBrush="{x:Null}"
+                 Click="Save_Button_Pressed">
             <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="Preloaded_Assets/save_confirm_button.gif"/>
         </Button>
 
@@ -51,7 +52,8 @@
             <Image Name="ExitButton_Image" Source="/Preloaded_Assets/VIC2/Icons/button_exit.png" Stretch="UniformToFill"/>
         </Button>
 
-        <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
+        <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                      Grid.RowSpan="3" HorizontalAlignment="Left" Width="300" Margin="35,10,0,0">
             <Grid x:Name="FileInterfaceViewerGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
@@ -62,7 +64,12 @@
 
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25" Name="CoreGridRow"/>
-                    <RowDefinition Height="25" />
+                    <RowDefinition Height="25"/>
+
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
 
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -87,7 +94,8 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <TextBox x:Name="OWNERBOX" Text="FRA" Grid.Row="1" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+                         Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
 
                 <TextBlock Name="Controller" Text="Controller" Grid.Row="2" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -95,7 +103,8 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <TextBox x:Name="CONTROLLERBOX" Text="FRA" Grid.Row="2" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+                         Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
 
                 <TextBlock Name="TradeGood" Text="Trade Good" Grid.Row="3" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -103,7 +112,8 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <TextBox x:Name="TRADEGOODBOX" Text="grain" Grid.Row="3" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
 
                 <TextBlock Name="LifeRating" Text="Life Rating" Grid.Row="4" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -111,7 +121,8 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <TextBox x:Name="LIFERATINGBOX" Text="35" Grid.Row="4" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
 
                 <TextBlock Name="Colonial" Text="Colonial Level" Grid.Row="5" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -119,7 +130,8 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <TextBox x:Name="COLONIALBOX" Text="0" Grid.Row="5" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"/>
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
 
                 <TextBlock Name="Cores" Text="Core(s)" Grid.Row="6" Grid.Column="0"
                          FontFamily="Arial" Background="{x:Null}"
@@ -180,6 +192,53 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+
+
+                <TextBlock Name="Terrain" Text="Terrain" Grid.Row="7" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="TERRAINBOX" Text="" Grid.Row="7" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
+
+                <TextBlock Name="Naval_Base" Text="Naval Base" Grid.Row="8" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="NAVALBASEBOX" Text="" Grid.Row="8" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
+
+                <TextBlock Name="Fort" Text="Fort" Grid.Row="9" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="FORTBOX" Text="" Grid.Row="9" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
+
+                <TextBlock Name="State_Building" Text="State Buildings" Grid.Row="10" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="STATEBUILDINGBOX" Text="" Grid.Row="10" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
+
+                <TextBlock Name="Railroad" Text="Railroad" Grid.Row="11" Grid.Column="0" FontFamily="Arial"
+                         Background="{x:Null}" Foreground="Black"
+                         Height="16" TextAlignment="Center" FontSize="14"
+                         Focusable="False" HorizontalAlignment="Left"/>
+                <TextBox x:Name="RAILROADBOX" Text="" Grid.Row="11" Grid.Column="1" FontFamily="Arial"
+                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
+                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
+                         TextChanged="HistoryFile_Changed"/>
+
             </Grid>
 
         </ScrollViewer>

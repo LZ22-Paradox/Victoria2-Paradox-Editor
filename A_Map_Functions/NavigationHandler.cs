@@ -115,13 +115,14 @@ namespace Paradox_Editor
             MainWindow.FileInterface.Visibility = Visibility.Visible;
             MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
 
-            var boxBinding = new InterfaceHistoryfile(MainWindow, pixelColor,
+            var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);
             boxBinding.PutTAGDataIntoInferface();
             boxBinding.PutOtherDataIntoInferface();
             MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
+            MainWindow.FileInterface.Set_Save_Icon_To_Saved();
         }
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)
@@ -179,7 +180,7 @@ namespace Paradox_Editor
                 }
                 else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
-                    if (MainWindow.IsImageFlipped == true)
+                    if (MainWindow.IsImageFlipped)
                     {
                         if (e.Delta > 0)
                         {

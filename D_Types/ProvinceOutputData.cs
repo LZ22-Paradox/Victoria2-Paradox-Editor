@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Paradox_Editor.D_Class_Types
+namespace Paradox_Editor.D_Types
 {
     public class ProvinceOutputData
     {
@@ -14,5 +14,6 @@ namespace Paradox_Editor.D_Class_Types
         public Dictionary<string, List<string>> IDToCores { get; set; }
         public Dictionary<string, string> IDToOwner { get; set; }
         public Dictionary<string, string> IDToController { get; set; }
+
     }
 }

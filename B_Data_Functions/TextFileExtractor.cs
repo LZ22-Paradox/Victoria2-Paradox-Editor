@@ -1,4 +1,4 @@
-﻿using Paradox_Editor.D_Class_Types;
+﻿using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -58,7 +58,7 @@ namespace Paradox_Editor.B_Map_Functions
 
             }
             return ProvinceData;
-        } //Repair Lin4 44
+        }
 
         public ProvinceIDDictionaries ExtractForDictionary()
         {
@@ -73,10 +73,11 @@ namespace Paradox_Editor.B_Map_Functions
                 var colonialList = new List<string>();
 
                 var stateBuildingList = new List<string>(); //Unused. See HistoryFile.cs & Todo.txt
-                var navalBaseList = new List<string>();
+                var navalBaseList = new List<string>(); //Untouched. Add naval base support to interface.
+                var fortList = new List<string>();
+                var railRoadList = new List<string>();
 
-
-                var fileName = Path.GetFileName(fileEntry); //FileEntry = Filepath
+                var fileName = Path.GetFileName(fileEntry).Replace(".txt",""); //FileEntry = Filepath
                 var splitName = fileName.Split('-'); //SplitName[1] = Province Name
                 if (int.TryParse(splitName[0], out int IDValue)) //IDValue = Province ID
                 {
@@ -141,6 +142,12 @@ namespace Paradox_Editor.B_Map_Functions
                                 else if (line.Contains("naval_base"))
                                     navalBaseList.Add(value);
 
+                                else if (line.Contains("fort"))
+                                    fortList.Add(value);
+
+                                else if (line.Contains("railroad"))
+                                    railRoadList.Add(value);
+
                                 //add something regarding state_buildings.
                             }
                         }
@@ -155,8 +162,11 @@ namespace Paradox_Editor.B_Map_Functions
                     TradeGoods = tradeGoodList,
                     LifeRating = lifeRatingList,
                     Terrain = terrainList,
+                    State_Building = stateBuildingList,
                     Colonial = colonialList,
-                    Naval_Base = navalBaseList
+                    Naval_Base = navalBaseList,
+                    Fort = fortList,
+                    Railroad = railRoadList,
                 };
 
                 HistoryFileData.Add(historyFile);

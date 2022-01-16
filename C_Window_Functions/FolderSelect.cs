@@ -6,12 +6,10 @@ using System.Windows.Media.Imaging;
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.A_Map_Functions;
 using System.Collections.Generic;
-using Paradox_Editor.D_Class_Types;
+using Paradox_Editor.D_Types;
 
 namespace Paradox_Editor.C_Window_Functions
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 
     public class FolderSelect
     {

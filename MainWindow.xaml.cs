@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D_Class_Types;
+using Paradox_Editor.D_Types;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -21,12 +21,12 @@ namespace Paradox_Editor
         private NavigationHandler Navigator;
         public FolderSelect SelectMap;
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-        public static bool IsImageFlipped { get; set; } = false;
+        public static bool IsImageFlipped { get; set; }
         public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public int CurrentGameMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
-
+        public static int DefaultHistoryInterfaceRows { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +44,8 @@ namespace Paradox_Editor
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
             timer.Start();
+
+            DefaultHistoryInterfaceRows = FileInterface.FileInterfaceViewerGrid.RowDefinitions.Count + 1;
         }
 
 

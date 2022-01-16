@@ -13,6 +13,6 @@ namespace Paradox_Editor.D_Types
 
         public MapMode_IconSet MapModeIconSet { get; set; }
         public Interface_AssetSet InterfaceAssetSet { get; set; }
-        
+
     }
 }

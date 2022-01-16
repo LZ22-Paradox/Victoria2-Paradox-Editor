@@ -1,7 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Paradox_Editor.B_Map_Functions;
-using Paradox_Editor.D_Class_Types;
+using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

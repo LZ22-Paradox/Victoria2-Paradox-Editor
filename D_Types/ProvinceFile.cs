@@ -1,4 +1,4 @@
-﻿namespace Paradox_Editor.D_Class_Types
+﻿namespace Paradox_Editor.D_Types
 {
     public class ProvinceFile
     {

@@ -1,5 +1,4 @@
-﻿using Paradox_Editor.D_Class_Types;
-using Paradox_Editor.D_Types;
+﻿using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +9,7 @@ using System.Windows.Data;
 namespace Paradox_Editor.C_Window_Functions
 {
 
-    public class InterfaceHistoryfile
+    public class HistoryfileInterface
     {
 
         private MainWindow MainWindow;
@@ -20,7 +19,7 @@ namespace Paradox_Editor.C_Window_Functions
         private Dictionary<string, string> TAGToName;
 
 
-        public InterfaceHistoryfile(MainWindow mainWindow, Color pixelColor, Dictionary<uint, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
+        public HistoryfileInterface(MainWindow mainWindow, Color pixelColor, Dictionary<uint, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
         {
             PixelColor = pixelColor;
             ColorToID = storedColorToID;
@@ -80,7 +79,7 @@ namespace Paradox_Editor.C_Window_Functions
         }
 
         public void PutOtherDataIntoInferface()
-            //need to make into a 2-way observable collection that correlates w. the rest of the data
+        //need to make into a 2-way observable collection that correlates w. the rest of the data
         {
             if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
@@ -110,6 +109,41 @@ namespace Paradox_Editor.C_Window_Functions
                     {
                         MainWindow.FileInterface.COLONIALBOX.Text = null;
                     }
+                    if (historyData.Naval_Base.Count > 0)
+                    {
+                        MainWindow.FileInterface.NAVALBASEBOX.Text = Convert.ToString(historyData.Naval_Base[0]);
+                    }
+                    else
+                    {
+                        MainWindow.FileInterface.NAVALBASEBOX.Text = null;
+                    }
+                    if (historyData.Terrain.Count > 0)
+                    {
+                        MainWindow.FileInterface.TERRAINBOX.Text = Convert.ToString(historyData.Terrain[0]);
+                    }
+                    else
+                    {
+                        MainWindow.FileInterface.TERRAINBOX.Text = null;
+                    }
+                    if (historyData.Fort.Count > 0)
+                    {
+                        MainWindow.FileInterface.FORTBOX.Text = Convert.ToString(historyData.Fort[0]);
+                    }
+                    else
+                    {
+                        MainWindow.FileInterface.FORTBOX.Text = null;
+                    }
+                    if (historyData.Railroad.Count > 0)
+                    {
+                        MainWindow.FileInterface.RAILROADBOX.Text = Convert.ToString(historyData.Railroad[0]);
+                    }
+                    else
+                    {
+                        MainWindow.FileInterface.RAILROADBOX.Text = null;
+                    }
+
+                    //Add State_Building stuff here
+
                 }
             }
         }

@@ -10,8 +10,6 @@ to editing them directly; which may cause more complications than necessary.
 D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     O_ CREATE NEW TEXT FILE
 
-
-
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
 
@@ -23,28 +21,22 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     - Add potential "Stored Data" of edited provinces
         o See new class that saves what file was changed & its data
     - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
-    
+
     - GET HOTSPOT DEBUGGING
     - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
-        o SEE POTENTIAL MERGER WITH PREVIOUS ISSUE; if clicking elsewhere without saving, then obviously your work isn't saved
-            * Add Save-Icon Changing
-                [] Create the "Saved" notif Icon
-                [] Add flashing for save icon
 
     - Clicking "Exit" Saves data entered
         o Opens a menu asking wether or not to save province data you entered
-    - Fix Province-Political Maps Location/Size Difference
     - Add Stripey Lines for Controllers (Owners are the flat colour)
-    - Remove the .txt of the Left-Panel & the FileInterface's Province-Name's field
     - Click & Edit provinces in country map mode
         o Have borders for all provinces to distinguish
     - Add sound-effects to FileInterface buttons
 
-
 #. Compatibilities
-    - ADD FORT COMPATIBILITY
-    - Add Terrain Compatibility
     - Add State_Building Compatibility
+        * Interfaced but not implimented
+
+#. Add setting for placement
 
 2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
@@ -62,6 +54,8 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 #. Decorative Fixes
     - Fix Save Icon & Visual Handler Compatibility
     - Fix X-Icon & Visual Handler Compatibility
+
+#. Add warnings for any amount of letters over 3 for TAGS
 
 #. Optimize for performance
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
@@ -92,6 +86,7 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
             * Fix FileInterface initial background
                 [] Set FileInterface to coordinate with static background sources (Compatability with multiple instances.)
 
+#. Set name box HistoryFile on the Interface to actual name of province read from the CSV.
 
 #. Impliment toggle-able layer of edges between provinces. (Togglable Borders)
     * BORDER DRAWING ASSISTANCE [Cif3#8372 assisting]
@@ -114,7 +109,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
-
 
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
     - These apply to province history files

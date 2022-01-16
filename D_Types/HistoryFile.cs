@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Paradox_Editor.D_Class_Types
+namespace Paradox_Editor.D_Types
 {
     public class HistoryFile
     {
@@ -13,6 +13,8 @@ namespace Paradox_Editor.D_Class_Types
         public List<string> Colonial { get; set; }
         public List<string> State_Building { get; set; } //Currently unused. Will be implimented later. [contains level, building, upgrade]
         public List<string> Naval_Base { get; set; }
+        public List<string> Fort { get; set; }
+        public List<string> Railroad { get; set; }
 
     }
 }

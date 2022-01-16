@@ -44,8 +44,8 @@
 
         <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" VerticalAlignment="Top" Background="Purple" Width="200" Panel.ZIndex="2" Height="40" Margin="400,25,0,0" Grid.Row="1"/>
 
-        <Button x:Name="button" Content="SELECT" HorizontalAlignment="Left" VerticalAlignment="Top"
-        Width="50" Height="25" Click="SelectMasterFolder_Click" Margin="20,15,0,0" Grid.Column="0" Panel.ZIndex="1" Grid.RowSpan="2"/>
+        <Button x:Name="button" Content="SELECT MOD FOLDER" HorizontalAlignment="Center" VerticalAlignment="Top"
+        Width="150" Height="25" Click="SelectMasterFolder_Click" Margin="0,12,0,0" Grid.Column="1" Panel.ZIndex="1" Grid.RowSpan="2"/>
 
         <Button x:Name="game_launch" Content="LAUNCH GAME" HorizontalAlignment="Right" VerticalAlignment="Top"
         Width="100" Height="20" Margin="0,15,17,0" Grid.Column="1" Panel.ZIndex="1" Grid.RowSpan="2"/>
@@ -68,7 +68,9 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-
+        
+        
+        
         <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="15,12,0,0"
                   VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="GameSelected" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Vic2" Content="N/A">
