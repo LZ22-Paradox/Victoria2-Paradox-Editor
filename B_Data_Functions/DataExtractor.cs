@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Paradox_Editor.B_Map_Functions
 {
-    public class TextFileExtractor
+    public class DataExtractor
     {
 
         public string[] FilePath;
@@ -26,19 +26,18 @@ namespace Paradox_Editor.B_Map_Functions
 
         public ObservableCollection<HistoryFile> HistoryFileData { get; set; } = new ObservableCollection<HistoryFile>();
 
-        public TextFileExtractor(string[] filepath, ObservableCollection<ProvinceFile> datasend)
+        public DataExtractor(string[] filepath, ObservableCollection<ProvinceFile> datasend)
         {
             FilePath = filepath;
         }
 
-        public TextFileExtractor(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, HistoryFile> dictionary3)
+        public DataExtractor(string[] filepath, Dictionary<string, string> dictionary1, Dictionary<string, string> dictionary2, Dictionary<string, HistoryFile> dictionary3)
         {
             FilePath = filepath;
             provinceIDToFileDictionary = dictionary1; //provinceIDToFile
             provinceIDToProvinceNameDictionary = dictionary2; //provinceIDToProvinceName
             provinceIDToHistoryFileDictionary = dictionary3; //provinceIDToHistoryFile
         }
-
 
         public ObservableCollection<ProvinceFile> ExtractForCollection(string[] FilePath) //Repair Line 44
         {
@@ -55,7 +54,6 @@ namespace Paradox_Editor.B_Map_Functions
                 {
                     Debug.WriteLine("Problem File(s) |" + " Collection Extractor | " + SplitName[0]);
                 }
-
             }
             return ProvinceData;
         }
@@ -72,12 +70,14 @@ namespace Paradox_Editor.B_Map_Functions
                 var terrainList = new List<string>();
                 var colonialList = new List<string>();
 
-                var stateBuildingList = new List<string>(); //Unused. See HistoryFile.cs & Todo.txt
                 var navalBaseList = new List<string>(); //Untouched. Add naval base support to interface.
                 var fortList = new List<string>();
                 var railRoadList = new List<string>();
 
-                var fileName = Path.GetFileName(fileEntry).Replace(".txt",""); //FileEntry = Filepath
+                var stateBuildingList = new List<StateBuilding>();
+
+
+                var fileName = Path.GetFileName(fileEntry).Replace(".txt", ""); //FileEntry = Filepath
                 var splitName = fileName.Split('-'); //SplitName[1] = Province Name
                 if (int.TryParse(splitName[0], out int IDValue)) //IDValue = Province ID
                 {
@@ -103,55 +103,89 @@ namespace Paradox_Editor.B_Map_Functions
                     Debug.WriteLine("Problem File(s) | Dictionary Extractor -TextFileExtract.cs");
                 }
 
+                bool isReadingBuilding = false;
+                var stateBuildingTempList = new StateBuilding();
                 foreach (var line in File.ReadAllLines(fileEntry))
                 //IMPLIMENT IGNORE LINES WITH A POUND "4" | Delete everything AFTER the #. Otherwise, some line of lua may be lost
                 {
                     if (NullOrWhiteSpaceCheck.IsNotEmptyOrWhiteSpace(line.Trim()))
                     {
-                        if (line.Length is not <= 1)
+                        var badLines = new[] { "\t", "#" };
+                        //Hashtag|Pound added to Badlines temporarily. Add interactions s o o n :tm:
+
+                        var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
+                        var key = seperatedLines[0];
+                        var value = "";
+                        if (!line.Contains("}"))
                         {
-                            var badLines = new[] { "}", "upgrade", "building", "level", "state_building", "\t", "#" };
-                            //Hashtag|Pound added to Badlines temporarily. Add interactions s o o n :tm:
-                            if (badLines.Any(line.Contains) == false)
-                            {
-                                var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
-                                var key = seperatedLines[0];
-                                var value = seperatedLines[1];
-
-                                if (line.Contains("owner"))
-                                    ownerList.Add(value);
-
-                                else if (line.Contains("controller"))
-                                    controllerList.Add(value);
-
-                                else if (line.Contains("trade_goods"))
-                                    tradeGoodList.Add(value);
-
-                                else if (line.Contains("life_rating"))
-                                    lifeRatingList.Add(value);
-
-                                else if (line.Contains("colonial"))
-                                    colonialList.Add(value);
-
-                                else if (line.Contains("terrain"))
-                                    terrainList.Add(value);
-
-                                else if (line.Contains("add_core"))
-                                    coreList.Add(value);
-
-                                else if (line.Contains("naval_base"))
-                                    navalBaseList.Add(value);
-
-                                else if (line.Contains("fort"))
-                                    fortList.Add(value);
-
-                                else if (line.Contains("railroad"))
-                                    railRoadList.Add(value);
-
-                                //add something regarding state_buildings.
-                            }
+                            value = seperatedLines[1];
+                        } else
+                        {
+                            value = "}";
                         }
 
+                        if (line.Contains("state_building", StringComparison.Ordinal))
+                        {
+                            isReadingBuilding = true;
+                        }
+
+                        else if (line.Contains("level", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Level = value;
+                        }
+
+                        else if (line.Contains("building", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Building = value;
+                        }
+
+                        else if (line.Contains("upgrade", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Upgrade = value;
+                        }
+
+                        else if (line.Contains("}"))
+                        {
+                            isReadingBuilding = false;
+                            stateBuildingList.Add(stateBuildingTempList);
+                        }
+
+                        if (!isReadingBuilding)
+                        {
+                            if (badLines.Any(line.Contains).Equals(false))
+                            {
+
+                                if (key.Equals("owner", StringComparison.Ordinal))
+                                    ownerList.Add(value);
+
+                                else if (key.Equals("controller", StringComparison.Ordinal))
+                                    controllerList.Add(value);
+
+                                else if (key.Equals("trade_goods", StringComparison.Ordinal))
+                                    tradeGoodList.Add(value);
+
+                                else if (key.Equals("life_rating", StringComparison.Ordinal))
+                                    lifeRatingList.Add(value);
+
+                                else if (key.Equals("colonial", StringComparison.Ordinal))
+                                    colonialList.Add(value);
+
+                                else if (key.Equals("terrain", StringComparison.Ordinal))
+                                    terrainList.Add(value);
+
+                                else if (key.Equals("add_core", StringComparison.Ordinal))
+                                    coreList.Add(value);
+
+                                else if (key.Equals("naval_base", StringComparison.Ordinal))
+                                    navalBaseList.Add(value);
+
+                                else if (key.Equals("fort", StringComparison.Ordinal))
+                                    fortList.Add(value);
+
+                                else if (key.Equals("railroad", StringComparison.Ordinal))
+                                    railRoadList.Add(value);
+                            }
+                        }
                     }
                 }
                 var historyFile = new HistoryFile()

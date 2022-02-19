@@ -20,6 +20,10 @@ namespace Paradox_Editor
     public partial class FileInterface : UserControl
     {
         public ObservableCollection<CoreData> CoreDataCollection { get; set; } = new ObservableCollection<CoreData>();
+
+        public ObservableCollection<StateBuilding> StateBuildingCollection { get; set; } = new ObservableCollection<StateBuilding>();
+
+
         public InterfaceRowHandler InterfaceHandler { get; set; } = new InterfaceRowHandler();
         public MainWindow MainWindow {get; set;} = (MainWindow)Application.Current.MainWindow;
         private Point start;

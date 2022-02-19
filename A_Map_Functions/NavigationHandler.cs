@@ -111,7 +111,7 @@ namespace Paradox_Editor
             var windowPos = e.GetPosition(MainWindow);
             MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
             //Get positioning right. Also add animation?
-
+            
             MainWindow.FileInterface.Visibility = Visibility.Visible;
             MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
 
@@ -119,10 +119,17 @@ namespace Paradox_Editor
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);
-            boxBinding.PutTAGDataIntoInferface();
-            boxBinding.PutOtherDataIntoInferface();
-            MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
-            MainWindow.FileInterface.Set_Save_Icon_To_Saved();
+            
+            //if (boxBinding.IsOceanTile()) //FIND WHERE NAME IS FOUND FOR PROVINCE
+            //{
+                boxBinding.PutTAGDataIntoInferface();
+                boxBinding.PutOtherDataIntoInferface();
+                MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
+                MainWindow.FileInterface.Set_Save_Icon_To_Saved();
+            //} else {
+                //MainWindow.FileInterface.Visibility = Visibility.Hidden;
+            //}
+
         }
 
         public Bitmap BitmapFromSource(BitmapSource bitmapsource)

@@ -13,11 +13,11 @@ using System.Windows.Media;
 
 namespace Paradox_Editor
 {
-    public class DataAcquisition
+    public class FileDataAcquisition
     {
 
 
-        public DataAcquisition()
+        public FileDataAcquisition()
         {
         }
 
@@ -118,7 +118,7 @@ namespace Paradox_Editor
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
-            var ExtractedData = new TextFileExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
+            var ExtractedData = new DataExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
 
             var provinceIDToCoreTAGs = new Dictionary<string, List<string>>();
 

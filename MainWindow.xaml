@@ -140,8 +140,9 @@
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
                            ClipToBounds="True" StretchDirection="Both"   
                            MouseDown="Map_MouseDown"
+                           
                            >
-                        
+
                     </Image>
 
                     <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
@@ -150,7 +151,9 @@
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both"
                            MouseDown="Map_MouseDown"
-                           />
+                           >
+
+                    </Image>
 
 
                     <Image x:Name="mapTerrain" Height="700" Width="1446" 
@@ -158,7 +161,9 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both"
-                           MouseDown="Map_MouseDown"/>
+                           MouseDown="Map_MouseDown"
+                           >
+                    </Image>
 
                     <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
 

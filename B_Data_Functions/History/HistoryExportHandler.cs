@@ -30,7 +30,7 @@ namespace Paradox_Editor.B_Data_Functions
             var terrainList = new List<string>();
             var colonialList = new List<string>();
 
-            var stateBuildingList = new List<string>();
+            var stateBuildingList = new List<StateBuilding>();
             var navalBaseList = new List<string>();
             var fortList = new List<string>();
             var railRoadList = new List<string>();
@@ -54,8 +54,7 @@ namespace Paradox_Editor.B_Data_Functions
             //stateBuildingList = new List<string>();
             ///Above is Unused. See HistoryFile.cs & Todo.txt
             navalBaseList.Add(MainWindow.FileInterface.NAVALBASEBOX.Text);
-
-
+            
             return current_Interface = new HistoryFile()
             {
                 Owner = ownerList,
@@ -70,9 +69,8 @@ namespace Paradox_Editor.B_Data_Functions
                 Fort = fortList,
                 Railroad = railRoadList
             };
-
         }
-
+        
 
         public List<string> ExportEntries(HistoryFile current_Interface)
         {
@@ -123,6 +121,9 @@ namespace Paradox_Editor.B_Data_Functions
 
 
             //add state_building list
+
+
+
 
             if (!current_Interface.Colonial[0].IsEmptyOrWhiteSpace())
             {

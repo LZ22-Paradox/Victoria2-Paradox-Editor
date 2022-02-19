@@ -15,6 +15,9 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
                         >>>> 0. RE-SEPERATE TODO LIST IN MANAGABLE STEPS <<<
 
+                        DATAEXTRACTOR.CS - GET STATE BUILDING DATA [DONE]
+                        ADD STATE BUILDING DATA TO THE TABLE
+
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
         o Perhaps use VisualOffset instead of RenderTransform
@@ -36,7 +39,9 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     - Add State_Building Compatibility
         * Interfaced but not implimented
 
-#. Add setting for placement
+#. Add setting for country painting
+
+#. Make it so clicking in political map mode w. specific button pressed opens province history interface
 
 2. Fix Two Problem Provinces [Vanilla Environment]
 Problem File(s) | Collection Extractor | 1337  Prome.txt
@@ -50,10 +55,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
     - Use Child Window for File Interface
         * Copy File & Override the respective-line
-
-#. Decorative Fixes
-    - Fix Save Icon & Visual Handler Compatibility
-    - Fix X-Icon & Visual Handler Compatibility
 
 #. Add warnings for any amount of letters over 3 for TAGS
 
@@ -102,25 +103,25 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     and you check the pixel UP and DOWN on that line
     and you do it again <== and you have all your shape founds
 
-
-#. Add Fort Mapmode
-
-#. Add States Mapmode
+#. Add new Mapmodes
+    - Buildings Mapmode
+        o Railroad Mapmode
+        o Fort Mapmode
+    - States Mapmode
+    - Population (or population-density)
+    - Culture (common/cultures.txt ___ Ignoring a lot of lines besides culture-name and respective color.)
+    - Religion??
+        o Potential for a Vic2 religion map mode
 
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
 
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
     - These apply to province history files
-#. Impliment core aspects
-    - Population
-    - Culture
-    - Religion??
-        o Potential for a Vic2 religion map mode
+
 
 
 #. Impliment complex terrain map mode
-
 
 #. Save game editing
 

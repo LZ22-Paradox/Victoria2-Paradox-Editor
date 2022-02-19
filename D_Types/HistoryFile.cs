@@ -11,7 +11,7 @@ namespace Paradox_Editor.D_Types
         public List<string> LifeRating { get; set; }
         public List<string> Terrain { get; set; }
         public List<string> Colonial { get; set; }
-        public List<string> State_Building { get; set; } //Currently unused. Will be implimented later. [contains level, building, upgrade]
+        public List<StateBuilding> State_Building { get; set; } //Currently unused. Will be implimented later. [contains level, building, upgrade]
         public List<string> Naval_Base { get; set; }
         public List<string> Fort { get; set; }
         public List<string> Railroad { get; set; }

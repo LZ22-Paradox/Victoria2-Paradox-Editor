@@ -63,7 +63,7 @@ namespace Paradox_Editor.A_Map_Navigation
                 }
                 else
                 {
-                    pixels[index] = GetRawColor(Colors.Black);
+                    pixels[index] = GetRawColor(Colors.Black); //Uncolonized
                 }
 
                 ///This is the area for significant change; different modes.

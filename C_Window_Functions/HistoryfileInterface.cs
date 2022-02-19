@@ -18,7 +18,6 @@ namespace Paradox_Editor.C_Window_Functions
         private ProvinceOutputData ProvIDToData;
         private Dictionary<string, string> TAGToName;
 
-
         public HistoryfileInterface(MainWindow mainWindow, Color pixelColor, Dictionary<uint, string> storedColorToID, ProvinceOutputData storedProvinceIDToData, Dictionary<string, string> storedTagToCountryName)
         {
             PixelColor = pixelColor;
@@ -27,11 +26,24 @@ namespace Paradox_Editor.C_Window_Functions
             TAGToName = storedTagToCountryName;
             MainWindow = mainWindow;
         }
+        
+        public bool IsOceanTile()
+        {
+            int x = 1, y = 2;
+            if (x == y)
+            {
+                return true;
 
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
         //POTENTIALLY CHANGE TO DATAGRID
         public void PutTAGDataIntoInferface()
         {
-
             if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
                 MainWindow.FileInterface.PROVIDBOX.Text = ProvinceID;
@@ -50,22 +62,18 @@ namespace Paradox_Editor.C_Window_Functions
                 {
                     MainWindow.FileInterface.CONTROLLERBOX.Text = Convert.ToString(controllerTAG);
                 }
-
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
 
                     var outputCores = ProvinceCores;
                 }
 
-
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(PixelColor.R + "," + PixelColor.G + "," + PixelColor.B);
-
             }
         }
 
         public List<string> GetCoreList()
         {
-
             if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
             {
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
@@ -143,9 +151,15 @@ namespace Paradox_Editor.C_Window_Functions
                     }
 
                     //Add State_Building stuff here
-
                 }
             }
+
+
+        }
+
+        public void EnterStateBuildingsIntoInterface()
+        {
+
         }
 
     }
