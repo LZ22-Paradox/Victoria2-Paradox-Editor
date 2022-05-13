@@ -10,13 +10,6 @@ namespace Paradox_Editor.B_Data_Functions
 {
     public class HistoryExportHandler
     {
-
-        /*        public string Path { get; set; }
-                public HistoryExportHandler(string path)
-                {
-                    Path = path;
-                }*/
-
         public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         public HistoryFile GetInterfaceEntries()
         {
@@ -51,10 +44,25 @@ namespace Paradox_Editor.B_Data_Functions
             fortList.Add(MainWindow.FileInterface.FORTBOX.Text);
             railRoadList.Add(MainWindow.FileInterface.RAILROADBOX.Text);
 
-            //stateBuildingList = new List<string>();
-            ///Above is Unused. See HistoryFile.cs & Todo.txt
+            foreach (StateBuilding item in MainWindow.FileInterface.STATEBUILDING_GRID.Items)
+            {
+                var extractedBuilding = new StateBuilding(); //May need "Else" statements
+                if (item.Building is not "" or null)
+                {
+                    extractedBuilding.Building = item.Building;
+                }
+                if (item.Upgrade is not "" or null)
+                {
+                    extractedBuilding.Upgrade = item.Building;
+                }
+                if (item.Level is not "" or null)
+                {
+                    extractedBuilding.Level = item.Building;
+                }
+                stateBuildingList.Add(extractedBuilding);
+            }            ///Above is Unused. See HistoryFile.cs & Todo.txt
             navalBaseList.Add(MainWindow.FileInterface.NAVALBASEBOX.Text);
-            
+
             return current_Interface = new HistoryFile()
             {
                 Owner = ownerList,
@@ -70,7 +78,7 @@ namespace Paradox_Editor.B_Data_Functions
                 Railroad = railRoadList
             };
         }
-        
+
 
         public List<string> ExportEntries(HistoryFile current_Interface)
         {
@@ -121,7 +129,13 @@ namespace Paradox_Editor.B_Data_Functions
 
 
             //add state_building list
-
+            foreach (var entry in current_Interface.State_Building)
+            {
+/*                if (!entry.Building.IsEmptyOrWhiteSpace())
+                {
+                    fileBuild.Add("add_core = " + entry);
+                }*/
+            }
 
 
 

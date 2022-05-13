@@ -20,26 +20,14 @@ namespace Paradox_Editor
     public partial class FileInterface : UserControl
     {
         public ObservableCollection<CoreData> CoreDataCollection { get; set; } = new ObservableCollection<CoreData>();
-
         public ObservableCollection<StateBuilding> StateBuildingCollection { get; set; } = new ObservableCollection<StateBuilding>();
-
-
         public InterfaceRowHandler InterfaceHandler { get; set; } = new InterfaceRowHandler();
         public MainWindow MainWindow {get; set;} = (MainWindow)Application.Current.MainWindow;
-        private Point start;
 
         public FileInterface()
         {
             InterfaceHandler.MainWindow = MainWindow;
-            this.MouseLeftButtonDown += new MouseButtonEventHandler(LeftButtonDown);
-            this.MouseLeftButtonUp += new MouseButtonEventHandler(LeftButtonUp);
-            this.MouseMove += new MouseEventHandler(Grid_MouseMove);
-
-            //
-
             InitializeComponent();
-
-
             Set_Save_Icon_To_Saved();
         }
 
@@ -49,65 +37,41 @@ namespace Paradox_Editor
             GameSoundHandler.SoundHandler.PlayClickSound();
         }
 
-        public void LeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ReleaseMouse();
-        }
-        private void ReleaseMouse()
-        {
-            this.ReleaseMouseCapture();
-            this.Cursor = Cursors.Arrow;
-        }
-
-        public void LeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (this.IsMouseCaptured) return;
-            this.Cursor = Cursors.ScrollAll;
-            start = e.MouseDevice.GetPosition(this);
-            this.CaptureMouse();
-        }
-
-        private void Grid_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!this.IsMouseCaptured) return;
-            var end = e.MouseDevice.GetPosition(this);
-            var m = this.RenderTransform.Value;
-            m.OffsetX -= start.X - end.X;
-            m.OffsetY -= start.Y - end.Y;
-            this.RenderTransform = new MatrixTransform(m); //See VisualOffset for future alterations
-        }
-
         public void RemoveCoreRow(object sender, RoutedEventArgs e)
         {
             CoreDataCollection.RemoveAt(COREGRID.SelectedIndex); //Removes Core
-            InterfaceHandler.RemoveRowFromCoreList();
-
+            InterfaceHandler.RemoveInterfaceRow();
             HistoryFile_Changed(sender, e); //Notify data has been changed.
         }
 
-        public void AddCoreRow(object sender, RoutedEventArgs e)
+        public void AddBlankCoreRow(object sender, RoutedEventArgs e)
         {
-
             CoreData core = new CoreData("");
             CoreDataCollection.Add(core); //Adds the Blank Core
+            InterfaceHandler.AddInterfaceRow();
+            HistoryFile_Changed(sender, e); //Notify data has been changed.
+        }
 
-            InterfaceHandler.AddRowFromCoreList();
-
+        public void AddBlankStateBuildingRow(object sender, RoutedEventArgs e)
+        {
+            var stateBuilding = new StateBuilding("");
+            StateBuildingCollection.Add(stateBuilding); //Adds the Blank Core
+            InterfaceHandler.AddInterfaceRow();
             HistoryFile_Changed(sender, e); //Notify data has been changed.
         }
 
         public void ResetCores(object sender, RoutedEventArgs e)
         {
             CoreDataCollection.Clear();
-            InterfaceHandler.ResetRowsFromCoreList();
+            InterfaceHandler.ResetListRows();
 
             HistoryFile_Changed(sender, e); //Notify data has been changed.
         }
-
-        public void AddExistingCores(object sender, RoutedEventArgs e, MainWindow MainWindow, System.Drawing.Color PixelColor)
+        
+        public void AddCoresAndBuildings(object sender, RoutedEventArgs e, MainWindow MainWindow, System.Drawing.Color PixelColor)
         {
             CoreDataCollection.Clear();
-            InterfaceHandler.ResetRowsFromCoreList();
+            InterfaceHandler.ResetListRows();
             var boxBinding = new HistoryfileInterface(MainWindow, PixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
@@ -120,14 +84,35 @@ namespace Paradox_Editor
                 {
                     CoreData core = new CoreData(coreEntry);
                     CoreDataCollection.Add(core);
+                    InterfaceHandler.AddInterfaceRow();
+                }
+            }
 
-                    InterfaceHandler.AddRowFromCoreList();
+            StateBuildingCollection.Clear();
+            //InterfaceHandler.ResetStateBuildingListRows();
+
+            var buildingList = boxBinding.GetStateBuildingList();
+            if (buildingList != null) //Oceans don't have cores; they're null
+            {
+                foreach (var buildingEntry in buildingList)
+                {
+                    var building = new StateBuilding();
+                    building.Building = buildingEntry.Building;
+                    building.Upgrade = buildingEntry.Upgrade;
+                    building.Level = buildingEntry.Level;
+                    StateBuildingCollection.Add(building);
+                    InterfaceHandler.AddInterfaceRow();
+                    ProvinceInterfaceViewerGrid.RowDefinitions.Add(new RowDefinition()); //Adds a Row to Interface
+
+                    var p = MainWindow.FileInterface.STATEBUILDING_GRID.Height + 25;
+                    MainWindow.FileInterface.STATEBUILDING_GRID.Height = p;
+                    MainWindow.FileInterface.StateBuildingGridRow.Height = new GridLength(p);
                 }
             }
 
         }
 
-        public void HistoryFile_Changed(object sender, RoutedEventArgs e)
+         public void HistoryFile_Changed(object sender, RoutedEventArgs e)
         {
             //---------Changes the Save Icon to Warning Gif----------------
             var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif",UriKind.Relative));

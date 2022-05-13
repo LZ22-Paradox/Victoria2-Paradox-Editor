@@ -8,7 +8,6 @@ using System.Windows.Data;
 
 namespace Paradox_Editor.C_Window_Functions
 {
-
     public class HistoryfileInterface
     {
 
@@ -26,21 +25,7 @@ namespace Paradox_Editor.C_Window_Functions
             TAGToName = storedTagToCountryName;
             MainWindow = mainWindow;
         }
-        
-        public bool IsOceanTile()
-        {
-            int x = 1, y = 2;
-            if (x == y)
-            {
-                return true;
 
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
         //POTENTIALLY CHANGE TO DATAGRID
         public void PutTAGDataIntoInferface()
         {
@@ -65,7 +50,7 @@ namespace Paradox_Editor.C_Window_Functions
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
 
-                    var outputCores = ProvinceCores;
+                    var outputCores = ProvinceCores; //Does nothing Currently
                 }
 
                 MainWindow.FileInterface.COLORRGB.Text = Convert.ToString(PixelColor.R + "," + PixelColor.G + "," + PixelColor.B);
@@ -78,14 +63,25 @@ namespace Paradox_Editor.C_Window_Functions
             {
                 if (ProvIDToData.IDToCores.TryGetValue(ProvinceID, out var ProvinceCores))
                 {
-                    var outputCores = ProvinceCores;
-                    return outputCores;
+                    return ProvinceCores;
                 }
-                
             }
             return null;
         }
 
+        public List<StateBuilding> GetStateBuildingList()
+        {
+            if (ColorToID.TryGetValue((uint)PixelColor.ToArgb(), out var ProvinceID))
+            {
+                if (ProvIDToData.IDToHistory.TryGetValue(ProvinceID, out var ProvinceBuildings))
+                {
+                    var outputCores = ProvinceBuildings.State_Building;
+                    return outputCores;
+                }
+            }
+            return null;
+        }
+        
         public void PutOtherDataIntoInferface()
         //need to make into a 2-way observable collection that correlates w. the rest of the data
         {
@@ -150,15 +146,9 @@ namespace Paradox_Editor.C_Window_Functions
                         MainWindow.FileInterface.RAILROADBOX.Text = null;
                     }
 
-                    //Add State_Building stuff here
                 }
             }
 
-
-        }
-
-        public void EnterStateBuildingsIntoInterface()
-        {
 
         }
 

@@ -6,16 +6,13 @@ using Point = System.Windows.Point;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using System.Drawing;
 using Image = System.Windows.Controls.Image;
-using System.IO;
 using Paradox_Editor.C_Window_Functions;
 using Cursors = System.Windows.Input.Cursors;
 using Application = System.Windows.Application;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
-using System.Diagnostics;
-
+using Paradox_Editor.D_Types;
 
 namespace Paradox_Editor
 {
@@ -60,8 +57,7 @@ namespace Paradox_Editor
 
         public void MoveTimerTick(object sender, EventArgs e) //Add compatibility for alternate control mode
         {
-            //Debug.WriteLine(Keyboard.FocusedElement + " is Focused");
-            double velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
+            var velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
             var flipCheck = 1;
             if (MainWindow.IsImageFlipped == true)
             {
@@ -105,44 +101,24 @@ namespace Paradox_Editor
             var mousePos = e.GetPosition(image);
             var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
             var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
-            var bitmap = BitmapFromSource(source);
+            var bitmap = BitmapFromSource.BmpFromSource(source);
             var pixelColor = bitmap.GetPixel(pixelX, pixelY);
 
             var windowPos = e.GetPosition(MainWindow);
-            MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
+            //MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
             //Get positioning right. Also add animation?
-            
+
             MainWindow.FileInterface.Visibility = Visibility.Visible;
-            MainWindow.FileInterface.HorizontalAlignment = HorizontalAlignment.Left;
 
             var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);
-            
-            //if (boxBinding.IsOceanTile()) //FIND WHERE NAME IS FOUND FOR PROVINCE
-            //{
-                boxBinding.PutTAGDataIntoInferface();
-                boxBinding.PutOtherDataIntoInferface();
-                MainWindow.FileInterface.AddExistingCores(sender, e, MainWindow, pixelColor); //Clicking ocean bad
-                MainWindow.FileInterface.Set_Save_Icon_To_Saved();
-            //} else {
-                //MainWindow.FileInterface.Visibility = Visibility.Hidden;
-            //}
 
-        }
-
-        public Bitmap BitmapFromSource(BitmapSource bitmapsource)
-        {
-            Bitmap bitmap;
-            using (var outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                enc.Save(outStream);
-                bitmap = new Bitmap(outStream);
-            }
-            return bitmap;
+            boxBinding.PutTAGDataIntoInferface();
+            boxBinding.PutOtherDataIntoInferface();
+            MainWindow.FileInterface.AddCoresAndBuildings(sender, e, MainWindow, pixelColor); //Clicking ocean bad
+            MainWindow.FileInterface.Set_Save_Icon_To_Saved();
         }
 
         public void MouseMove(object sender, MouseEventArgs e)

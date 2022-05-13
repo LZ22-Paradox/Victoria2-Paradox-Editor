@@ -104,29 +104,28 @@ namespace Paradox_Editor.B_Map_Functions
                 }
 
                 bool isReadingBuilding = false;
-                var stateBuildingTempList = new StateBuilding();
+                StateBuilding stateBuildingTempList = new StateBuilding();
                 foreach (var line in File.ReadAllLines(fileEntry))
                 //IMPLIMENT IGNORE LINES WITH A POUND "4" | Delete everything AFTER the #. Otherwise, some line of lua may be lost
                 {
                     if (NullOrWhiteSpaceCheck.IsNotEmptyOrWhiteSpace(line.Trim()))
                     {
-                        var badLines = new[] { "\t", "#" };
-                        //Hashtag|Pound added to Badlines temporarily. Add interactions s o o n :tm:
-
+                        var badLines = new[] { "\t", "#" }; //Hashtag|Pound added to Badlines temporarily. Add interactions s o o n :tm:
                         var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
                         var key = seperatedLines[0];
                         var value = "";
                         if (!line.Contains("}"))
                         {
-                            value = seperatedLines[1];
+                            value = seperatedLines[1]; //Ignore "}" lines
                         } else
                         {
                             value = "}";
                         }
-
-                        if (line.Contains("state_building", StringComparison.Ordinal))
+                        
+                        if (line.Contains("state_building = {", StringComparison.Ordinal))
                         {
                             isReadingBuilding = true;
+                            stateBuildingTempList = new StateBuilding();
                         }
 
                         else if (line.Contains("level", StringComparison.Ordinal))
@@ -143,8 +142,8 @@ namespace Paradox_Editor.B_Map_Functions
                         {
                             stateBuildingTempList.Upgrade = value;
                         }
-
-                        else if (line.Contains("}"))
+                        
+                        else if (line.Contains("}") && (isReadingBuilding == true))
                         {
                             isReadingBuilding = false;
                             stateBuildingList.Add(stateBuildingTempList);
@@ -188,6 +187,7 @@ namespace Paradox_Editor.B_Map_Functions
                         }
                     }
                 }
+
                 var historyFile = new HistoryFile()
                 {
                     Owner = ownerList,
@@ -209,7 +209,7 @@ namespace Paradox_Editor.B_Map_Functions
                     provinceIDToHistoryFileDictionary.Add(Convert.ToString(IDValue), historyFile); //duplicates entries. This is not needed.
                 else
                     Debug.WriteLine("Repeated Entry | " + IDValue);
-            }
+                }
 
             return new ProvinceIDDictionaries()
             {

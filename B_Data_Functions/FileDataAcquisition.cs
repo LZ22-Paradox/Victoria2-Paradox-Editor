@@ -97,7 +97,7 @@ namespace Paradox_Editor
                     continue;
 
                 var removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
-                var words = removal.Split('=');
+                var words = removal.Split('='); //Has the actual country names
                 var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
                 Debug.WriteLine(trimmedTagToCountry);
                 if (!tagToCountryName.ContainsKey(trimmedTagToCountry[0]))
@@ -114,15 +114,15 @@ namespace Paradox_Editor
 
         public ProvinceOutputData GetProvinceIDToData(string[] pathToHistoryFile)
         {
-
+            
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
             var ExtractedData = new DataExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
-
+            
             var provinceIDToCoreTAGs = new Dictionary<string, List<string>>();
 
-            var provinceIDToOwnerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
+            var provinceIDToOwnerTAG = new Dictionary<string, string>(); //Flat color; controlled by country
             var provinceIDToControllerTAG = new Dictionary<string, string>(); //Stripey lines; controlled by country
             foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
             {
@@ -138,7 +138,7 @@ namespace Paradox_Editor
                 }
             }
 
-
+            
             foreach (KeyValuePair<string, HistoryFile> entry in ExtractedData.ToHistoryFile) //split into new class or into textfilextract
             {
                 if (entry.Value.Core.Count != 0)

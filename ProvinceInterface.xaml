@@ -54,7 +54,7 @@
 
         <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                       Grid.RowSpan="4" HorizontalAlignment="Left" Width="300" Margin="35,10,0,-900">
-            <Grid x:Name="FileInterfaceViewerGrid">
+            <Grid x:Name="ProvinceInterfaceViewerGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -70,7 +70,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25" Name="StateBuildingGridRow"/>
                     <RowDefinition Height="25"/>
 
                 </Grid.RowDefinitions>
@@ -145,7 +145,7 @@
                 <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Right" Panel.ZIndex="1"
-                        Click="AddCoreRow" ToolTip="Add new Core TAG"
+                        Click="AddBlankCoreRow" ToolTip="Add new Core TAG"
                         VerticalAlignment="Top">
                     <Image Name="AddCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
                 </Button>
@@ -165,21 +165,16 @@
                           FontFamily="Arial" Grid.RowSpan="1" FontWeight="Normal"
                           Width="64" Height="0" ItemsSource="{Binding CoreDataCollection}"
                           HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
-                          VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}"                          
-                          >
-
+                          VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding TAG}" Width="40">
-
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>
                                     <Setter Property="Foreground" Value="{DynamicResource theForegroundBrush}"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
-
                         </DataGridTextColumn>
-
                         <DataGridTemplateColumn x:Name="ButtonColumn"  Header="Open File" Width="22">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -194,7 +189,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
 
                 <TextBlock Name="Terrain" Text="Terrain" Grid.Row="7" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -236,26 +230,17 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="STATEBUILDINGBOX" Text="" Grid.Row="11" Grid.Column="1" FontFamily="Arial"
-                         Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
-                         Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed">
-
-                </TextBox>
-
                 <DataGrid
                     x:Name="STATEBUILDING_GRID" 
-                    Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" FontFamily="Arial"
+                    Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="4" FontFamily="Arial"
                     Background="{x:Null}" Foreground="Black"
-                    Height="24"
+                    Height="44"
                     FontSize="14"
                     Focusable="False"
                     HorizontalAlignment="Left"
-                    ItemsSource="{Binding CoreDataCollection}">
+                    VerticalAlignment="Top"
+                    ItemsSource="{Binding StateBuildingCollection}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Level" Width="50"/>
-                        <DataGridTextColumn Header="Building" Width="100"/>
-                        <DataGridTextColumn Header="Upgrade" Width="70"/>
                     </DataGrid.Columns>
 
                 </DataGrid>

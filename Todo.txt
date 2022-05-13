@@ -18,13 +18,21 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
                         DATAEXTRACTOR.CS - GET STATE BUILDING DATA [DONE]
                         ADD STATE BUILDING DATA TO THE TABLE
 
+Fixed the Reset-Rows button for cores to not affect State-buildings.
+Add add & reset buttons for state-buildings
+
+If a core or building is changed : make the thing ask for save
+
+Fix the entire Core List being Deleted [InterfaceRowHandler.cs : RemoveRowFromCoreList]
+Fix weird state-building grid shrinking too small for certain provinces
+
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
         o Perhaps use VisualOffset instead of RenderTransform
     - Add potential "Stored Data" of edited provinces
         o See new class that saves what file was changed & its data
     - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
-
+    - Add Date Compatability into the History Interface
     - GET HOTSPOT DEBUGGING
     - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
 
@@ -67,13 +75,14 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
             * This requires a search-through for every dictionary
     - Speed up map navigation
     - See the tiny compatibility error (see DataAcquisition "...")
-
+    - HistoryFile points to DataExtraction in HistoryExportHandler, can possible use the index of a history file instead of needing to reacquire its data.
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.
         o Absolutely NO pixel manipulation required.
     - Simplified: Reads history files. Blank files give black output. Others give certain colours.
         o Dig in game files
+    - Add mode to read base-game terrain
 
 
 

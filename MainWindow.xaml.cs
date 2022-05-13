@@ -26,10 +26,12 @@ namespace Paradox_Editor
         public int CurrentGameMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
 
         public static ObservableCollection<ProvinceFile> ProvinceData { get; set; } = new ObservableCollection<ProvinceFile>();
-        public static int DefaultHistoryInterfaceRows { get; set; }
+        public static int InterfaceActualRows { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+
+            InterfaceActualRows = FileInterface.ProvinceInterfaceViewerGrid.RowDefinitions.Count;
 
             Navigator =
                 new NavigationHandler(mapCanvas)
@@ -44,8 +46,6 @@ namespace Paradox_Editor
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
             timer.Start();
-
-            DefaultHistoryInterfaceRows = FileInterface.FileInterfaceViewerGrid.RowDefinitions.Count + 1;
         }
 
 

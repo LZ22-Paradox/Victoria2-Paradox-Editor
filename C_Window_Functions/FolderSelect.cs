@@ -65,8 +65,8 @@ namespace Paradox_Editor.C_Window_Functions
 
             CountryNameToColor CountryNameToColorConverter = new();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
-            StoredCountryNameToColor = countryNameToColor;
-            
+            StoredCountryNameToColor = countryNameToColor; //Check if used
+
             var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
             MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
 
@@ -78,7 +78,7 @@ namespace Paradox_Editor.C_Window_Functions
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
             Image2 = Image1;
-            
+
             ///-----------------------Lazy Ending-----------------------------
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
             var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
