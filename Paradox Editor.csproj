@@ -14,10 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="D_Types\ProgramProperties.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Remove=".editorconfig" />
     <None Remove="BackgroundSelectEU4.png" />
     <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />
@@ -116,6 +113,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\LukeZurg22_Gaming\source\repos\Paradox Editor\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\LukeZurg22_Gaming\source\repos\Paradox Editor\.editorconfig" />
   </ItemGroup>
 
 </Project>

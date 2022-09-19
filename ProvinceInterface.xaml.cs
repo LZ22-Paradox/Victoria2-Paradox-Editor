@@ -31,10 +31,34 @@ namespace Paradox_Editor
             Set_Save_Icon_To_Saved();
         }
 
+        public void Update()
+        {
+            background.Source = VisualHandler.InterfaceAssetSet.Interface_Background;
+            AddCore_Image.Source = VisualHandler.InterfaceAssetSet.Add_Icon;
+            ResetCore_Image.Source = VisualHandler.InterfaceAssetSet.Reset_Icon;
+            ExitButton_Image.Source = VisualHandler.InterfaceAssetSet.Exit_Icon;
+
+            PROVIDBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            NAMEBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            Color.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            COLORRGB.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            Owner.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            OWNERBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            Controller.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            CONTROLLERBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            TradeGood.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            TRADEGOODBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            LifeRating.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            LIFERATINGBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            Colonial.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            COLONIALBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            Cores.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+        }
+
         public void ExitClicked(object sender, EventArgs e)
         {
             Visibility = Visibility.Hidden;
-            GameSoundHandler.SoundHandler.PlayClickSound();
+            SoundHandler.PlayClickSound();
         }
 
         public void RemoveCoreRow(object sender, RoutedEventArgs e)
@@ -43,6 +67,8 @@ namespace Paradox_Editor
             InterfaceHandler.RemoveInterfaceRow();
             HistoryFile_Changed(sender, e); //Notify data has been changed.
         }
+
+
 
         public void AddBlankCoreRow(object sender, RoutedEventArgs e)
         {
@@ -104,9 +130,9 @@ namespace Paradox_Editor
                     InterfaceHandler.AddInterfaceRow();
                     ProvinceInterfaceViewerGrid.RowDefinitions.Add(new RowDefinition()); //Adds a Row to Interface
 
-                    var p = MainWindow.FileInterface.STATEBUILDING_GRID.Height + 25;
-                    MainWindow.FileInterface.STATEBUILDING_GRID.Height = p;
-                    MainWindow.FileInterface.StateBuildingGridRow.Height = new GridLength(p);
+                    var p = STATEBUILDING_GRID.Height + 25;
+                    STATEBUILDING_GRID.Height = p;
+                    StateBuildingGridRow.Height = new GridLength(p);
                 }
             }
 
@@ -127,15 +153,16 @@ namespace Paradox_Editor
 
             var historyFileHandler = new HistoryExportHandler();
             var interfaceEntries = historyFileHandler.GetInterfaceEntries();
-            var historyFromInterface = historyFileHandler.ExportEntries(interfaceEntries);
+            var newHistoryFile = historyFileHandler.ExportEntries(interfaceEntries);
 
+            //Deletes an old existing file.
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
             using (var streamWriter = File.CreateText(path)) // Create file
             {
-                foreach (var entry in historyFromInterface)
+                foreach (var entry in newHistoryFile)
                 {
                     streamWriter.WriteLine(entry.ToString());
                     Debug.WriteLine(entry);

@@ -13,7 +13,7 @@ namespace Paradox_Editor.B_Data_Functions
         public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         public HistoryFile GetInterfaceEntries()
         {
-            var current_Interface = new HistoryFile();
+            var currentInterface = new HistoryFile();
 
             var ownerList = new List<string>();
             var controllerList = new List<string>();
@@ -63,7 +63,7 @@ namespace Paradox_Editor.B_Data_Functions
             }            ///Above is Unused. See HistoryFile.cs & Todo.txt
             navalBaseList.Add(MainWindow.FileInterface.NAVALBASEBOX.Text);
 
-            return current_Interface = new HistoryFile()
+            return currentInterface = new HistoryFile()
             {
                 Owner = ownerList,
                 Controller = controllerList,

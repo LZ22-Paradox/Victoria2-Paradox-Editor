@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Paradox_Editor.D_Types.Asset_Types
+namespace Paradox_Editor.D_Types.Assets
 {
     public class Interface_AssetSet
     {

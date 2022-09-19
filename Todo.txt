@@ -21,8 +21,6 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 Fixed the Reset-Rows button for cores to not affect State-buildings.
 Add add & reset buttons for state-buildings
 
-If a core or building is changed : make the thing ask for save
-
 Fix the entire Core List being Deleted [InterfaceRowHandler.cs : RemoveRowFromCoreList]
 Fix weird state-building grid shrinking too small for certain provinces
 

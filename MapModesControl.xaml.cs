@@ -15,27 +15,26 @@ namespace Paradox_Editor
         }
 
         public int CurrentMapMode = 1;//Political(0), Provinces(1), Terrain(2)
-        public static HandledAssets CurrentGameAssets;
-        
+
         private void MapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 0;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
-            GameSoundHandler.SoundHandler.PlayClickSound();
+            UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
+            SoundHandler.PlayClickSound();
         }
 
         private void MapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
-            GameSoundHandler.SoundHandler.PlayClickSound();
+            UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
+            SoundHandler.PlayClickSound();
         }
 
         private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
-            UpdateMapModeVisibility(CurrentMapMode, CurrentGameAssets.MapModeIconSet);
-            GameSoundHandler.SoundHandler.PlayClickSound();
+            UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
+            SoundHandler.PlayClickSound();
         }
 
         public static void UpdateMapModeVisibility(int CurrentMapMode, MapMode_IconSet Assets) //Updates & Disables the other existing map modes

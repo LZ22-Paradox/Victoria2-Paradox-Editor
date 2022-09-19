@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
@@ -19,6 +20,7 @@ namespace Paradox_Editor
     public partial class MainWindow : Window
     {
         private NavigationHandler Navigator;
+
         public FolderSelect SelectMap;
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public static bool IsImageFlipped { get; set; }
@@ -53,8 +55,8 @@ namespace Paradox_Editor
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
-            MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
-            MapModesControl.UpdateMapModeVisibility(1, MapModesControl.CurrentGameAssets.MapModeIconSet);
+            VisualHandler.ConductAssetChange("VIC2");
+            MapModesControl.UpdateMapModeVisibility(1, VisualHandler.MapModeIconSet);
         }
 
         public void Map_MouseUp(object sender, MouseButtonEventArgs e)
@@ -121,29 +123,29 @@ namespace Paradox_Editor
 
         public void GameSelected(object sender, RoutedEventArgs e)
         {
-            var VisualHandler = new MenuVisualHandler();
             if (GameSelect.SelectedItem.ToString().Contains("Victoria II"))
             {
-                GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
-                MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2");
+                SoundHandler.SoundAssetChange("VIC2");
+                VisualHandler.ConductAssetChange("VIC2");
 
-                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
-                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2"));
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, VisualHandler.MapModeIconSet);
+                FileInterface.Update();
             }
             else if (GameSelect.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
-                GameSoundHandler.SoundHandler.SoundAssetChange("EU4");
-                MapModesControl.CurrentGameAssets = MenuVisualHandler.VisualHandler.ConductAssetChange("EU4");
-                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("EU4"));
-
-                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, MapModesControl.CurrentGameAssets.MapModeIconSet);
+                SoundHandler.SoundAssetChange("EU4");
+                VisualHandler.ConductAssetChange("EU4");
+                FileInterface.Update();
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, VisualHandler.MapModeIconSet);
             }
             else
             {
-                VisualHandler.UpdateInterface(MenuVisualHandler.VisualHandler.ConductAssetChange("VIC2"));
-                GameSoundHandler.SoundHandler.SoundAssetChange("VIC2");
+                SoundHandler.SoundAssetChange("VIC2");
+                VisualHandler.ConductAssetChange("VIC2");
+                FileInterface.Update();
             }
-            GameSoundHandler.SoundHandler.PlayConnectingSound();
+
+            SoundHandler.PlayConnectingSound();
         }
 
         private void ControlChange(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

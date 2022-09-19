@@ -16,7 +16,6 @@ namespace Paradox_Editor
     public class FileDataAcquisition
     {
 
-
         public FileDataAcquisition()
         {
         }
