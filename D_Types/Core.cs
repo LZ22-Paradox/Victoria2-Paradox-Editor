@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 namespace Paradox_Editor.D_Types
 {
 
-    public class CoreData
+    public class Core
     {
-        public CoreData(string tag)
+        private string TAG { get; set; }
+
+        public Core(string TAG)
         {
-            TAG = tag;
+            tag = TAG;
         }
 
-        private string tag { get; set; }
-
-        public string TAG
+        public string tag
         {
-            get => tag;
-            set => tag = value;
+            get => TAG;
+            set => TAG = value;
         }
 
         /*public string TAG

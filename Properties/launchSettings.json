@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Paradox Editor": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

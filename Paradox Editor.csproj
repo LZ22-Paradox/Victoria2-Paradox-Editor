@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>zorg.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -121,6 +122,10 @@
 
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\LukeZurg22_Gaming\source\repos\Paradox Editor\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="zorg.ico" />
   </ItemGroup>
 
 </Project>

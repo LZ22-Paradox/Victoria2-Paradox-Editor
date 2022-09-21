@@ -19,7 +19,7 @@ namespace Paradox_Editor
 
     public partial class FileInterface : UserControl
     {
-        public ObservableCollection<CoreData> CoreDataCollection { get; set; } = new ObservableCollection<CoreData>();
+        public ObservableCollection<Core> CoreDataCollection { get; set; } = new ObservableCollection<Core>();
         public ObservableCollection<StateBuilding> StateBuildingCollection { get; set; } = new ObservableCollection<StateBuilding>();
         public InterfaceRowHandler InterfaceHandler { get; set; } = new InterfaceRowHandler();
         public MainWindow MainWindow {get; set;} = (MainWindow)Application.Current.MainWindow;
@@ -72,7 +72,7 @@ namespace Paradox_Editor
 
         public void AddBlankCoreRow(object sender, RoutedEventArgs e)
         {
-            CoreData core = new CoreData("");
+            Core core = new Core("");
             CoreDataCollection.Add(core); //Adds the Blank Core
             InterfaceHandler.AddInterfaceRow();
             HistoryFile_Changed(sender, e); //Notify data has been changed.
@@ -108,7 +108,7 @@ namespace Paradox_Editor
             {
                 foreach (var coreEntry in coresList)
                 {
-                    CoreData core = new CoreData(coreEntry);
+                    Core core = new Core(coreEntry);
                     CoreDataCollection.Add(core);
                     InterfaceHandler.AddInterfaceRow();
                 }

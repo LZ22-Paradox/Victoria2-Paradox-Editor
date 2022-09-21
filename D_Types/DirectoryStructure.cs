@@ -10,8 +10,9 @@ namespace Paradox_Editor.D_Types
     {
         public string[] MasterDirectory { get; set; }
         public string[] Countries { get; set; }
+        public string[] HistoryProvincePaths { get; set; }
         public string CountriesTxt { get; set; }
-        public string DefinitionCSV { get; set; }
-        public string[] HistoryProvinces { get; set; }
+        public string DefinitionCSVPath { get; set; }
+
     }
 }

@@ -43,15 +43,11 @@ namespace Paradox_Editor
 
             SelectMap = new FolderSelect(mapCanvas, mapProvinces, mapPolitical);
 
-
-            var timer = new DispatcherTimer();
+/*            var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(0.01);
             timer.Tick += new EventHandler(Navigator.MoveTimerTick);
-            timer.Start();
+            timer.Start();*/
         }
-
-
-
 
         private void MainWindow_Load(object _1, EventArgs _2)
         {
@@ -112,7 +108,7 @@ namespace Paradox_Editor
         {
             var fileopener = new Process();
             fileopener.StartInfo.FileName = "explorer";
-            fileopener.StartInfo.Arguments = SelectedItem.FilePath;
+            fileopener.StartInfo.Arguments = SelectedItem.HistoryFilePath;
             fileopener.Start();
         }
 

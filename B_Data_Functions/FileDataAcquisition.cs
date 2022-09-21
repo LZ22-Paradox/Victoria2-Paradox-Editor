@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using Paradox_Editor.A_All_New_Methods;
 using Paradox_Editor.B_Map_Functions;
 using Paradox_Editor.D_Types;
 using System;
@@ -20,17 +21,7 @@ namespace Paradox_Editor
         {
         }
 
-        public sealed class MainCsvIndexSyntax : ClassMap<ProvinceDefinition>
-        {
-            public MainCsvIndexSyntax()
-            {
-                Map(m => m.province).Index(0);
-                Map(m => m.red).Index(1);
-                Map(m => m.green).Index(2);
-                Map(m => m.blue).Index(3);
-            }
-        }
-
+        //✓✓✓
         public DirectoryStructure CollectDirectoryData(string directory)
         {
             var MasterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
@@ -43,11 +34,12 @@ namespace Paradox_Editor
                 MasterDirectory = MasterFolder,
                 Countries = Path_Countries,
                 CountriesTxt = Path_CountriesTxt,
-                DefinitionCSV = Path_CSV,
-                HistoryProvinces = Path_Provinces
+                DefinitionCSVPath = Path_CSV,
+                HistoryProvincePaths = Path_Provinces
             };
         }
 
+        ///
         public Dictionary<uint, string> GetProvinceColorToID(string pathToCSVFile)
         {
             var colorToProvinceId = new Dictionary<uint, string>();
@@ -61,7 +53,7 @@ namespace Paradox_Editor
             using (var csv = new CsvReader(reader, cfg))
             {
                 csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
-                var records = csv.GetRecords<ProvinceDefinition>().Skip(1);
+                var records = csv.GetRecords<ProvinceCSVDefinition>().Skip(1);
                 {
                     foreach (var record in records)
                     {
@@ -78,6 +70,7 @@ namespace Paradox_Editor
             return colorToProvinceId;
         }
 
+        ///
         public Dictionary<string, string> GetTagToCountryName(string pathToCountriesTxt)
         {
             var tagToCountryName = new Dictionary<string, string>();

@@ -55,7 +55,7 @@ namespace Paradox_Editor
             Canvas.CaptureMouse();
         }
 
-        public void MoveTimerTick(object sender, EventArgs e) //Add compatibility for alternate control mode
+        public void MoveTimerTick() //Add compatibility for alternate control mode
         {
             var velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
             var flipCheck = 1;
@@ -138,7 +138,6 @@ namespace Paradox_Editor
                 image.RenderTransform = new MatrixTransform(m);
             });
             start = e.MouseDevice.GetPosition(Canvas);
-
         }
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)

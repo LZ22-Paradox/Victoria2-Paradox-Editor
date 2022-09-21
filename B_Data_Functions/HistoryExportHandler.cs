@@ -30,11 +30,11 @@ namespace Paradox_Editor.B_Data_Functions
 
             ownerList.Add(MainWindow.FileInterface.OWNERBOX.Text);
             controllerList.Add(MainWindow.FileInterface.CONTROLLERBOX.Text);
-            foreach (CoreData item in MainWindow.FileInterface.COREGRID.Items)
+            foreach (Core item in MainWindow.FileInterface.COREGRID.Items)
             {
-                if (item.TAG is not "" or null)
+                if (item.tag is not "" or null)
                 {
-                    coreList.Add(Convert.ToString(item.TAG));
+                    coreList.Add(Convert.ToString(item.tag));
                 }
             }
             tradeGoodList.Add(MainWindow.FileInterface.TRADEGOODBOX.Text);

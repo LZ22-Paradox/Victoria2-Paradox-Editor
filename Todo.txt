@@ -20,6 +20,7 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 Fixed the Reset-Rows button for cores to not affect State-buildings.
 Add add & reset buttons for state-buildings
+Do some heavy performance fixing!!! : Change how much RAM the program gets when testing
 
 Fix the entire Core List being Deleted [InterfaceRowHandler.cs : RemoveRowFromCoreList]
 Fix weird state-building grid shrinking too small for certain provinces

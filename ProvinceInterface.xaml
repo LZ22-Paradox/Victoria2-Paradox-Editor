@@ -94,7 +94,7 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="OWNERBOX" Text="FRA" Grid.Row="1" Grid.Column="1" FontFamily="Arial"
+                <TextBox x:Name="OWNERBOX" Text="" Grid.Row="1" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="HistoryFile_Changed"/>
@@ -103,7 +103,7 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="CONTROLLERBOX" Text="FRA" Grid.Row="2" Grid.Column="1" FontFamily="Arial"
+                <TextBox x:Name="CONTROLLERBOX" Text="" Grid.Row="2" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="HistoryFile_Changed"/>
@@ -112,7 +112,7 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="TRADEGOODBOX" Text="grain" Grid.Row="3" Grid.Column="1" FontFamily="Arial"
+                <TextBox x:Name="TRADEGOODBOX" Text="" Grid.Row="3" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="HistoryFile_Changed"/>
@@ -121,7 +121,7 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="LIFERATINGBOX" Text="35" Grid.Row="4" Grid.Column="1" FontFamily="Arial"
+                <TextBox x:Name="LIFERATINGBOX" Text="" Grid.Row="4" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="HistoryFile_Changed"/>
@@ -130,7 +130,7 @@
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
-                <TextBox x:Name="COLONIALBOX" Text="0" Grid.Row="5" Grid.Column="1" FontFamily="Arial"
+                <TextBox x:Name="COLONIALBOX" Text="" Grid.Row="5" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="HistoryFile_Changed"/>

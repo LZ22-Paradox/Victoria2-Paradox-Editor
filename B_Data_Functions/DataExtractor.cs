@@ -48,7 +48,7 @@ namespace Paradox_Editor.B_Map_Functions
                 var SplitName = fileName.Split('-');
                 if (int.TryParse(SplitName[0], out int IDValue))
                 {
-                    ProvinceData.Add(new ProvinceFile() { ProvinceID = IDValue, ProvinceName = SplitName[1], FilePath = fileEntry }); //Add the respective province data into the FilePaths source
+                    ProvinceData.Add(new ProvinceFile() { ProvinceID = IDValue, ProvinceName = SplitName[1], HistoryFilePath = fileEntry }); //Add the respective province data into the FilePaths source
                 }
                 else
                 {

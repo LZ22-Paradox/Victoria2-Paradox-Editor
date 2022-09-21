@@ -1,12 +1,9 @@
-﻿using System.IO;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using System.Windows.Controls;
-using Paradox_Editor.B_Map_Functions;
-using System.Windows.Media.Imaging;
-using Paradox_Editor.A_Map_Navigation;
-using Paradox_Editor.A_Map_Functions;
 using System.Collections.Generic;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.B_Data_Functions;
+using Paradox_Editor.A_All_New_Methods;
 
 namespace Paradox_Editor.C_Window_Functions
 {
@@ -51,44 +48,52 @@ namespace Paradox_Editor.C_Window_Functions
             }
 
             IsMapLoaded = true;
-            var dataAcquisitionInstance = new FileDataAcquisition();
-            var directoryData = dataAcquisitionInstance.CollectDirectoryData(selectedDirectory);
 
-            var provinceColorToID = dataAcquisitionInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
-            StoredProvinceColorToID = provinceColorToID;
+            var directoryData = new NewDataAcquisition(selectedDirectory);
+            directoryData.ListHistoryprovinces();
+            directoryData.PopulateAppendProvinceCSVData();
+            
+            //Methods below will need compression into some class or type
+            directoryData.GetProvinceColorToID();
+            /*            var dataAcquisitionInstance = new FileDataAcquisition();
+             *            ✓✓✓
 
-            var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
-            StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
+                        var provinceColorToID = dataAcquisitionInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
+                        StoredProvinceColorToID = provinceColorToID;
+                        ✓✓✓
 
-            var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
-            StoredTagToCountryName = tagToCountryName;
+                        var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
+                        StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
 
-            CountryNameToColor CountryNameToColorConverter = new();
-            var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
-            StoredCountryNameToColor = countryNameToColor; //Check if used
+                        var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
+                        StoredTagToCountryName = tagToCountryName;
 
-            var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
-            MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
+                        CountryNameToColor CountryNameToColorConverter = new();
+                        var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
+                        StoredCountryNameToColor = countryNameToColor; //Check if used
 
-            MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
+                        var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
+                        MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
 
-            var image = new ImageTransformation(Canvas);
-            image.InvertCanvas(Canvas);
+                        MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
-            var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
-            Image2 = Image1;
+                        var image = new ImageTransformation(Canvas);
+                        image.InvertCanvas(Canvas);
 
-            ///-----------------------Lazy Ending-----------------------------
-            var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
-            var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
-            writeableBmp.Clear(Colors.White);
-            var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
-                provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
-                tagToCountryName, countryNameToColor);
-            ColorMap.DrawProvinceMap();
-            MainWindow.mapPolitical.Source = ColorMap.SizeReference;
-            ///---------------------------------------------------------------
+                        var imgs = new ImageSourceConverter(); //Create instance of the image converter
+                        Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
+                        Image2 = Image1;
+
+                        ///-----------------------Lazy Ending-----------------------------
+                        var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
+                        var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
+                        writeableBmp.Clear(Colors.White);
+                        var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
+                            provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
+                            tagToCountryName, countryNameToColor);
+                        ColorMap.DrawProvinceMap();
+                        MainWindow.mapPolitical.Source = ColorMap.SizeReference;
+                        ///---------------------------------------------------------------*/
         }
     }
 }
