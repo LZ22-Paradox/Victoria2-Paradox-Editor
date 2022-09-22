@@ -39,7 +39,7 @@ namespace Paradox_Editor.B_Map_Functions
             provinceIDToHistoryFileDictionary = dictionary3; //provinceIDToHistoryFile
         }
 
-        public ObservableCollection<ProvinceFile> ExtractForCollection(string[] FilePath) //Repair Line 44
+/*        public ObservableCollection<ProvinceFile> ExtractForCollection(string[] FilePath) //Repair Line 44
         {
             ObservableCollection<ProvinceFile> ProvinceData = new ObservableCollection<ProvinceFile>();
             foreach (string fileEntry in FilePath) //"For each file in the path list"
@@ -56,9 +56,9 @@ namespace Paradox_Editor.B_Map_Functions
                 }
             }
             return ProvinceData;
-        }
+        }*/
 
-        public ProvinceIDDictionaries ExtractForDictionary()
+        /*public ProvinceIDDictionaries ExtractForDictionary()
         {
             foreach (string fileEntry in FilePath)
             {
@@ -82,26 +82,16 @@ namespace Paradox_Editor.B_Map_Functions
                 if (int.TryParse(splitName[0], out int IDValue)) //IDValue = Province ID
                 {
                     if (provinceIDToFileDictionary.ContainsKey(Convert.ToString(IDValue)))
-                    {
                         Debug.WriteLine("Repeated Entry | " + IDValue);
-                    }
                     else
-                    {
-                        provinceIDToFileDictionary.Add(Convert.ToString(IDValue), fileEntry); //provinceIDToFile
-                    }
+                        provinceIDToFileDictionary.Add(Convert.ToString(IDValue), fileEntry);
                     if (provinceIDToProvinceNameDictionary.ContainsKey(Convert.ToString(IDValue)))
-                    {
                         Debug.WriteLine("Repeated Entry | " + IDValue);
-                    }
                     else
-                    {
                         provinceIDToProvinceNameDictionary.Add(Convert.ToString(IDValue), splitName[1].Replace(" ", ""));
-                    }
                 }
                 else
-                {
                     Debug.WriteLine("Problem File(s) | Dictionary Extractor -TextFileExtract.cs");
-                }
 
                 bool isReadingBuilding = false;
                 StateBuilding stateBuildingTempList = new StateBuilding();
@@ -217,7 +207,7 @@ namespace Paradox_Editor.B_Map_Functions
                 ToName = provinceIDToProvinceNameDictionary,
                 ToHistoryFile = provinceIDToHistoryFileDictionary
             };
-        }
+        }*/
 
 
 

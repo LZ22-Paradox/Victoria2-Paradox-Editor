@@ -55,13 +55,11 @@ namespace Paradox_Editor.C_Window_Functions
             
             //Methods below will need compression into some class or type
             directoryData.GetProvinceColorToID();
-            /*            var dataAcquisitionInstance = new FileDataAcquisition();
-             *            ✓✓✓
+            directoryData.GetTagToCountryName();
 
-                        var provinceColorToID = dataAcquisitionInstance.GetProvinceColorToID(directoryData.DefinitionCSV);
-                        StoredProvinceColorToID = provinceColorToID;
-                        ✓✓✓
-
+            directoryData.ExtractHistoryFileContents();
+            /*
+                        //✓✓✓
                         var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
                         StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
 

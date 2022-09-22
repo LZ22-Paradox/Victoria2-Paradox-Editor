@@ -141,33 +141,102 @@ namespace Paradox_Editor.A_All_New_Methods
                 index = input.IndexOf("dynamic_tags");
                 if (index >= 0)
                     input = input.Substring(0, index);
-
                 if (string.IsNullOrEmpty(input))
                     continue;
 
                 var removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
                 var words = removal.Split('='); //Has the actual country names
                 var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
-                Debug.WriteLine(trimmedTagToCountry);
+                //Debug.WriteLine(trimmedTagToCountry);
                 if (!TagsToCountryNames.ContainsKey(trimmedTagToCountry[0]))
-                {
                     TagsToCountryNames.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
-                }
                 else
-                {
                     Debug.WriteLine("Repeated TAG in common/countries/: " + trimmedTagToCountry[0]);
-                }
             }
         }
-        /* Will need ProvColor -> ID, Tag -> Country Name, Etc.
-         * 
-         */
-    #endregion
 
+        //Separate State Buildings & Cores into seperate, smaller methods.
+        public void ExtractHistoryFileContents()
+        {
+            foreach (ProvinceFile file in Provinces.Values)
+            {
+                bool isReadingBuilding = false;
+                var stateBuildingTempList = new StateBuilding();
+                foreach (var line in File.ReadAllLines(file.HistoryFilePath)) //IMPLIMENT IGNORE LINES WITH A POUND "4" | Delete everything AFTER
+                    if (NullOrWhiteSpaceCheck.IsNotEmptyOrWhiteSpace(line.Trim()))
+                    {
+                        var badLines = new[] { "\t", "#" }; //Hashtag|Pound added to Badlines temporarily.
+                        var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
+                        var key = seperatedLines[0];
+                        var value = "";
+                        if (!line.Contains("}"))
+                            value = seperatedLines[1]; //Ignore "}" lines
+                        else
+                            value = "}";
 
+                        if (line.Contains("state_building = {", StringComparison.Ordinal))
+                        {
+                            isReadingBuilding = true;
+                            stateBuildingTempList = new StateBuilding();
+                        }
+                        else if (line.Contains("level", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Level = value;
+                        }
+                        else if (line.Contains("building", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Building = value;
+                        }
+                        else if (line.Contains("upgrade", StringComparison.Ordinal))
+                        {
+                            stateBuildingTempList.Upgrade = value;
+                        }
+                        else if (line.Contains("}") && (isReadingBuilding == true))
+                        {
+                            isReadingBuilding = false;
+                            file.State_Buildings.Add(stateBuildingTempList);
+                        }
+                        if (!isReadingBuilding)
+                        {
+                            if (badLines.Any(line.Contains).Equals(false))
+                            {
 
+                                if (key.Equals("owner", StringComparison.Ordinal))
+                                    file.Owner = (value);
 
+                                else if (key.Equals("controller", StringComparison.Ordinal))
+                                    file.Controller = (value);
 
+                                else if (key.Equals("trade_goods", StringComparison.Ordinal))
+                                    file.TradeGoods = (value);
+
+                                else if (key.Equals("life_rating", StringComparison.Ordinal))
+                                    file.LifeRating = Convert.ToInt16(value);
+
+                                else if (key.Equals("colonial", StringComparison.Ordinal))
+                                    file.Colonial = Convert.ToInt16(value);
+
+                                else if (key.Equals("terrain", StringComparison.Ordinal))
+                                    file.Terrain = (value);
+
+                                else if (key.Equals("add_core", StringComparison.Ordinal))
+                                    file.Cores = (value); //Sent to sub-method in provincefile, see better algorithms
+
+                                else if (key.Equals("naval_base", StringComparison.Ordinal))
+                                    file.Naval_Base = Convert.ToInt16(value);
+
+                                else if (key.Equals("fort", StringComparison.Ordinal))
+                                    file.Fort = Convert.ToInt16(value);
+
+                                else if (key.Equals("railroad", StringComparison.Ordinal))
+                                    file.Railroad = Convert.ToInt16(value);
+                            }
+                        }
+                    }
+            }
+        }
 
     }
+
+    #endregion
 }

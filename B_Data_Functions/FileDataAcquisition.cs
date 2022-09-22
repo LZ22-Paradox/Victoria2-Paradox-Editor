@@ -38,8 +38,7 @@ namespace Paradox_Editor
                 HistoryProvincePaths = Path_Provinces
             };
         }
-
-        ///
+        ///✓✓✓
         public Dictionary<uint, string> GetProvinceColorToID(string pathToCSVFile)
         {
             var colorToProvinceId = new Dictionary<uint, string>();
@@ -69,8 +68,7 @@ namespace Paradox_Editor
             }
             return colorToProvinceId;
         }
-
-        ///
+        ///✓✓✓
         public Dictionary<string, string> GetTagToCountryName(string pathToCountriesTxt)
         {
             var tagToCountryName = new Dictionary<string, string>();
@@ -104,9 +102,10 @@ namespace Paradox_Editor
             return tagToCountryName;
         }
 
+
+        ///
         public ProvinceOutputData GetProvinceIDToData(string[] pathToHistoryFile)
         {
-            
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
@@ -136,21 +135,16 @@ namespace Paradox_Editor
                 if (entry.Value.Core.Count != 0)
                 {
                     var coreList = new List<string>();
-
-
                     for (int i = 0; i < entry.Value.Core.Count; i++)
                     {
                         coreList.Add(entry.Value.Core[i]);
                     }
-
                     provinceIDToCoreTAGs.Add(entry.Key, coreList);
-
                 }
                 else
                 {
                     provinceIDToCoreTAGs.Add(entry.Key, null);
                 }
-
             }
 
             return new ProvinceOutputData()

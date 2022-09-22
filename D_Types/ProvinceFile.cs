@@ -18,17 +18,17 @@ namespace Paradox_Editor.D_Types
         public uint color { get; set; }
 
         //History File
-        public List<string> Owner { get; set; }
-        public List<string> Controller { get; set; }
+        public string Owner { get; set; }
+        public string Controller { get; set; }
         public Core[] Cores { get; set; }
-        public List<string> TradeGoods { get; set; }
-        public List<string> LifeRating { get; set; }
-        public List<string> Terrain { get; set; }
-        public List<string> Colonial { get; set; }
-        public List<StateBuilding> State_Building { get; set; }
-        public List<string> Naval_Base { get; set; }
-        public List<string> Fort { get; set; }
-        public List<string> Railroad { get; set; }
+        public string TradeGoods { get; set; }
+        public int LifeRating { get; set; }
+        public string Terrain { get; set; }
+        public int Colonial { get; set; }
+        public List<StateBuilding> State_Buildings { get; set; }
+        public int Naval_Base { get; set; }
+        public int Fort { get; set; }
+        public int Railroad { get; set; }
 
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
@@ -45,6 +45,16 @@ namespace Paradox_Editor.D_Types
                     // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
                 }
             }
+        }
+
+        public void PopulateStateBuildings()
+        {
+
+        }
+
+        public void PopulateCoreList()
+        {
+
         }
     }
 }
