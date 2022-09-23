@@ -35,6 +35,7 @@ namespace Paradox_Editor.A_All_New_Methods
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
 
+        private bool isReadingBuilding = false;
 
         public NewDataAcquisition() { }
         public NewDataAcquisition(string directory)
@@ -83,7 +84,7 @@ namespace Paradox_Editor.A_All_New_Methods
                     var tempProvinceFile = new ProvinceFile();
                     tempProvinceFile.ProvinceID = IDValue;
                     tempProvinceFile.HistoryFilePath = fileEntry;
-                    tempProvinceFile.ProvinceFileName = splitName[1];
+                    tempProvinceFile.ProvinceFileName = splitName[1].Trim();
                     if (Provinces.ContainsKey((uint)IDValue))
                         Debug.WriteLine("Repeated Entry | " + IDValue);
                     else
@@ -156,87 +157,101 @@ namespace Paradox_Editor.A_All_New_Methods
         }
 
         //Separate State Buildings & Cores into seperate, smaller methods.
+
+        public void GetStateBuildings(ProvinceFile file)
+        {
+            var tempStateBuilding = new StateBuilding();
+
+            List<string> list = new List<string>();
+            using (StreamReader sr = new StreamReader(file.HistoryFilePath))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
+                    var key = seperatedLines[0];
+                    var value = seperatedLines[1];
+
+                    if (line.StartsWith("level"))
+                        tempStateBuilding.Level = value;
+                    if (line.StartsWith("building"))
+                        tempStateBuilding.Building = value;
+                    if (line.StartsWith("upgrade"))
+                        tempStateBuilding.Upgrade = value;
+                    if (line.StartsWith("}"))
+                        return;
+                }
+            }
+            isReadingBuilding = false;
+        }
+
         public void ExtractHistoryFileContents()
         {
             foreach (ProvinceFile file in Provinces.Values)
             {
-                bool isReadingBuilding = false;
-                var stateBuildingTempList = new StateBuilding();
-                foreach (var line in File.ReadAllLines(file.HistoryFilePath)) //IMPLIMENT IGNORE LINES WITH A POUND "4" | Delete everything AFTER
-                    if (NullOrWhiteSpaceCheck.IsNotEmptyOrWhiteSpace(line.Trim()))
+                List<string> tempCoresList = new List<string>();
+                using (StreamReader sr = new StreamReader(file.HistoryFilePath))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        var badLines = new[] { "\t", "#" }; //Hashtag|Pound added to Badlines temporarily.
+                        if (line.Contains("}") || line.Contains("\t"))
+                            return;
+
+                        int index = line.IndexOf("#");
+                        if (index >= 0)
+                            line = line.Substring(0, index);
+
                         var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
                         var key = seperatedLines[0];
-                        var value = "";
-                        if (!line.Contains("}"))
-                            value = seperatedLines[1]; //Ignore "}" lines
-                        else
-                            value = "}";
+                        var value = seperatedLines[1];
 
-                        if (line.Contains("state_building = {", StringComparison.Ordinal))
+                        switch (line)
                         {
-                            isReadingBuilding = true;
-                            stateBuildingTempList = new StateBuilding();
+                            case string s when line.StartsWith("state_building"):
+                                isReadingBuilding = true;
+                                GetStateBuildings(file);
+                                break;
+                            case string s when line.StartsWith("owner"):
+                                file.Owner = value;
+                                break;
+                            case string s when line.StartsWith("controller"):
+                                file.Controller = value;
+                                break;
+                            case string s when line.StartsWith("trade_goods"):
+                                file.TradeGoods = value;
+                                break;
+                            case string s when line.StartsWith("life_rating"):
+                                file.LifeRating = Convert.ToInt16(value);
+                                break;
+                            case string s when line.StartsWith("colonial"):
+                                file.Colonial = Convert.ToInt16(value);
+                                break;
+                            case string s when line.StartsWith("terrain"):
+                                file.Terrain = value;
+                                break;
+                            case string s when line.StartsWith("add_core"):
+                                tempCoresList.Add(value);
+                                break;
+                            case string s when line.StartsWith("naval_base"):
+                                file.Naval_Base = Convert.ToInt16(value);
+                                break;
+                            case string s when line.StartsWith("fort"):
+                                file.Fort = Convert.ToInt16(value);
+                                break;
+                            case string s when line.StartsWith("railroad"):
+                                file.Railroad = Convert.ToInt16(value);
+                                break;
+                            default:
+                                break;
                         }
-                        else if (line.Contains("level", StringComparison.Ordinal))
-                        {
-                            stateBuildingTempList.Level = value;
-                        }
-                        else if (line.Contains("building", StringComparison.Ordinal))
-                        {
-                            stateBuildingTempList.Building = value;
-                        }
-                        else if (line.Contains("upgrade", StringComparison.Ordinal))
-                        {
-                            stateBuildingTempList.Upgrade = value;
-                        }
-                        else if (line.Contains("}") && (isReadingBuilding == true))
-                        {
-                            isReadingBuilding = false;
-                            file.State_Buildings.Add(stateBuildingTempList);
-                        }
-                        if (!isReadingBuilding)
-                        {
-                            if (badLines.Any(line.Contains).Equals(false))
-                            {
 
-                                if (key.Equals("owner", StringComparison.Ordinal))
-                                    file.Owner = (value);
-
-                                else if (key.Equals("controller", StringComparison.Ordinal))
-                                    file.Controller = (value);
-
-                                else if (key.Equals("trade_goods", StringComparison.Ordinal))
-                                    file.TradeGoods = (value);
-
-                                else if (key.Equals("life_rating", StringComparison.Ordinal))
-                                    file.LifeRating = Convert.ToInt16(value);
-
-                                else if (key.Equals("colonial", StringComparison.Ordinal))
-                                    file.Colonial = Convert.ToInt16(value);
-
-                                else if (key.Equals("terrain", StringComparison.Ordinal))
-                                    file.Terrain = (value);
-
-                                else if (key.Equals("add_core", StringComparison.Ordinal))
-                                    file.Cores = (value); //Sent to sub-method in provincefile, see better algorithms
-
-                                else if (key.Equals("naval_base", StringComparison.Ordinal))
-                                    file.Naval_Base = Convert.ToInt16(value);
-
-                                else if (key.Equals("fort", StringComparison.Ordinal))
-                                    file.Fort = Convert.ToInt16(value);
-
-                                else if (key.Equals("railroad", StringComparison.Ordinal))
-                                    file.Railroad = Convert.ToInt16(value);
-                            }
-                        }
                     }
+                }
+                file.Cores = tempCoresList;
             }
         }
-
     }
-
     #endregion
+
 }

@@ -59,39 +59,40 @@ namespace Paradox_Editor.C_Window_Functions
 
             directoryData.ExtractHistoryFileContents();
             /*
-                        //✓✓✓
-                        var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
-                        StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
+            //✓✓✓
+            var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
+            StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
 
-                        var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
-                        StoredTagToCountryName = tagToCountryName;
+            //✓✓✓
+            var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
+            StoredTagToCountryName = tagToCountryName;
 
-                        CountryNameToColor CountryNameToColorConverter = new();
-                        var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
-                        StoredCountryNameToColor = countryNameToColor; //Check if used
+            CountryNameToColor CountryNameToColorConverter = new();
+            var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
+            StoredCountryNameToColor = countryNameToColor; //Check if used
 
-                        var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
-                        MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
+            var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
+            MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
 
-                        MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
+            MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
-                        var image = new ImageTransformation(Canvas);
-                        image.InvertCanvas(Canvas);
+            var image = new ImageTransformation(Canvas);
+            image.InvertCanvas(Canvas);
 
-                        var imgs = new ImageSourceConverter(); //Create instance of the image converter
-                        Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
-                        Image2 = Image1;
+            var imgs = new ImageSourceConverter(); //Create instance of the image converter
+            Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
+            Image2 = Image1;
 
-                        ///-----------------------Lazy Ending-----------------------------
-                        var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
-                        var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
-                        writeableBmp.Clear(Colors.White);
-                        var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
-                            provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
-                            tagToCountryName, countryNameToColor);
-                        ColorMap.DrawProvinceMap();
-                        MainWindow.mapPolitical.Source = ColorMap.SizeReference;
-                        ///---------------------------------------------------------------*/
+            ///-----------------------Lazy Ending-----------------------------
+            var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
+            var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
+            writeableBmp.Clear(Colors.White);
+            var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
+                provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
+                tagToCountryName, countryNameToColor);
+            ColorMap.DrawProvinceMap();
+            MainWindow.mapPolitical.Source = ColorMap.SizeReference;
+            ///---------------------------------------------------------------*/
         }
     }
 }

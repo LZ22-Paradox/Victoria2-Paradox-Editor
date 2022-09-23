@@ -104,12 +104,12 @@ namespace Paradox_Editor
 
 
         ///
-        public ProvinceOutputData GetProvinceIDToData(string[] pathToHistoryFile)
+        /*public void GetProvinceIDToData(string[] pathToHistoryFile)
         {
             var provinceIDToFile = new Dictionary<string, string>();
             var provinceIDToProvinceName = new Dictionary<string, string>();
             var provinceIDToHistoryFile = new Dictionary<string, HistoryFile>();
-            var ExtractedData = new DataExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
+            //var ExtractedData = new DataExtractor(pathToHistoryFile, provinceIDToFile, provinceIDToProvinceName, provinceIDToHistoryFile).ExtractForDictionary();
             
             var provinceIDToCoreTAGs = new Dictionary<string, List<string>>();
 
@@ -147,18 +147,9 @@ namespace Paradox_Editor
                 }
             }
 
-            return new ProvinceOutputData()
-            {
-                IDToFile = ExtractedData.ToFile,
-                IDToName = ExtractedData.ToName,
-                IDToHistory = ExtractedData.ToHistoryFile, //IDToCores = Text.provinceIDToCoresDictionary,
-                IDToOwner = provinceIDToOwnerTAG,
-                IDToController = provinceIDToControllerTAG,
-                IDToCores = provinceIDToCoreTAGs
-            };
         }
 
-        //
+        //*/
 
     }
 }

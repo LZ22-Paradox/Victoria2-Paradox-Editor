@@ -20,7 +20,7 @@ namespace Paradox_Editor.D_Types
         //History File
         public string Owner { get; set; }
         public string Controller { get; set; }
-        public Core[] Cores { get; set; }
+        public List<string> Cores;
         public string TradeGoods { get; set; }
         public int LifeRating { get; set; }
         public string Terrain { get; set; }
