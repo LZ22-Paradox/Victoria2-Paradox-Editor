@@ -14,7 +14,6 @@ namespace Paradox_Editor.C_Window_Functions
 
         //public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         //Stored opener is subject to change for user convienence
-        public string StoredGameDirectory { get; set; }
         public Dictionary<uint, string> StoredProvinceColorToID { get; set; }
         public Dictionary<string, string> StoredTagToCountryName { get; set; }
         public Dictionary<string, Color> StoredCountryNameToColor { get; private set; }
@@ -41,7 +40,6 @@ namespace Paradox_Editor.C_Window_Functions
 
             var filesector = new Explorer();
             var selectedDirectory = filesector.OpenFileSelect();
-            StoredGameDirectory = selectedDirectory;
             if (selectedDirectory == null)
             {
                 return;
@@ -49,15 +47,8 @@ namespace Paradox_Editor.C_Window_Functions
 
             IsMapLoaded = true;
 
-            var directoryData = new NewDataAcquisition(selectedDirectory);
-            directoryData.ListHistoryprovinces();
-            directoryData.PopulateAppendProvinceCSVData();
-            
-            //Methods below will need compression into some class or type
-            directoryData.GetProvinceColorToID();
-            directoryData.GetTagToCountryName();
-
-            directoryData.ExtractHistoryFileContents();
+            var provinceData = new NewDataAcquisition(selectedDirectory);
+            provinceData.AcquisitionAllData(selectedDirectory);
             /*
             //✓✓✓
             var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);

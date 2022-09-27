@@ -1,4 +1,4 @@
-﻿using Paradox_Editor.D_Types;
+﻿/*using Paradox_Editor.D_Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,10 +131,10 @@ namespace Paradox_Editor.B_Data_Functions
             //add state_building list
             foreach (var entry in current_Interface.State_Building)
             {
-/*                if (!entry.Building.IsEmptyOrWhiteSpace())
+*//*                if (!entry.Building.IsEmptyOrWhiteSpace())
                 {
                     fileBuild.Add("add_core = " + entry);
-                }*/
+                }*//*
             }
 
 
@@ -151,3 +151,4 @@ namespace Paradox_Editor.B_Data_Functions
 
     }
 }
+*/

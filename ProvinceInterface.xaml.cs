@@ -151,9 +151,9 @@ namespace Paradox_Editor
             var fileName = "Test.txt";
             var path = @"C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestPrimaryEnvironment(DoD)\output\" + fileName;
 
-            var historyFileHandler = new HistoryExportHandler();
-            var interfaceEntries = historyFileHandler.GetInterfaceEntries();
-            var newHistoryFile = historyFileHandler.ExportEntries(interfaceEntries);
+            //var historyFileHandler = new HistoryExportHandler();
+            //var interfaceEntries = historyFileHandler.GetInterfaceEntries();
+            //var newHistoryFile = historyFileHandler.ExportEntries(interfaceEntries);
 
             //Deletes an old existing file.
             if (File.Exists(path))
@@ -162,12 +162,12 @@ namespace Paradox_Editor
             }
             using (var streamWriter = File.CreateText(path)) // Create file
             {
-                foreach (var entry in newHistoryFile)
+/*                foreach (var entry in newHistoryFile)
                 {
                     streamWriter.WriteLine(entry.ToString());
                     Debug.WriteLine(entry);
                 }
-            }
+*/            }
 
             using (StreamReader sr = File.OpenText(path)) // Open file
             {

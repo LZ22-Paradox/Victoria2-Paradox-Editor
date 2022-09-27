@@ -1,4 +1,5 @@
-﻿using CsvHelper;
+﻿using CSVFile;
+using CsvHelper;
 using CsvHelper.Configuration;
 using Paradox_Editor.D_Types;
 using System;
@@ -35,14 +36,22 @@ namespace Paradox_Editor.A_All_New_Methods
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
 
-        private bool isReadingBuilding = false;
-
         public NewDataAcquisition() { }
         public NewDataAcquisition(string directory)
         {
             Directories = CollectDirectoryData(directory);
         }
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
+
+        public void AcquisitionAllData(string directory)
+        {
+            CollectDirectoryData(directory);
+            GetHistoryFiles();
+            PopulateAppendProvinceCSVData();
+
+            GetProvinceColorToID();
+            GetTagToCountryName();
+        }
 
         /// <summary>
         /// Gets Victoria 2's directory paths.
@@ -68,7 +77,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// <summary>
         /// Populates an initial list of provinces.
         /// </summary>
-        public void ListHistoryprovinces()
+        public void GetHistoryFiles()
         {
             ///<!!!!!!DOES NOT READ FILES THAT ONLY HAVE SPACES (IE, LIKE "1337 Prome")!!!!!>
             foreach (string fileEntry in Directories.HistoryProvincePaths)
@@ -88,7 +97,10 @@ namespace Paradox_Editor.A_All_New_Methods
                     if (Provinces.ContainsKey((uint)IDValue))
                         Debug.WriteLine("Repeated Entry | " + IDValue);
                     else
-                        Provinces.Add((uint)IDValue, tempProvinceFile); //provinceIDToFile
+                    {
+                        Provinces.Add((uint)IDValue, tempProvinceFile);
+                        Provinces[(uint)IDValue].PopulateHistoryData(); //1st Province (Fez) Isn't getting its data!
+                    }
                 }
                 else
                     Debug.WriteLine("Error listing history provinces. File {0} could not be split.", fileName);
@@ -102,7 +114,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// </summary>
         /// <param name="pathToCSVFile"></param>
         /// <returns name="Dictionary<uint, string>"></returns>
-        public void PopulateAppendProvinceCSVData()
+        public void PopulateAppendProvinceCSVData() //This method is slowing down the program
         {
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -116,13 +128,20 @@ namespace Paradox_Editor.A_All_New_Methods
             {
                 foreach (var record in records)
                 {
-                    try { Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record); }
-                    catch (KeyNotFoundException exception) { Debug.WriteLine(exception.Message); }
+                    if (record.province.IsNotEmptyOrWhiteSpace())
+                    {
+                        if (Provinces.ContainsKey(Convert.ToUInt32(record.province)))
+                            Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record);
+                    }
                 }
             }
         }
 
         #region This region is for code that must be compressed, method-wise, into either the province file for otherwise. (Find more efficient ways to do this!)
+        
+        /// <summary>
+        /// Populates dictionary of province colour keys with province ID's.
+        /// </summary>
         public void GetProvinceColorToID()
         {
             foreach (ProvinceFile province in Provinces.Values)
@@ -131,6 +150,9 @@ namespace Paradox_Editor.A_All_New_Methods
             }
         }
 
+        /// <summary>
+        /// Gets given game TAG's and country names, based on the common/...name.txt files.
+        /// </summary>
         public void GetTagToCountryName() //Requires fixing up and efficiency-working (also implement into provinces)
         {
             foreach (var line in File.ReadAllLines(Directories.CountriesTxt)) //Check Path_CountriesTxt
@@ -156,101 +178,7 @@ namespace Paradox_Editor.A_All_New_Methods
             }
         }
 
-        //Separate State Buildings & Cores into seperate, smaller methods.
 
-        public void GetStateBuildings(ProvinceFile file)
-        {
-            var tempStateBuilding = new StateBuilding();
-
-            List<string> list = new List<string>();
-            using (StreamReader sr = new StreamReader(file.HistoryFilePath))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
-                    var key = seperatedLines[0];
-                    var value = seperatedLines[1];
-
-                    if (line.StartsWith("level"))
-                        tempStateBuilding.Level = value;
-                    if (line.StartsWith("building"))
-                        tempStateBuilding.Building = value;
-                    if (line.StartsWith("upgrade"))
-                        tempStateBuilding.Upgrade = value;
-                    if (line.StartsWith("}"))
-                        return;
-                }
-            }
-            isReadingBuilding = false;
-        }
-
-        public void ExtractHistoryFileContents()
-        {
-            foreach (ProvinceFile file in Provinces.Values)
-            {
-                List<string> tempCoresList = new List<string>();
-                using (StreamReader sr = new StreamReader(file.HistoryFilePath))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        if (line.Contains("}") || line.Contains("\t"))
-                            return;
-
-                        int index = line.IndexOf("#");
-                        if (index >= 0)
-                            line = line.Substring(0, index);
-
-                        var seperatedLines = line.Replace(" ", "").Split('='); //Ignoring state-buildings. Do that later!
-                        var key = seperatedLines[0];
-                        var value = seperatedLines[1];
-
-                        switch (line)
-                        {
-                            case string s when line.StartsWith("state_building"):
-                                isReadingBuilding = true;
-                                GetStateBuildings(file);
-                                break;
-                            case string s when line.StartsWith("owner"):
-                                file.Owner = value;
-                                break;
-                            case string s when line.StartsWith("controller"):
-                                file.Controller = value;
-                                break;
-                            case string s when line.StartsWith("trade_goods"):
-                                file.TradeGoods = value;
-                                break;
-                            case string s when line.StartsWith("life_rating"):
-                                file.LifeRating = Convert.ToInt16(value);
-                                break;
-                            case string s when line.StartsWith("colonial"):
-                                file.Colonial = Convert.ToInt16(value);
-                                break;
-                            case string s when line.StartsWith("terrain"):
-                                file.Terrain = value;
-                                break;
-                            case string s when line.StartsWith("add_core"):
-                                tempCoresList.Add(value);
-                                break;
-                            case string s when line.StartsWith("naval_base"):
-                                file.Naval_Base = Convert.ToInt16(value);
-                                break;
-                            case string s when line.StartsWith("fort"):
-                                file.Fort = Convert.ToInt16(value);
-                                break;
-                            case string s when line.StartsWith("railroad"):
-                                file.Railroad = Convert.ToInt16(value);
-                                break;
-                            default:
-                                break;
-                        }
-
-                    }
-                }
-                file.Cores = tempCoresList;
-            }
-        }
     }
     #endregion
 

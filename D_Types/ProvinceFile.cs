@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace Paradox_Editor.D_Types
 {
@@ -17,10 +19,11 @@ namespace Paradox_Editor.D_Types
         public string blue { get; set; }
         public uint color { get; set; }
 
-        //History File
+        //public HistoryFile HistoryData { get; set; }
+        //History Data
         public string Owner { get; set; }
         public string Controller { get; set; }
-        public List<string> Cores;
+        public List<string> Cores = new();
         public string TradeGoods { get; set; }
         public int LifeRating { get; set; }
         public string Terrain { get; set; }
@@ -29,6 +32,7 @@ namespace Paradox_Editor.D_Types
         public int Naval_Base { get; set; }
         public int Fort { get; set; }
         public int Railroad { get; set; }
+
 
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
@@ -40,16 +44,105 @@ namespace Paradox_Editor.D_Types
                 {
                     var color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
                     this.color = color;
-                    this.ProvinceName = record.name;
+                    ProvinceName = record.name;
 
                     // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
                 }
             }
         }
 
-        public void PopulateStateBuildings()
+        public void PopulateHistoryData()
         {
+            List<string> tempCoresList = new();
+            using (StreamReader sr = new(HistoryFilePath))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string value;
+                    string key;
+                    if (line.Replace("\t", "").Contains("}") || line.IsEmptyOrWhiteSpace())
+                    {
+                        value = null;
+                    } else {
+                        int index = line.IndexOf("#");
+                        if (index >= 0)
+                            line = line.Substring(0, index);
 
+                        var seperatedLines = line.Replace(" ", "").Split('=');
+                        key = seperatedLines[0];
+                        value = seperatedLines[1];
+                    }
+
+
+                    switch (line)
+                    {
+                        case string when line.StartsWith("state_building"): //Problem: It is ignoring state-buildings!
+                            GetStateBuildings();
+                            break;
+                        case string when line.StartsWith("owner"):
+                            Owner = value;
+                            break;
+                        case string when line.StartsWith("controller"):
+                            Controller = value;
+                            break;
+                        case string when line.StartsWith("trade_goods"):
+                            TradeGoods = value;
+                            break;
+                        case string when line.StartsWith("life_rating"):
+                            LifeRating = Convert.ToInt16(value);
+                            break;
+                        case string when line.StartsWith("colonial"):
+                            Colonial = Convert.ToInt16(value);
+                            break;
+                        case string when line.StartsWith("terrain"):
+                            Terrain = value;
+                            break;
+                        case string when line.StartsWith("add_core"):
+                            Cores.Add(value);
+                            break;
+                        case string when line.StartsWith("naval_base"):
+                            Naval_Base = Convert.ToInt16(value);
+                            break;
+                        case string when line.StartsWith("fort"):
+                            Fort = Convert.ToInt16(value);
+                            break;
+                        case string when line.StartsWith("railroad"):
+                            Railroad = Convert.ToInt16(value);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+            Cores = tempCoresList;
+        }
+
+        public void GetStateBuildings() //Move to ProvinceFile
+        {
+            var tempStateBuilding = new StateBuilding();
+            using (StreamReader sr = new(HistoryFilePath)) //Should remove check if line is state-building
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    var seperatedLines = line.Replace(" ", "").Replace("\t", "").Split('=');
+                    var key = seperatedLines[0];
+                    if (line.StartsWith("}"))
+                        return;
+                    var value = seperatedLines[1];
+
+                    if (key.Equals("level"))
+                        tempStateBuilding.Level = value;
+                    if (key.Equals("building"))
+                        tempStateBuilding.Building = value;
+                    if (key.Equals("upgrade"))
+                        tempStateBuilding.Upgrade = value;
+
+                }
+            }
+            State_Buildings.Add(tempStateBuilding); //This line is ignored?!?!
         }
 
         public void PopulateCoreList()
