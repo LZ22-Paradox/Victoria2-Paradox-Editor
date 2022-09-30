@@ -114,7 +114,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// </summary>
         /// <param name="pathToCSVFile"></param>
         /// <returns name="Dictionary<uint, string>"></returns>
-        public void PopulateAppendProvinceCSVData() //This method is slowing down the program
+        public void PopulateAppendProvinceCSVData()
         {
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
@@ -177,7 +177,6 @@ namespace Paradox_Editor.A_All_New_Methods
                     Debug.WriteLine("Repeated TAG in common/countries/: " + trimmedTagToCountry[0]);
             }
         }
-
 
     }
     #endregion

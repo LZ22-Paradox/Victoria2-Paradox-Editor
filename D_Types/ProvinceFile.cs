@@ -28,7 +28,7 @@ namespace Paradox_Editor.D_Types
         public int LifeRating { get; set; }
         public string Terrain { get; set; }
         public int Colonial { get; set; }
-        public List<StateBuilding> State_Buildings { get; set; }
+        public List<StateBuilding> State_Buildings = new List<StateBuilding>();
         public int Naval_Base { get; set; }
         public int Fort { get; set; }
         public int Railroad { get; set; }
@@ -53,32 +53,35 @@ namespace Paradox_Editor.D_Types
 
         public void PopulateHistoryData()
         {
+            bool isReadingBuildings = false;
+            StateBuilding tempStateBuilding = new StateBuilding();
             List<string> tempCoresList = new();
-            using (StreamReader sr = new(HistoryFilePath))
+            using StreamReader sr = new(HistoryFilePath);
+            string line;
+            while ((line = sr.ReadLine()) != null)
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                string value;
+                string key;
+                if (line.Replace("\t", "").Contains("}") || line.IsEmptyOrWhiteSpace())
+                    value = null;
+                else
                 {
-                    string value;
-                    string key;
-                    if (line.Replace("\t", "").Contains("}") || line.IsEmptyOrWhiteSpace())
-                    {
-                        value = null;
-                    } else {
-                        int index = line.IndexOf("#");
-                        if (index >= 0)
-                            line = line.Substring(0, index);
+                    int index = line.IndexOf("#");
+                    if (index >= 0)
+                        line = line.Substring(0, index);
 
-                        var seperatedLines = line.Replace(" ", "").Split('=');
-                        key = seperatedLines[0];
-                        value = seperatedLines[1];
-                    }
+                    var seperatedLines = line.Replace(" ", "").Split('=');
+                    key = seperatedLines[0];
+                    value = seperatedLines[1];
+                }
 
-
+                if (isReadingBuildings == false)
+                {
                     switch (line)
                     {
                         case string when line.StartsWith("state_building"): //Problem: It is ignoring state-buildings!
-                            GetStateBuildings();
+                            isReadingBuildings = true;
+                            tempStateBuilding = new();
                             break;
                         case string when line.StartsWith("owner"):
                             Owner = value;
@@ -99,7 +102,7 @@ namespace Paradox_Editor.D_Types
                             Terrain = value;
                             break;
                         case string when line.StartsWith("add_core"):
-                            Cores.Add(value);
+                            tempCoresList.Add(value);
                             break;
                         case string when line.StartsWith("naval_base"):
                             Naval_Base = Convert.ToInt16(value);
@@ -113,7 +116,25 @@ namespace Paradox_Editor.D_Types
                         default:
                             break;
                     }
-
+                }
+                else
+                {
+                    switch (line)
+                    {
+                        case string when line.Contains("level"): //Problem: It is ignoring state-buildings!
+                            tempStateBuilding.Level = value;
+                            break;
+                        case string when line.Contains("building"): //Problem: It is ignoring state-buildings!
+                            tempStateBuilding.Building = value;
+                            break;
+                        case string when line.Contains("upgrade"): //Problem: It is ignoring state-buildings!
+                            tempStateBuilding.Upgrade = value;
+                            break;
+                        default:
+                            State_Buildings.Add(tempStateBuilding);
+                            isReadingBuildings = false;
+                            break;
+                    }
                 }
             }
             Cores = tempCoresList;
@@ -129,20 +150,21 @@ namespace Paradox_Editor.D_Types
                 {
                     var seperatedLines = line.Replace(" ", "").Replace("\t", "").Split('=');
                     var key = seperatedLines[0];
-                    if (line.StartsWith("}"))
-                        return;
-                    var value = seperatedLines[1];
+                    if (!line.StartsWith("}"))
+                    {
+                        var value = seperatedLines[1];
 
-                    if (key.Equals("level"))
-                        tempStateBuilding.Level = value;
-                    if (key.Equals("building"))
-                        tempStateBuilding.Building = value;
-                    if (key.Equals("upgrade"))
-                        tempStateBuilding.Upgrade = value;
-
+                        if (key.Equals("level"))
+                            tempStateBuilding.Level = value;
+                        if (key.Equals("building"))
+                            tempStateBuilding.Building = value;
+                        if (key.Equals("upgrade"))
+                            tempStateBuilding.Upgrade = value;
+                    }
                 }
+                State_Buildings.Add(tempStateBuilding); //This line is ignored?!?!
+                
             }
-            State_Buildings.Add(tempStateBuilding); //This line is ignored?!?!
         }
 
         public void PopulateCoreList()
