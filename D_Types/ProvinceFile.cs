@@ -33,7 +33,6 @@ namespace Paradox_Editor.D_Types
         public int Fort { get; set; }
         public int Railroad { get; set; }
 
-
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
             if (record.province.IsNotEmptyOrWhiteSpace())
@@ -138,33 +137,6 @@ namespace Paradox_Editor.D_Types
                 }
             }
             Cores = tempCoresList;
-        }
-
-        public void GetStateBuildings() //Move to ProvinceFile
-        {
-            var tempStateBuilding = new StateBuilding();
-            using (StreamReader sr = new(HistoryFilePath)) //Should remove check if line is state-building
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    var seperatedLines = line.Replace(" ", "").Replace("\t", "").Split('=');
-                    var key = seperatedLines[0];
-                    if (!line.StartsWith("}"))
-                    {
-                        var value = seperatedLines[1];
-
-                        if (key.Equals("level"))
-                            tempStateBuilding.Level = value;
-                        if (key.Equals("building"))
-                            tempStateBuilding.Building = value;
-                        if (key.Equals("upgrade"))
-                            tempStateBuilding.Upgrade = value;
-                    }
-                }
-                State_Buildings.Add(tempStateBuilding);
-                
-            }
         }
 
     }
