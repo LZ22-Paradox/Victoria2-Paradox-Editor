@@ -121,13 +121,13 @@ namespace Paradox_Editor.D_Types
                 {
                     switch (line)
                     {
-                        case string when line.Contains("level"): //Problem: It is ignoring state-buildings!
+                        case string when line.Contains("level"):
                             tempStateBuilding.Level = value;
                             break;
-                        case string when line.Contains("building"): //Problem: It is ignoring state-buildings!
+                        case string when line.Contains("building"):
                             tempStateBuilding.Building = value;
                             break;
-                        case string when line.Contains("upgrade"): //Problem: It is ignoring state-buildings!
+                        case string when line.Contains("upgrade"):
                             tempStateBuilding.Upgrade = value;
                             break;
                         default:
@@ -162,14 +162,10 @@ namespace Paradox_Editor.D_Types
                             tempStateBuilding.Upgrade = value;
                     }
                 }
-                State_Buildings.Add(tempStateBuilding); //This line is ignored?!?!
+                State_Buildings.Add(tempStateBuilding);
                 
             }
         }
 
-        public void PopulateCoreList()
-        {
-
-        }
     }
 }

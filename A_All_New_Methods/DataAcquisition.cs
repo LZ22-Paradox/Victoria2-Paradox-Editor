@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Paradox_Editor.FileDataAcquisition;
+using System.Windows.Media;
 
 namespace Paradox_Editor.A_All_New_Methods
 {
-
+    //For use in important CSV file reading.
     public sealed class MainCsvIndexSyntax : ClassMap<ProvinceFile>
     {
         public MainCsvIndexSyntax()
@@ -27,7 +27,7 @@ namespace Paradox_Editor.A_All_New_Methods
         }
     }
 
-    public class NewDataAcquisition
+    public class DataAcquisition
     {
         private DirectoryStructure Directories = new();
         private Dictionary<uint, ProvinceFile> Provinces = new();
@@ -35,14 +35,19 @@ namespace Paradox_Editor.A_All_New_Methods
         //Temporary lists that may be sorted later
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
+        private Dictionary<string, Color> CountryNamesToColors = new();
 
-        public NewDataAcquisition() { }
-        public NewDataAcquisition(string directory)
+        public DataAcquisition() { }
+        public DataAcquisition(string directory)
         {
             Directories = CollectDirectoryData(directory);
         }
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
 
+        /// <summary>
+        /// Calls for a read of all data.
+        /// </summary>
+        /// <param name="directory"></param>
         public void AcquisitionAllData(string directory)
         {
             CollectDirectoryData(directory);
@@ -50,7 +55,13 @@ namespace Paradox_Editor.A_All_New_Methods
             PopulateAppendProvinceCSVData();
 
             GetProvinceColorToID();
-            GetTagToCountryName();
+            GetTagsToCountryNames();
+            GetCountryNamesToColours();
+        }
+        public DataAcquisition ReturnAcquisitionAllData(string directory)
+        {
+            AcquisitionAllData(directory);
+            return this;
         }
 
         /// <summary>
@@ -137,8 +148,6 @@ namespace Paradox_Editor.A_All_New_Methods
             }
         }
 
-        #region This region is for code that must be compressed, method-wise, into either the province file for otherwise. (Find more efficient ways to do this!)
-        
         /// <summary>
         /// Populates dictionary of province colour keys with province ID's.
         /// </summary>
@@ -153,7 +162,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// <summary>
         /// Gets given game TAG's and country names, based on the common/...name.txt files.
         /// </summary>
-        public void GetTagToCountryName() //Requires fixing up and efficiency-working (also implement into provinces)
+        public void GetTagsToCountryNames() //Requires fixing up and efficiency-working (also implement into provinces)
         {
             foreach (var line in File.ReadAllLines(Directories.CountriesTxt)) //Check Path_CountriesTxt
             {
@@ -178,7 +187,51 @@ namespace Paradox_Editor.A_All_New_Methods
             }
         }
 
+        /// <summary>
+        /// Populates the dictionary of country name keys with their respective country-colours.
+        /// </summary>
+        public void GetCountryNamesToColours()
+        {
+            foreach (var countryFile in Directories.Countries)
+            {
+                string[] seperatedColors = new string[3];
+                string name = Path.GetFileName(countryFile).Replace(".txt", "");
+                string firstLine = File.ReadLines(countryFile).First();
+                if (firstLine.StartsWith("color"))
+                {
+                    var splitData = firstLine.Split("=", StringSplitOptions.TrimEntries);
+                    var fixedColorData = splitData[1].Replace("{", "").Replace("}", "").Trim();
+                    var splitColors = fixedColorData.Split(" ");
+                    seperatedColors = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                }
+                else
+                {
+                    foreach (var line in File.ReadAllLines(countryFile)) //Where the magic happens
+                    {
+                        if (line.Contains("color =", StringComparison.Ordinal)) //color = { #  #  # }
+                        {
+                            var splitData = line.Split("=", StringSplitOptions.TrimEntries);
+                            var fixedColorData = splitData[1].Replace("{", "").Replace("}", "").Trim();
+                            var splitColors = fixedColorData.Split(" ");
+                            seperatedColors = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                        }
+                        else { }
+                    }
+                }
+                if (!CountryNamesToColors.ContainsKey(name))
+                {
+                    CountryNamesToColors.Add(name,
+                        Color.FromRgb(
+                            (byte)Convert.ToInt32(seperatedColors[0]),
+                            (byte)Convert.ToInt32(seperatedColors[1]),
+                            (byte)Convert.ToInt32(seperatedColors[2])
+                        ));
+                }
+            }
+        }
+
+        //
+
     }
-    #endregion
 
 }

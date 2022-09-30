@@ -12,8 +12,8 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
 
 
     * Reorganize CountryNameToColor into data acquisition and chip off that useless class.
-    * Fix State_Buildings not being added to the list, for whatever the reason.
-        (Perhaps the usage of the other method = bad and a bool check is needed instead?)
+    * Add "#" handling in province's PopulateHistoryData()
+    * See about changing filelistview and the binding of the data source for the better
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY

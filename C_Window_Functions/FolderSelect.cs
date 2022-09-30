@@ -10,14 +10,15 @@ namespace Paradox_Editor.C_Window_Functions
 
     public class FolderSelect
     {
-        public static bool IsMapLoaded;
+        public static bool IsMapLoaded; //Obselete, Move to Map Renderer
 
         //public static string StoredOpener { get; set; } = Path.Combine("E:", "Games", "Victoria II", "mod", "LZ22");
         //Stored opener is subject to change for user convienence
-        public Dictionary<uint, string> StoredProvinceColorToID { get; set; }
-        public Dictionary<string, string> StoredTagToCountryName { get; set; }
-        public Dictionary<string, Color> StoredCountryNameToColor { get; private set; }
-        public ProvinceOutputData StoredProvinceIDToDataDictionaries { get; private set; }
+        public Dictionary<uint, string> StoredProvinceColorToID { get; set; } //Obselete, Delete
+        public Dictionary<string, string> StoredTagToCountryName { get; set; } //Obselete, Delete
+        public Dictionary<string, Color> StoredCountryNameToColor { get; private set; } //Obselete, Delete
+        public ProvinceOutputData StoredProvinceIDToDataDictionaries { get; private set; } //Obselete, Delete
+        public DataAcquisition ModData { get; set; } //Check if type needs rename.
 
         private Canvas Canvas;
         private Image Image1;
@@ -38,33 +39,31 @@ namespace Paradox_Editor.C_Window_Functions
         {
             var MainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
 
-            var filesector = new Explorer();
-            var selectedDirectory = filesector.OpenFileSelect();
+            Explorer filesector = new();
+            string selectedDirectory = filesector.OpenFileSelect();
             if (selectedDirectory == null)
-            {
                 return;
-            }
+            
 
             IsMapLoaded = true;
 
-            var provinceData = new NewDataAcquisition(selectedDirectory);
-            provinceData.AcquisitionAllData(selectedDirectory);
+            DataAcquisition provinceData = new(selectedDirectory);
+            ModData = provinceData.ReturnAcquisitionAllData(selectedDirectory);
             /*
             //✓✓✓
-            var provinceIDToDataDictionaries = dataAcquisitionInstance.GetProvinceIDToData(directoryData.HistoryProvinces);
             StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
-
             //✓✓✓
             var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
             StoredTagToCountryName = tagToCountryName;
-
+            //✓✓✓
             CountryNameToColor CountryNameToColorConverter = new();
             var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
             StoredCountryNameToColor = countryNameToColor; //Check if used
-
+            //✓✓✓
             var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
             MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
 
+            
             MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
             var image = new ImageTransformation(Canvas);
