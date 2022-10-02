@@ -16,8 +16,8 @@ namespace Paradox_Editor.C_Window_Functions
         public static MapMode_IconSet MapModeIconSet { get; set; }
         public static Interface_AssetSet InterfaceAssetSet { get; set; }
 
-        public static string IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
-        public static string ImageAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
+        private static string IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
+        private static string ImageAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
 
         //public MainWindow MainWindow { get; set; } = (MainWindow)System.Windows.Application.Current.MainWindow;
 
@@ -50,6 +50,7 @@ namespace Paradox_Editor.C_Window_Functions
             }
 
             //<---------------------------------------------->
+
             MapModeIconSet = new()
             {
                 PoliticalOff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_PoliticalOff.png", UriKind.Relative)),
@@ -67,15 +68,14 @@ namespace Paradox_Editor.C_Window_Functions
                 Reset_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_reset.png", UriKind.Relative)),
                 Exit_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_exit.png", UriKind.Relative)),
 
-                Interface_Background = new BitmapImage(new Uri(ImageAssetsPath + "provinceInterface.png", UriKind.Relative))
+                Interface_Background = new BitmapImage(new Uri(ImageAssetsPath + "provinceInterface.png", UriKind.Relative)),
+
+                TextColor = textColor,
+                BoxColor = boxColor
             };
-            //<---------------------------------------------->
 
-            InterfaceAssetSet.TextColor = textColor;
-            InterfaceAssetSet.BoxColor = boxColor;
-
-            SolidColorBrush backgroundColor = (SolidColorBrush)VisualHandler.InterfaceAssetSet.BoxColor;
-            SolidColorBrush foregroundColor = (SolidColorBrush)VisualHandler.InterfaceAssetSet.TextColor;
+            SolidColorBrush backgroundColor = (SolidColorBrush)InterfaceAssetSet.BoxColor;
+            SolidColorBrush foregroundColor = (SolidColorBrush)InterfaceAssetSet.TextColor;
             Application.Current.Resources["theBackgroundBrush"] = new SolidColorBrush(backgroundColor.Color);
             Application.Current.Resources["theForegroundBrush"] = new SolidColorBrush(foregroundColor.Color);
 

@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Paradox_Editor.B_Data_Functions
 {
-    public class HistoryExportHandler
+    public class Old_HistoryExportHandler
     {
         public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         public HistoryFile GetInterfaceEntries()
