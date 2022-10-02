@@ -13,6 +13,7 @@ using Application = System.Windows.Application;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.A_All_New_Methods;
 
 namespace Paradox_Editor
 {
@@ -54,7 +55,7 @@ namespace Paradox_Editor
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
         }
-
+        
         public void MoveTimerTick() //Add compatibility for alternate control mode
         {
             var velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
@@ -108,9 +109,10 @@ namespace Paradox_Editor
             //MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
             //Get positioning right. Also add animation?
 
-            MainWindow.FileInterface.Visibility = Visibility.Visible;
 
-            var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
+            //MainWindow.FileInterface.Visibility = Visibility.Visible;
+
+            /*var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,
                 MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
                 MainWindow.SelectMap.StoredTagToCountryName);
@@ -119,6 +121,7 @@ namespace Paradox_Editor
             boxBinding.PutOtherDataIntoInferface();
             MainWindow.FileInterface.AddCoresAndBuildings(sender, e, MainWindow, pixelColor); //Clicking ocean bad
             MainWindow.FileInterface.Set_Save_Icon_To_Saved();
+            */
         }
 
         public void MouseMove(object sender, MouseEventArgs e)

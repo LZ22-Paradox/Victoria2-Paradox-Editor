@@ -11,9 +11,14 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     O_ CREATE NEW TEXT FILE
 
 
-    * Reorganize CountryNameToColor into data acquisition and chip off that useless class.
     * Add "#" handling in province's PopulateHistoryData()
     * See about changing filelistview and the binding of the data source for the better
+    * Reimplement Stored Opener
+    * Get name of mod folder. Check if Victoria 2 (based on game selected), and load the mod if not.
+    * 1825 : "Zouar"'s name is empty in the list preview. The name isn't being read in the CSV.
+        o The CSV has a mislabel for the province. It's last (BLUE) colour has a '.' in it.
+        String should be formatted and dot could be removed in ProvinceFile.AppendFromCSV
+            - 1825;208;17;223.;Zouar;x
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
@@ -55,7 +60,7 @@ Fix weird state-building grid shrinking too small for certain provinces
 
 #. Make it so clicking in political map mode w. specific button pressed opens province history interface
 
-2. Fix Two Problem Provinces [Vanilla Environment]
+2. Fix Two Problem Provinces [Vanilla Environment] {Space between ID and name | See DataAcquision for if implemented}
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 

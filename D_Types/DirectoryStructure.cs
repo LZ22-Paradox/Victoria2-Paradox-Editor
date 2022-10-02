@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Paradox_Editor.D_Types
 {
-    public class DirectoryStructure
+    public struct DirectoryStructure
     {
         public string[] MasterDirectory { get; set; }
         public string[] Countries { get; set; }

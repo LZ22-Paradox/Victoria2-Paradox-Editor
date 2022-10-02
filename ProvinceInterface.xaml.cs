@@ -1,34 +1,48 @@
-﻿using Paradox_Editor.B_Data_Functions;
+﻿using Paradox_Editor.A_All_New_Methods;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
 
 namespace Paradox_Editor
 {
+    [ToolboxItem(true)]
 
-    public partial class FileInterface : UserControl
+    /// <summary>
+    /// Interaction logic for ProvinceInterface.xaml
+    /// </summary>
+    public partial class ProvinceInterface : UserControl
     {
-        public ObservableCollection<Core> CoreDataCollection { get; set; } = new ObservableCollection<Core>();
-        public ObservableCollection<StateBuilding> StateBuildingCollection { get; set; } = new ObservableCollection<StateBuilding>();
-        public InterfaceRowHandler InterfaceHandler { get; set; } = new InterfaceRowHandler();
-        public MainWindow MainWindow {get; set;} = (MainWindow)Application.Current.MainWindow;
+        private DataAcquisition ModData { get; set; }
+        private int InterfaceActualRows;
 
-        public FileInterface()
+        //For usage in Data Binding
+        public ObservableCollection<Core> Cores { get; set; } = new ObservableCollection<Core>();
+        public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
+
+        /*        static ProvinceInterface()
+                {
+                    DefaultStyleKeyProperty.OverrideMetadata(typeof(ProvinceInterface),
+                        new FrameworkPropertyMetadata(typeof(ProvinceInterface)));
+                }*/
+        public ProvinceInterface() { InitializeComponent(); }
+        public ProvinceInterface(DataAcquisition modData)
         {
-            InterfaceHandler.MainWindow = MainWindow;
             InitializeComponent();
+            ModData = modData;
             Set_Save_Icon_To_Saved();
+        }
+
+        public void PopulateInterface()
+        {
+
         }
 
         public void Update()
@@ -52,143 +66,107 @@ namespace Paradox_Editor
             LIFERATINGBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
             Colonial.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
             COLONIALBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
-            Cores.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
+            CoresText.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
         }
 
-        public void ExitClicked(object sender, EventArgs e)
+        public void CloseInterface(object sender, EventArgs e)
         {
             Visibility = Visibility.Hidden;
             SoundHandler.PlayClickSound();
         }
 
-        public void RemoveCoreRow(object sender, RoutedEventArgs e)
-        {
-            CoreDataCollection.RemoveAt(COREGRID.SelectedIndex); //Removes Core
-            InterfaceHandler.RemoveInterfaceRow();
-            HistoryFile_Changed(sender, e); //Notify data has been changed.
-        }
-
-
-
-        public void AddBlankCoreRow(object sender, RoutedEventArgs e)
-        {
-            Core core = new Core("");
-            CoreDataCollection.Add(core); //Adds the Blank Core
-            InterfaceHandler.AddInterfaceRow();
-            HistoryFile_Changed(sender, e); //Notify data has been changed.
-        }
-
-        public void AddBlankStateBuildingRow(object sender, RoutedEventArgs e)
-        {
-            var stateBuilding = new StateBuilding("");
-            StateBuildingCollection.Add(stateBuilding); //Adds the Blank Core
-            InterfaceHandler.AddInterfaceRow();
-            HistoryFile_Changed(sender, e); //Notify data has been changed.
-        }
-
-        public void ResetCores(object sender, RoutedEventArgs e)
-        {
-            CoreDataCollection.Clear();
-            InterfaceHandler.ResetListRows();
-
-            HistoryFile_Changed(sender, e); //Notify data has been changed.
-        }
-        
-        public void AddCoresAndBuildings(object sender, RoutedEventArgs e, MainWindow MainWindow, System.Drawing.Color PixelColor)
-        {
-            CoreDataCollection.Clear();
-            InterfaceHandler.ResetListRows();
-            var boxBinding = new HistoryfileInterface(MainWindow, PixelColor,
-                MainWindow.SelectMap.StoredProvinceColorToID,
-                MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
-                MainWindow.SelectMap.StoredTagToCountryName);
-
-            var coresList = boxBinding.GetCoreList();
-            if (coresList != null) //Oceans don't have cores; they're null
-            {
-                foreach (var coreEntry in coresList)
-                {
-                    Core core = new Core(coreEntry);
-                    CoreDataCollection.Add(core);
-                    InterfaceHandler.AddInterfaceRow();
-                }
-            }
-
-            StateBuildingCollection.Clear();
-            //InterfaceHandler.ResetStateBuildingListRows();
-
-            var buildingList = boxBinding.GetStateBuildingList();
-            if (buildingList != null) //Oceans don't have cores; they're null
-            {
-                foreach (var buildingEntry in buildingList)
-                {
-                    var building = new StateBuilding();
-                    building.Building = buildingEntry.Building;
-                    building.Upgrade = buildingEntry.Upgrade;
-                    building.Level = buildingEntry.Level;
-                    StateBuildingCollection.Add(building);
-                    InterfaceHandler.AddInterfaceRow();
-                    ProvinceInterfaceViewerGrid.RowDefinitions.Add(new RowDefinition()); //Adds a Row to Interface
-
-                    var p = STATEBUILDING_GRID.Height + 25;
-                    STATEBUILDING_GRID.Height = p;
-                    StateBuildingGridRow.Height = new GridLength(p);
-                }
-            }
-
-        }
-
-         public void HistoryFile_Changed(object sender, RoutedEventArgs e)
-        {
-            //---------Changes the Save Icon to Warning Gif----------------
-            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif",UriKind.Relative));
-            ImageBehavior.SetAnimatedSource(Save_Button, newGif);
-            //-------------------------------------------------------------
-        }
-
         public void Save_Button_Pressed(object sender, RoutedEventArgs e)
         {
+            //Creates TEMPORARY test file
             var fileName = "Test.txt";
             var path = @"C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestPrimaryEnvironment(DoD)\output\" + fileName;
 
-            //var historyFileHandler = new HistoryExportHandler();
-            //var interfaceEntries = historyFileHandler.GetInterfaceEntries();
-            //var newHistoryFile = historyFileHandler.ExportEntries(interfaceEntries);
-
-            //Deletes an old existing file.
             if (File.Exists(path))
-            {
                 File.Delete(path);
-            }
-            using (var streamWriter = File.CreateText(path)) // Create file
-            {
-/*                foreach (var entry in newHistoryFile)
-                {
-                    streamWriter.WriteLine(entry.ToString());
-                    Debug.WriteLine(entry);
-                }
-*/            }
 
+            File.CreateText(path);
             using (StreamReader sr = File.OpenText(path)) // Open file
             {
                 string s = "";
                 while ((s = sr.ReadLine()) != null)
-                {
                     Debug.WriteLine(s);
-                }
             }
 
             Set_Save_Icon_To_Saved();
         }
 
-        public void Set_Save_Icon_To_Saved()
+        public void Interface_Changed(object sender, RoutedEventArgs e)
         {
-            //---------Changes the Save Icon to Confirmed Gif----------------
-            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_confirm_button.gif", UriKind.Relative));
+            //---------Changes the Save Icon to Warning Gif----------------
+            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif", UriKind.Relative));
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
             //-------------------------------------------------------------
         }
 
+        /// <summary>
+        /// Changes the Save Icon to Confirmed Gif
+        /// </summary>
+        public void Set_Save_Icon_To_Saved()
+        {
+            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_confirm_button.gif", UriKind.Relative));
+            ImageBehavior.SetAnimatedSource(Save_Button, newGif);
+        }
+
+
+
+
+        public void ResetCores(object sender, RoutedEventArgs e)
+        {
+            var rowCount = ProvinceInterfaceViewerGrid.RowDefinitions.Count;
+            if (rowCount > InterfaceActualRows + 1) //Requires changing every time the row count is altered.
+            {
+                ProvinceInterfaceViewerGrid.RowDefinitions.RemoveAt(rowCount - 1);
+                var heightChange = COREGRID.Height - 25;
+                COREGRID.Height = heightChange;
+                CoreGridRow.Height = new GridLength(heightChange);
+            }
+            else if (rowCount == InterfaceActualRows)
+            {
+                COREGRID.Height = 0;
+            }
+            else
+            {
+                ProvinceInterfaceViewerGrid.RowDefinitions.RemoveAt(rowCount - 1);
+                COREGRID.Height = 0;
+            }
+            Interface_Changed(sender, e); //Notify data has been changed.
+        }
+
+        public void ResetListRows(object sender, RoutedEventArgs e)
+        {
+            var rowCount = ProvinceInterfaceViewerGrid.RowDefinitions.Count;
+            for (int i = rowCount; i > InterfaceActualRows; i--)
+            {
+                ProvinceInterfaceViewerGrid.RowDefinitions.RemoveAt(rowCount - 1);
+                rowCount = ProvinceInterfaceViewerGrid.RowDefinitions.Count;
+            }
+            COREGRID.Height = 0;
+            CoreGridRow.Height = new GridLength(25);
+            STATEBUILDING_GRID.Height = 0;
+            StateBuildingGridRow.Height = new GridLength(44);
+
+            Interface_Changed(sender, e); //Notify data has been changed.
+        }
+
+        public void AddBlankCore(object sender, RoutedEventArgs e)
+        {
+            Cores.Add(new Core("")); //Adds the Blank Core
+            //InterfaceHandler.AddInterfaceRow();
+            Interface_Changed(sender, e); //Notify data has been changed.
+        }
+
+        public void RemoveCore(object sender, RoutedEventArgs e)
+        {
+            Cores.RemoveAt(COREGRID.SelectedIndex); //Removes Core
+            //InterfaceHandler.RemoveInterfaceRow();
+            Interface_Changed(sender, e); //Notify data has been changed.
+        }
 
     }
 }
+

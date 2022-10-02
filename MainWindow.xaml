@@ -8,7 +8,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Z-22 Paradox Map Editor" Height="700" Width="1200" UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
+        Title="Z-22 Paradox Map Editor" Height="700" Width="1200"
+        UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Background>
@@ -40,14 +41,10 @@
         <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right"
         Margin="0,0,18,15" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212" Grid.Row="1"/>
 
+        <local:ProvinceInterface Grid.Column="1" HorizontalAlignment="Center" Panel.ZIndex="3"
+                                 VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.RowSpan="2"
+                                 Height="270" Width="368"/>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="4" Height="270" Width="372" Panel.ZIndex="5" >
-            <behaviors:Interaction.Behaviors>
-                <behaviors:MouseDragElementBehavior ConstrainToParentBounds="True"/>
-            </behaviors:Interaction.Behaviors>
-            <local:FileInterface x:Name="FileInterface" Visibility="Visible" HorizontalAlignment="Left"  VerticalAlignment="Top"
-        Grid.Column="1" Grid.Row="1"  Height="267" Width="372" Grid.RowSpan="2"/>
-        </Grid>
 
         <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" VerticalAlignment="Top" Background="Purple" Width="200" Panel.ZIndex="2" Height="40" Margin="400,25,0,0" Grid.Row="1"/>
 
@@ -56,17 +53,18 @@
 
         <Button x:Name="game_launch" Content="LAUNCH GAME" HorizontalAlignment="Right" VerticalAlignment="Top"
         Width="100" Height="20" Margin="0,15,17,0" Grid.Column="1" Panel.ZIndex="1" Grid.RowSpan="2"/>
-<!--Click does nothing at the moment-->
+        <!--Click does nothing at the moment-->
 
-        <DataGrid x:Name="fileListView" Margin="20,15,0,9" AlternatingRowBackground="#FFE2E2E2"
-                  ItemsSource="{Binding ProvinceData}" SelectedItem="{Binding SelectedItem}"
+
+
+        <DataGrid x:Name="fileListView" Margin="20,15,-5,0" AlternatingRowBackground="#FFE2E2E2"
+                  ItemsSource="{Binding ProvinceData, Mode=TwoWay}" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible"
                   Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn/>
-                <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID}"/>
-                <DataGridTextColumn x:Name="Column2" Header="Name" Width="105" Binding="{Binding ProvinceName}"/>
-                <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="61">
+                <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="Column2" Header="Name" Width="120" Binding="{Binding ProvinceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="Open" Height="18" Width="55" Click="OpenFileFromList"/>
@@ -75,11 +73,10 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
-        
-        
-        <ComboBox x:Name="GameSelect" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="15,12,0,0"
-                  VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="GameSelected" Grid.RowSpan="2" Height="22">
+
+        <ComboBox x:Name="GameSelectDropdown"
+                  HorizontalAlignment="Left" Grid.Row="0" Grid.Column="1" Margin="15,12,0,0"
+                  VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="SelectGame" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Vic2" Content="N/A">
             </ListBoxItem>
             <ListBoxItem Content="Victoria II" FontFamily="18thCentury" FontSize="20" FontWeight="Bold">
@@ -122,7 +119,7 @@
             </Grid>
         </Expander>
 
-        <ComboBox x:Name="ControlMode" HorizontalAlignment="Left" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="178,12,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ControlChange" Grid.RowSpan="2" Height="22">
+        <ComboBox x:Name="ControlMode" HorizontalAlignment="Left" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="178,12,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ChangeControlScheme" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Mode_Classic" Content="Classic"/>
             <ListBoxItem x:Name="Mode_Modern" Content="Modern"/>
             <ListBoxItem x:Name="Mode_PaintDotNet" Content="Paint.NET"/>

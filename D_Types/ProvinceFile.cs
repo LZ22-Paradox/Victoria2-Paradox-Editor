@@ -35,7 +35,7 @@ namespace Paradox_Editor.D_Types
 
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
-            if (record.province.IsNotEmptyOrWhiteSpace())
+            if (!string.IsNullOrWhiteSpace(record.province))
             { //Faulty. Some provinces bug. (Tested Vanilla Vic2)
                 if (uint.TryParse(record.red, out var red) &&
                     uint.TryParse(record.green, out var green) &&
@@ -43,7 +43,7 @@ namespace Paradox_Editor.D_Types
                 {
                     var color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
                     this.color = color;
-                    ProvinceName = record.name;
+                    ProvinceName = record.name; //Does not work with Zouar
 
                     // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
                 }
@@ -61,7 +61,7 @@ namespace Paradox_Editor.D_Types
             {
                 string value;
                 string key;
-                if (line.Replace("\t", "").Contains("}") || line.IsEmptyOrWhiteSpace())
+                if (line.Replace("\t", "").Contains("}") || string.IsNullOrWhiteSpace(line))
                     value = null;
                 else
                 {
@@ -70,8 +70,13 @@ namespace Paradox_Editor.D_Types
                         line = line.Substring(0, index);
 
                     var seperatedLines = line.Replace(" ", "").Split('=');
-                    key = seperatedLines[0];
-                    value = seperatedLines[1];
+                    if (seperatedLines.Length < 2) {
+                        return;
+                    } else
+                    {
+                        key = seperatedLines[0];
+                        value = seperatedLines[1];
+                    }
                 }
 
                 if (isReadingBuildings == false)

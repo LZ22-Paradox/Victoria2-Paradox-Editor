@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Paradox_Editor.C_Window_Functions
 {
     public class Explorer
     {
-        public string OpenFileSelect()
+        public string OpenFolderSelect()
         {
             var dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -19,8 +20,15 @@ namespace Paradox_Editor.C_Window_Functions
             var storedOpener = dialog.SelectedPath; //Unused; Reimpliment stored opener.
 
             Console.ReadLine();
-            MainWindow.ProvinceData.Clear();
             return selectDirectory;
+        }
+
+        public void OpenFile(string argument)
+        {
+            var fileOpener = new Process();
+            fileOpener.StartInfo.FileName = "explorer";
+            fileOpener.StartInfo.Arguments = argument;
+            fileOpener.Start();
         }
 
     }

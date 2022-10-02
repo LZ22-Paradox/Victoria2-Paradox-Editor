@@ -139,7 +139,7 @@ namespace Paradox_Editor.A_All_New_Methods
             {
                 foreach (var record in records)
                 {
-                    if (record.province.IsNotEmptyOrWhiteSpace())
+                    if (!string.IsNullOrWhiteSpace(record.province))
                     {
                         if (Provinces.ContainsKey(Convert.ToUInt32(record.province)))
                             Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record);

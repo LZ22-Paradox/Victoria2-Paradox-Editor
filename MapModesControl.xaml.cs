@@ -6,7 +6,6 @@ using System.Windows.Controls;
 
 namespace Paradox_Editor
 {
-
     public partial class MapModesControl : UserControl
     {
         public MapModesControl()

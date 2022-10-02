@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Paradox_Editor.FileInterface"
+﻿<UserControl x:Class="Paradox_Editor.ProvinceInterface"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              xmlns:types="clr-namespace:Paradox_Editor.D_Types"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             d:DesignHeight="280" d:DesignWidth="368" AllowDrop="True" Focusable="True"
+             Height="270" Width="368" AllowDrop="True" Focusable="True"
              DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
              >
 
@@ -46,14 +46,14 @@
 
         <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0"
                 BorderThickness="2,1,0,1" Height="17" Width="17"
-                Background="{x:Null}" Click="ExitClicked" Margin="0,20,5,0"
+                Background="{x:Null}" Click="CloseInterface" Margin="0,20,5,0"
                 HorizontalAlignment="Right" VerticalAlignment="Top"
                 >
             <Image Name="ExitButton_Image" Source="/Preloaded_Assets/VIC2/Icons/button_exit.png" Stretch="UniformToFill"/>
         </Button>
 
         <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                      Grid.RowSpan="4" HorizontalAlignment="Left" Width="300" Margin="35,10,0,-900">
+                      Grid.RowSpan="4" HorizontalAlignment="Left" Width="300" Margin="35,10,0,-100">
             <Grid x:Name="ProvinceInterfaceViewerGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
@@ -97,7 +97,7 @@
                 <TextBox x:Name="OWNERBOX" Text="" Grid.Row="1" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="Controller" Text="Controller" Grid.Row="2" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -106,7 +106,7 @@
                 <TextBox x:Name="CONTROLLERBOX" Text="" Grid.Row="2" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="TradeGood" Text="Trade Good" Grid.Row="3" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -115,7 +115,7 @@
                 <TextBox x:Name="TRADEGOODBOX" Text="" Grid.Row="3" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="LifeRating" Text="Life Rating" Grid.Row="4" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -124,7 +124,7 @@
                 <TextBox x:Name="LIFERATINGBOX" Text="" Grid.Row="4" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="Colonial" Text="Colonial Level" Grid.Row="5" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -133,24 +133,24 @@
                 <TextBox x:Name="COLONIALBOX" Text="" Grid.Row="5" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
-                <TextBlock Name="Cores" Text="Core(s)" Grid.Row="6" Grid.Column="0"
+                <TextBlock Name="CoresText" Text="Core(s)" Grid.Row="6" Grid.Column="0"
                          FontFamily="Arial" Background="{x:Null}"
                          Foreground="Black" Height="16"
                          TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"
                          VerticalAlignment="Top"/>
 
-                <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                <Button Grid.Column="1" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Right" Panel.ZIndex="1"
-                        Click="AddBlankCoreRow" ToolTip="Add new Core TAG"
+                        Click="AddBlankCore" ToolTip="Add new Core TAG"
                         VerticalAlignment="Top">
                     <Image Name="AddCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
                 </Button>
 
-                <Button Grid.Column="3" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Left" Panel.ZIndex="1"
                         Click="ResetCores" ToolTip="Reset Cores List"
@@ -163,11 +163,11 @@
                           HeadersVisibility="None" AutoGenerateColumns="False"
                           Background="{x:Null}" FontSize="14" 
                           FontFamily="Arial" Grid.RowSpan="1" FontWeight="Normal"
-                          Width="64" Height="0" ItemsSource="{Binding CoreDataCollection}"
+                          Width="64" Height="0" ItemsSource="{Binding Cores}"
                           HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
                           VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding TAG}" Width="40">
+                        <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding tag}" Width="40">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>
@@ -181,7 +181,7 @@
                                     <Button Grid.Column="0" Foreground="{x:Null}"
                                             BorderBrush="{x:Null}" Background="{x:Null}"
                                             Height="20" Width="20" Panel.ZIndex="1"
-                                            Click="RemoveCoreRow">
+                                            Click="RemoveCore">
                                         <Image Source="/Preloaded_Assets/VIC2/Icons/button_remove.png"/>
                                     </Button>
                                 </DataTemplate>
@@ -197,7 +197,7 @@
                 <TextBox x:Name="TERRAINBOX" Text="" Grid.Row="7" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="Naval_Base" Text="Naval Base" Grid.Row="8" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -206,7 +206,7 @@
                 <TextBox x:Name="NAVALBASEBOX" Text="" Grid.Row="8" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="Fort" Text="Fort" Grid.Row="9" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -215,7 +215,7 @@
                 <TextBox x:Name="FORTBOX" Text="" Grid.Row="9" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="Railroad" Text="Railroad" Grid.Row="10" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -224,7 +224,7 @@
                 <TextBox x:Name="RAILROADBOX" Text="" Grid.Row="10" Grid.Column="1" FontFamily="Arial"
                          Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
-                         TextChanged="HistoryFile_Changed"/>
+                         TextChanged="Interface_Changed"/>
 
                 <TextBlock Name="State_Building" Text="State Buildings" Grid.Row="11" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
@@ -239,7 +239,7 @@
                     Focusable="False"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    ItemsSource="{Binding StateBuildingCollection}">
+                    ItemsSource="{Binding StateBuildings}">
                     <DataGrid.Columns>
                     </DataGrid.Columns>
 
@@ -250,7 +250,7 @@
         </ScrollViewer>
 
         <Image x:Name="background" Source="/Preloaded_Assets/VIC2/Images/provinceInterface.png"
-               Grid.RowSpan="6" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
+               Grid.RowSpan="6" Grid.Row="0" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
     </Grid>
 
 </UserControl>
