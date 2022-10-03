@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -32,9 +34,9 @@ namespace Paradox_Editor
         //Crashes after loading second mod
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-        public static bool IsImageFlipped { get; set; }
-        public int CurrentControlMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
-        public int CurrentGameMode { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public static bool IsImageFlipped { get; set; } //Possibly may be useless
+        public int CurrentControlMode { get; set; }
+        public int CurrentGameMode { get; set; }
 
         private ObservableCollection<ProvinceFile> _provincedata = new();
         public ObservableCollection<ProvinceFile> ProvinceData
@@ -113,6 +115,14 @@ namespace Paradox_Editor
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
             fileListView.ItemsSource = ProvinceData;
 
+            #region Inefficient code that requires sorting. Perhaps into the map renderer.
+            //Untested Code - Fix Up : Provinces map dissapears when re-selected : Move to MapRenderer class
+            var image = new ImageTransformation(mapCanvas);
+            image.InvertCanvas();
+            var imgs = new ImageSourceConverter(); //Create instance of the image converter
+            mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
+            mapPolitical = mapProvinces; //Feels inefficient
+            #endregion
             /*
             //✓✓✓
             StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
@@ -126,15 +136,12 @@ namespace Paradox_Editor
             //✓✓✓
             var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
             MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
-            
+            //✓✓✓
             MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
-            var image = new ImageTransformation(Canvas);
-            image.InvertCanvas(Canvas);
+            
 
-            var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            Image1.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
-            Image2 = Image1;
+            
 
             ///-----------------------Lazy Ending-----------------------------
             var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
@@ -180,7 +187,6 @@ namespace Paradox_Editor
         private void ChangeControlScheme(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             CurrentControlMode = ControlMode.SelectedIndex;
-
         }
     }
 }

@@ -10,16 +10,14 @@ using System.Windows.Media;
 
 namespace Paradox_Editor.A_Map_Functions
 {
+    ///Possibly shift into utilities
     public class ImageTransformation
     {
-        public Canvas CanvasTransform { get; set; }
+        private Canvas CanvasTransform { get; set; }
 
-        public ImageTransformation(Canvas canvas)
-        {
-            CanvasTransform = canvas;
-        }
+        public ImageTransformation(Canvas canvas) => CanvasTransform = canvas;
 
-        public void InvertCanvas(Canvas CanvasTransform)
+        public void InvertCanvas()
         {
             var flipTrans = new ScaleTransform(); //creates instance for scale
             CanvasTransform.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image

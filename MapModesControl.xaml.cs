@@ -36,6 +36,7 @@ namespace Paradox_Editor
             SoundHandler.PlayClickSound();
         }
 
+        ///Do performance Update
         public static void UpdateMapModeVisibility(int CurrentMapMode, MapMode_IconSet Assets) //Updates & Disables the other existing map modes
         {
             var MainWindow = (MainWindow)Application.Current.MainWindow;
@@ -46,8 +47,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOn;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
 
-                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapPolitical.Visibility = Visibility.Visible;
+                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapTerrain.Visibility = Visibility.Hidden;
             }
             else if (CurrentMapMode == 1) //If Provinces is on
@@ -56,8 +57,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
 
-                MainWindow.mapProvinces.Visibility = Visibility.Visible;
                 MainWindow.mapPolitical.Visibility = Visibility.Hidden;
+                MainWindow.mapProvinces.Visibility = Visibility.Visible;
                 MainWindow.mapTerrain.Visibility = Visibility.Hidden;
             }
             else if (CurrentMapMode == 2) //If Terrain is on
@@ -66,8 +67,8 @@ namespace Paradox_Editor
                 MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
                 MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOn;
 
-                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapPolitical.Visibility = Visibility.Hidden;
+                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
                 MainWindow.mapTerrain.Visibility = Visibility.Visible;
 
             }

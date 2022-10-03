@@ -41,10 +41,14 @@
         <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right"
         Margin="0,0,18,15" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212" Grid.Row="1"/>
 
-        <local:ProvinceInterface Grid.Column="1" HorizontalAlignment="Center" Panel.ZIndex="3"
-                                 VerticalAlignment="Center" Grid.ColumnSpan="2" Grid.RowSpan="2"
-                                 Height="270" Width="368"/>
-
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Height="270" Width="372" Panel.ZIndex="5" >
+            <behaviors:Interaction.Behaviors>
+                <behaviors:MouseDragElementBehavior ConstrainToParentBounds="True"/>
+            </behaviors:Interaction.Behaviors>
+            <local:ProvinceInterface x:Name="ProvinceInterface" Visibility="Visible" HorizontalAlignment="Center"  VerticalAlignment="Top"
+        Grid.Column="1" Grid.Row="1" Panel.ZIndex="3"  Height="270" Width="368" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+        </Grid>
+        
 
         <TextBox Name="TESTBOX" Text="TEST" Grid.Column="1" VerticalAlignment="Top" Background="Purple" Width="200" Panel.ZIndex="2" Height="40" Margin="400,25,0,0" Grid.Row="1"/>
 

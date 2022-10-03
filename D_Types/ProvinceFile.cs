@@ -35,16 +35,17 @@ namespace Paradox_Editor.D_Types
 
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
-            if (!string.IsNullOrWhiteSpace(record.province))
-            { //Faulty. Some provinces bug. (Tested Vanilla Vic2)
+            if (!string.IsNullOrWhiteSpace(record.province)) //Faulty. Some provinces bug. (Tested Vanilla Vic2)
+            {
                 if (uint.TryParse(record.red, out var red) &&
                     uint.TryParse(record.green, out var green) &&
                     uint.TryParse(record.blue, out var blue))
                 {
-                    var color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
-                    this.color = color;
-                    ProvinceName = record.name; //Does not work with Zouar
-
+                    this.red = red.ToString();
+                    this.green = green.ToString();
+                    this.blue = blue.ToString();
+                    color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
+                    ProvinceName = record.name; //Does not work with Zouar (CSV has misplaced '.')
                     // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
                 }
             }
