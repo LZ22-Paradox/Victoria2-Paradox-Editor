@@ -19,6 +19,7 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         o The CSV has a mislabel for the province. It's last (BLUE) colour has a '.' in it.
         String should be formatted and dot could be removed in ProvinceFile.AppendFromCSV
             - 1825;208;17;223.;Zouar;x
+    * Program replaces province view with political view.
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY

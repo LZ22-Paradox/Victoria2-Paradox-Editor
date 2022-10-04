@@ -9,9 +9,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Paradox_Editor.A_All_New_Methods;
 using Paradox_Editor.A_Map_Functions;
+using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 
@@ -100,8 +102,8 @@ namespace Paradox_Editor
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
-            var MainWindow = (MainWindow)System.Windows.Application.Current.MainWindow;
-
+            var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
+            
             Explorer filesector = new();
             string selectedDirectory = filesector.OpenFolderSelect();
             if (selectedDirectory == null)
@@ -115,44 +117,28 @@ namespace Paradox_Editor
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
             fileListView.ItemsSource = ProvinceData;
 
-            #region Inefficient code that requires sorting. Perhaps into the map renderer.
+
+            ///Load Province Map
             //Untested Code - Fix Up : Provinces map dissapears when re-selected : Move to MapRenderer class
             var image = new ImageTransformation(mapCanvas);
             image.InvertCanvas();
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(selectedDirectory, "map", "provinces.bmp")));
-            mapPolitical = mapProvinces; //Feels inefficient
-            #endregion
-            /*
-            //✓✓✓
-            StoredProvinceIDToDataDictionaries = provinceIDToDataDictionaries;
-            //✓✓✓
-            var tagToCountryName = dataAcquisitionInstance.GetTagToCountryName(directoryData.CountriesTxt);
-            StoredTagToCountryName = tagToCountryName;
-            //✓✓✓
-            CountryNameToColor CountryNameToColorConverter = new();
-            var countryNameToColor = CountryNameToColorConverter.GetCountryColor(directoryData.Countries);
-            StoredCountryNameToColor = countryNameToColor; //Check if used
-            //✓✓✓
-            var provinceDataCollection = new DataExtractor(directoryData.HistoryProvinces, MainWindow.ProvinceData);
-            MainWindow.ProvinceData = provinceDataCollection.ExtractForCollection(directoryData.HistoryProvinces); //Responsible for Left Panel
-            //✓✓✓
-            MainWindow.fileListView.ItemsSource = MainWindow.ProvinceData;
 
+            ///Load Political Map
+            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
+            //var writableImage = BitmapFactory.New(provinceMapSource.PixelWidth, provinceMapSource.PixelHeight); //Different dimensions than firstlayer
+            //writableImage.Clear(Colors.White); //Clears an image. Could be useful.
+            var politicalMap = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
+            MainWindow.mapPolitical.Source = politicalMap;
+
+            ///Load D_ Map
+
+
+            ///Load D_ Map
             
 
-            
 
-            ///-----------------------Lazy Ending-----------------------------
-            var firstLayer = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MainWindow.mapProvinces.Source); //May be problem
-            var writeableBmp = BitmapFactory.New(firstLayer.PixelWidth, firstLayer.PixelHeight); //Different dimensions than firstlayer
-            writeableBmp.Clear(Colors.White);
-            var ColorMap = new MapRenderer(firstLayer, writeableBmp, MainWindow.mapProvinces,
-                provinceColorToID, provinceIDToDataDictionaries.IDToOwner,
-                tagToCountryName, countryNameToColor);
-            ColorMap.DrawProvinceMap();
-            MainWindow.mapPolitical.Source = ColorMap.SizeReference;
-            ///--*/
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
@@ -188,5 +174,6 @@ namespace Paradox_Editor
         {
             CurrentControlMode = ControlMode.SelectedIndex;
         }
+    
     }
 }

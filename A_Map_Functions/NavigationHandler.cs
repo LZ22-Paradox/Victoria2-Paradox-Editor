@@ -95,7 +95,7 @@ namespace Paradox_Editor
 
         }
 
-        public void MouseLeftClick(object sender, MouseButtonEventArgs e)
+        public void MouseLeftClick(object sender, MouseButtonEventArgs e) //Fix up
         {
             var image = (Image)sender;
             var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap

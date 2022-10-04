@@ -36,13 +36,17 @@ namespace Paradox_Editor.A_All_New_Methods
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
         private Dictionary<string, Color> CountryNamesToColors = new();
-
+        
         public DataAcquisition() { }
         public DataAcquisition(string directory)
         {
             Directories = CollectDirectoryData(directory);
         }
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
+        public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
+        public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
+        public Dictionary<string, Color> GetCountryNamesToColours() => CountryNamesToColors;
+
 
         /// <summary>
         /// Calls for a read of all data.
@@ -52,11 +56,12 @@ namespace Paradox_Editor.A_All_New_Methods
         {
             CollectDirectoryData(directory);
             GetHistoryFiles();
-            PopulateAppendProvinceCSVData();
 
-            GetProvinceColorToID();
-            GetTagsToCountryNames();
-            GetCountryNamesToColours();
+            PopulateAppendProvinceCSVData();
+            PopulateProvinceColorsToIDs();
+            PopulateTagsToCountryNames();
+            PopulateCountryNamesToColours();
+            
         }
         public DataAcquisition ReturnAcquisitionAllData(string directory)
         {
@@ -151,7 +156,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// <summary>
         /// Populates dictionary of province colour keys with province ID's.
         /// </summary>
-        public void GetProvinceColorToID()
+        public void PopulateProvinceColorsToIDs()
         {
             foreach (ProvinceFile province in Provinces.Values)
             {
@@ -162,7 +167,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// <summary>
         /// Gets given game TAG's and country names, based on the common/...name.txt files.
         /// </summary>
-        public void GetTagsToCountryNames() //Requires fixing up and efficiency-working (also implement into provinces)
+        public void PopulateTagsToCountryNames() //Requires fixing up and efficiency-working (also implement into provinces)
         {
             foreach (var line in File.ReadAllLines(Directories.CountriesTxt)) //Check Path_CountriesTxt
             {
@@ -190,7 +195,7 @@ namespace Paradox_Editor.A_All_New_Methods
         /// <summary>
         /// Populates the dictionary of country name keys with their respective country-colours.
         /// </summary>
-        public void GetCountryNamesToColours()
+        public void PopulateCountryNamesToColours()
         {
             foreach (var countryFile in Directories.Countries)
             {

@@ -11,69 +11,63 @@ namespace Paradox_Editor.A_Map_Navigation
     public class MapRenderer
     {
 
-        private Image Image;
-        public WriteableBitmap FirstLayer;
         public WriteableBitmap SizeReference { get; set; }
 
-        private Dictionary<uint, string> Dictionary1;
-        private Dictionary<string, string> Dictionary2;
-        private Dictionary<string, string> Dictionary3;
-        private Dictionary<string, Color> Dictionary4;
         private DataAcquisition ModData;
 
-        public MapRenderer(DataAcquisition modData) => ModData = modData;
+        /*        [Obsolete]
+                public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<uint, string> colorToProvinceID, Dictionary<string, string> provinceIDToOwnerTAG, Dictionary<string, string> countryTAGToCountryName, Dictionary<string, Color> countryToColor)
+                {
+                    Image = image;
+                    FirstLayer = firstlayer;
+                    SizeReference = sizereference;
+                    Dictionary1 = colorToProvinceID;
+                    Dictionary2 = provinceIDToOwnerTAG;
+                    Dictionary3 = countryTAGToCountryName;
+                    Dictionary4 = countryToColor;
 
-        [Obsolete]
-        public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<uint, string> colorToProvinceID, Dictionary<string, string> provinceIDToOwnerTAG, Dictionary<string, string> countryTAGToCountryName, Dictionary<string, Color> countryToColor)
+                    //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
+                }*/
+
+        public MapRenderer(DataAcquisition modData)
         {
-            Image = image;
-            FirstLayer = firstlayer;
-            SizeReference = sizereference;
-            Dictionary1 = colorToProvinceID;
-            Dictionary2 = provinceIDToOwnerTAG;
-            Dictionary3 = countryTAGToCountryName;
-            Dictionary4 = countryToColor;
-
-            //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
+            ModData = modData;
         }
 
         static uint GetRawColor(Color color) =>(0xFFu << 24)
             | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
 
-        public unsafe void DrawProvinceMap()
+        public unsafe WriteableBitmap DrawPoliticalMap(WriteableBitmap image)
         {
-            FirstLayer.Lock();
-            var pixels = (uint*)FirstLayer.BackBuffer;
+            image.Lock();
+            var pixels = (uint*)image.BackBuffer;
 
-            var pixelCount = FirstLayer.PixelWidth * FirstLayer.PixelHeight;
+            var pixelCount = image.PixelWidth * image.PixelHeight;
 
             Parallel.For(0, pixelCount, (index) =>
             {
                 var rawPixel = pixels[index];
 
-                if (
-                    Dictionary1.TryGetValue(rawPixel, out var provinceID) &&
-                    Dictionary2.TryGetValue(provinceID, out var countryTAG) &&
-                    Dictionary3.TryGetValue(countryTAG, out var countryName) &&
-                    Dictionary4.TryGetValue(countryName, out var countryColor))
-                {
-                    pixels[index] = GetRawColor(countryColor);
-                }
-                else if (Dictionary1.TryGetValue(rawPixel, out var UncolonizedID)
-                    && !Dictionary2.TryGetValue(provinceID, out var unColonizedTag))
-                {
-                    pixels[index] = GetRawColor(Colors.White);
-                }
-                else
-                {
-                    pixels[index] = GetRawColor(Colors.Black); //Uncolonized
-                }
+                ModData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
+                ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
 
-                ///This is the area for significant change; different modes.
+                bool foundOwner = false;
+
+                if (province?.Owner != null)
+                {
+                    foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
+                    ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
+                    pixels[index] = GetRawColor(countryColor);
+                } 
+                else if (province?.Owner == null)
+                if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true)
+                        pixels[index] = GetRawColor(Colors.Black); //Uncolonized
+                else
+                        pixels[index] = GetRawColor(Colors.White); //Ocean
             });
 
-            FirstLayer.Unlock();
-            SizeReference = FirstLayer;
+            image.Unlock();
+            return image;
         }
 
         public void DrawStateMap()
