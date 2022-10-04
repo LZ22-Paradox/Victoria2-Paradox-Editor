@@ -4,8 +4,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Point = System.Windows.Point;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
-using System.Windows;
 using Image = System.Windows.Controls.Image;
 using Paradox_Editor.C_Window_Functions;
 using Cursors = System.Windows.Input.Cursors;
@@ -14,6 +12,12 @@ using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Paradox_Editor.D_Types;
 using Paradox_Editor.A_All_New_Methods;
+using System.Drawing;
+using System.IO;
+using System.Windows.Media.Imaging;
+using System.Drawing.Imaging;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace Paradox_Editor
 {
@@ -21,8 +25,10 @@ namespace Paradox_Editor
     public class NavigationHandler
     {
         private Point start;
-        private List<Image> Images = new List<Image>();
+        private List<Image> Maps = new();
         private Canvas Canvas;
+        private Dictionary<int, Image> SpareMaps;
+
         public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
 
 
@@ -31,10 +37,10 @@ namespace Paradox_Editor
             Canvas = canvas;
         }
 
-        public NavigationHandler AddImage(Image image)
+        public NavigationHandler(Canvas canvas, Dictionary<int, Image> maps)
         {
-            Images.Add(image);
-            return this;
+            Canvas = canvas;
+            SpareMaps = maps;
         }
 
         public void MouseLeave(object sender, MouseEventArgs e)
@@ -67,7 +73,7 @@ namespace Paradox_Editor
 
             if (MainWindow.scrollViewer.IsFocused && MainWindow.ControlMode.SelectedItem.Equals(MainWindow.Mode_Modern))
             {
-                Images.ForEach(image =>
+                Maps.ForEach(image =>
                 {
                     var matrix = image.RenderTransform.Value;
 
@@ -97,13 +103,27 @@ namespace Paradox_Editor
 
         public void MouseLeftClick(object sender, MouseButtonEventArgs e) //Fix up
         {
+            //BitmapSource source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
+
+
+            //if (MainWindow.mapModeButtons.GetMapMode() == 1)
+
+/*            var image = (Image)sender;
+            var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap*/
+
+
+            _ = SpareMaps.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);  //make as WriteableBitmap
+            var source = (BitmapSource)mapMode.Source;
+
             var image = (Image)sender;
-            var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
             var mousePos = e.GetPosition(image);
             var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
             var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
-            var bitmap = BitmapFromSource.BmpFromSource(source);
+            var bitmap = BitmapFromSource(source);
             var pixelColor = bitmap.GetPixel(pixelX, pixelY);
+
+
+
 
             var windowPos = e.GetPosition(MainWindow);
             //MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
@@ -130,35 +150,34 @@ namespace Paradox_Editor
             if (!Canvas.IsMouseCaptured) return;
 
             var end = e.MouseDevice.GetPosition(Canvas);
-
-            Images.ForEach(image =>
+            foreach (var image in SpareMaps.Values)
             {
                 var m = image.RenderTransform.Value;
                 m.OffsetX = m.OffsetX - (start.X - end.X);
                 m.OffsetY = m.OffsetY - (start.Y - end.Y);
-
-
                 image.RenderTransform = new MatrixTransform(m);
-            });
+            }
+
             start = e.MouseDevice.GetPosition(Canvas);
         }
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Images.ForEach(image =>
+            Maps.ForEach(image =>
             {
                 var p = e.MouseDevice.GetPosition(image);
                 var matrix = image.RenderTransform.Value;
 
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
-                    if (e.Delta > 0)
+                    switch (e.Delta)
                     {
-                        matrix.Translate(Math.Abs(e.Delta), 0);
-                    }
-                    else
-                    {
-                        matrix.Translate(-Math.Abs(e.Delta), 0);
+                        case > 0:
+                            matrix.Translate(Math.Abs(e.Delta), 0);
+                            break;
+                        default:
+                            matrix.Translate(-Math.Abs(e.Delta), 0);
+                            break;
                     }
 
                     image.RenderTransform = new MatrixTransform(matrix);
@@ -167,24 +186,26 @@ namespace Paradox_Editor
                 {
                     if (MainWindow.IsImageFlipped)
                     {
-                        if (e.Delta > 0)
+                        switch (e.Delta)
                         {
-                            matrix.Translate(0, -Math.Abs(e.Delta));
-                        }
-                        else
-                        {
-                            matrix.Translate(0, Math.Abs(e.Delta));
+                            case > 0:
+                                matrix.Translate(0, -Math.Abs(e.Delta));
+                                break;
+                            default:
+                                matrix.Translate(0, Math.Abs(e.Delta));
+                                break;
                         }
                     }
                     else
                     {
-                        if (e.Delta > 0)
+                        switch (e.Delta)
                         {
-                            matrix.Translate(0, Math.Abs(e.Delta));
-                        }
-                        else
-                        {
-                            matrix.Translate(0, -Math.Abs(e.Delta));
+                            case > 0:
+                                matrix.Translate(0, Math.Abs(e.Delta));
+                                break;
+                            default:
+                                matrix.Translate(0, -Math.Abs(e.Delta));
+                                break;
                         }
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
@@ -203,6 +224,20 @@ namespace Paradox_Editor
                 }
 
             });
+        }
+
+        private Bitmap BitmapFromSource(BitmapSource bitmapsource)
+        {
+            Bitmap bitmap;
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+
+                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
+                enc.Save(outStream);
+                bitmap = new Bitmap(outStream);
+            }
+            return bitmap;
         }
     }
 }

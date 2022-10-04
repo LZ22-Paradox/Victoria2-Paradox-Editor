@@ -95,29 +95,12 @@ namespace Paradox_Editor.D_Types
 
     public struct DirectoryStructure
     {
-        public string[] MasterDirectory { get; set; }
+        public string[] PrimaryDirectories { get; set; }
         public string[] Countries { get; set; }
         public string[] HistoryProvincePaths { get; set; }
         public string CountriesTxt { get; set; }
         public string DefinitionCSVPath { get; set; }
 
-    }
-
-    [Obsolete] //Code below may be obsolete and will need revision.
-    public static class BitmapFromSource
-    {
-        public static Bitmap BmpFromSource(BitmapSource bitmapsource)
-        {
-            Bitmap bitmap;
-            using (var outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                enc.Save(outStream);
-                bitmap = new Bitmap(outStream);
-            }
-            return bitmap;
-        }
     }
 
 }

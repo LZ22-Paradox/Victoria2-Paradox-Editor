@@ -13,7 +13,9 @@ namespace Paradox_Editor
             InitializeComponent();
         }
 
-        public int CurrentMapMode = 1;//Political(0), Provinces(1), Terrain(2)
+        private int CurrentMapMode = 1;//Political(0), Provinces(1), Terrain(2)
+
+        public int GetMapMode() => CurrentMapMode;
 
         private void MapmodeButton_Political_Click(object sender, RoutedEventArgs e)
         {
@@ -29,7 +31,7 @@ namespace Paradox_Editor
             SoundHandler.PlayClickSound();
         }
 
-        private void mapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
+        private void MapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
             UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);

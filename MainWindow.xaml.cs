@@ -28,18 +28,22 @@ namespace Paradox_Editor
         public DataAcquisition ModData { get; set; }
 
         private NavigationHandler Navigator;
-        public static bool IsMapLoaded; //Obselete, Move to Map Renderer
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void NotifyPropertyChange(string propertyName)
-        { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
-        //Crashes after loading second mod
+        public static bool IsMapLoaded;
 
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public static bool IsImageFlipped { get; set; } //Possibly may be useless
         public int CurrentControlMode { get; set; }
         public int CurrentGameMode { get; set; }
 
+        public Dictionary<int, Image> MapModes { get; set; }
+
+        /// <summary>
+        /// Numerous calls, constructors and methods to allow Province Data to bind to the History-File-List DataGrid.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChange(string propertyName)
+        { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+        //Crashes after loading second mod
         private ObservableCollection<ProvinceFile> _provincedata = new();
         public ObservableCollection<ProvinceFile> ProvinceData
         { get => _provincedata; set { _provincedata = value; NotifyPropertyChange("ProvinceData"); } }
@@ -49,11 +53,11 @@ namespace Paradox_Editor
             InitializeComponent();
             this.DataContext = this;
 
-            Navigator =
-                new NavigationHandler(mapCanvas)
-                .AddImage(mapProvinces)
-                .AddImage(mapPolitical)
-                .AddImage(mapTerrain);
+            MapModes = new Dictionary<int, Image>();
+            MapModes.Add(0, mapProvinces);
+            MapModes.Add(1, mapPolitical);
+            MapModes.Add(2, mapTerrain);
+            Navigator = new NavigationHandler(mapCanvas, MapModes);
 
             /*            var timer = new DispatcherTimer();
                         timer.Interval = TimeSpan.FromSeconds(0.01);
@@ -82,14 +86,7 @@ namespace Paradox_Editor
             }
             else if (e.LeftButton.Equals(MouseButtonState.Pressed) && IsMapLoaded)
             {
-                if (mapModeButtons.CurrentMapMode == 0) //Political Mapmode
-                {
-                    //null 
-                }
-                if (mapModeButtons.CurrentMapMode == 1) //Province Mapmode
-                {
-                    Navigator.MouseLeftClick(sender, e);
-                }
+                Navigator.MouseLeftClick(sender, e);
             }
 
         }
@@ -109,7 +106,7 @@ namespace Paradox_Editor
             if (selectedDirectory == null)
                 return;
 
-            IsMapLoaded = true; //Move AFTER map is rendered?
+            
             DataAcquisition provinceData = new(selectedDirectory);
             ModData = provinceData.ReturnAcquisitionAllData(selectedDirectory);
 
@@ -136,9 +133,9 @@ namespace Paradox_Editor
 
 
             ///Load D_ Map
-            
 
 
+            IsMapLoaded = true;
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
@@ -153,13 +150,13 @@ namespace Paradox_Editor
                 SoundHandler.SoundAssetChange("VIC2");
                 VisualHandler.ConductAssetChange("VIC2");
 
-                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, VisualHandler.MapModeIconSet);
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
             }
             else if (GameSelectDropdown.SelectedItem.ToString().Contains("Europa Universalis IV"))
             {
                 SoundHandler.SoundAssetChange("EU4");
                 VisualHandler.ConductAssetChange("EU4");
-                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.CurrentMapMode, VisualHandler.MapModeIconSet);
+                MapModesControl.UpdateMapModeVisibility(this.mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
             }
             else
             {

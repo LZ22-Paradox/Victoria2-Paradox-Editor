@@ -8,3 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:Paradox_Editor.C_Window_Functions.FolderSelect.Image1")]
 [assembly: SuppressMessage("CodeQuality", "IDE0052:Remove unread private members", Justification = "<Pending>")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
+[assembly: SuppressMessage("Style", "IDE0054:Use compound assignment", Justification = "<Pending>", Scope = "member", Target = "~M:Paradox_Editor.NavigationHandler.MouseMove(System.Object,System.Windows.Input.MouseEventArgs)")]

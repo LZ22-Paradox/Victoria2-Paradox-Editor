@@ -1,5 +1,4 @@
-﻿										T̳̿͟͞o̳̿͟͞ ̳̿͟͞D̳̿͟͞o̳̿͟͞ - ̳̿͟͞I̳̿͟͞d̳̿͟͞e̳̿͟͞a̳̿͟͞s̳̿͟͞ ̳̿͟͞t̳̿͟͞o̳̿͟͞ ̳̿͟͞A̳̿͟͞d̳̿͟͞d̳̿͟͞
-[] Environment = WPF with .NET 5.0 core
+﻿[] Environment = WPF with .NET 5.0 core
 
 [Definition.csv] - province;red;green;blue;provincename;x
 * FolderSelect is the master folder that executes the methods needed
@@ -19,7 +18,16 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         o The CSV has a mislabel for the province. It's last (BLUE) colour has a '.' in it.
         String should be formatted and dot could be removed in ProvinceFile.AppendFromCSV
             - 1825;208;17;223.;Zouar;x
-    * Program replaces province view with political view.
+    * If file isn't found, find Vic2's default instead.
+
+    BAD MOD INCOMPATABILITIES:
+        * TTA - Duplicate Colours.
+        * TOL - A history province has a number-only name.
+        * HTA - Missing countries on map.
+        * PDM - Tester country name has no colour.
+        * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format.
+        * LZ22 - A history province has "COLONIAL = YES", rather than an integer for some reason.
+        o Most Mods - Two provinces in Afrika are missing. (DoD Allbored For Testing)
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY

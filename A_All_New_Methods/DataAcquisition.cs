@@ -29,7 +29,9 @@ namespace Paradox_Editor.A_All_New_Methods
 
     public class DataAcquisition
     {
+        private string MasterDirectory;
         private DirectoryStructure Directories = new();
+        
         private Dictionary<uint, ProvinceFile> Provinces = new();
 
         //Temporary lists that may be sorted later
@@ -41,6 +43,7 @@ namespace Paradox_Editor.A_All_New_Methods
         public DataAcquisition(string directory)
         {
             Directories = CollectDirectoryData(directory);
+            MasterDirectory = directory;
         }
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
@@ -82,7 +85,7 @@ namespace Paradox_Editor.A_All_New_Methods
             string CSVFilePath = Path.Combine(directory, "map", "definition.csv");
             return new DirectoryStructure()
             {
-                MasterDirectory = masterFolder,
+                PrimaryDirectories = masterFolder,
                 Countries = countryCommonFiles,
                 CountriesTxt = countriesCommonFilePath,
                 DefinitionCSVPath = CSVFilePath,

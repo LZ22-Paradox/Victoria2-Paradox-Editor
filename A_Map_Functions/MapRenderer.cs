@@ -10,24 +10,7 @@ namespace Paradox_Editor.A_Map_Navigation
 {
     public class MapRenderer
     {
-
-        public WriteableBitmap SizeReference { get; set; }
-
         private DataAcquisition ModData;
-
-        /*        [Obsolete]
-                public MapRenderer(WriteableBitmap firstlayer, WriteableBitmap sizereference, Image image, Dictionary<uint, string> colorToProvinceID, Dictionary<string, string> provinceIDToOwnerTAG, Dictionary<string, string> countryTAGToCountryName, Dictionary<string, Color> countryToColor)
-                {
-                    Image = image;
-                    FirstLayer = firstlayer;
-                    SizeReference = sizereference;
-                    Dictionary1 = colorToProvinceID;
-                    Dictionary2 = provinceIDToOwnerTAG;
-                    Dictionary3 = countryTAGToCountryName;
-                    Dictionary4 = countryToColor;
-
-                    //colorToProvinceId, provinceIDToControllerTAG, tagToCountryName, countryNameToColor
-                }*/
 
         public MapRenderer(DataAcquisition modData)
         {
@@ -37,6 +20,11 @@ namespace Paradox_Editor.A_Map_Navigation
         static uint GetRawColor(Color color) =>(0xFFu << 24)
             | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
 
+        /// <summary>
+        /// Draws the political map.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
         public unsafe WriteableBitmap DrawPoliticalMap(WriteableBitmap image)
         {
             image.Lock();
