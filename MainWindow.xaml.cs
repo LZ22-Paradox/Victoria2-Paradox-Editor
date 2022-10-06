@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Paradox_Editor.A_All_New_Methods;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.C_Window_Functions;

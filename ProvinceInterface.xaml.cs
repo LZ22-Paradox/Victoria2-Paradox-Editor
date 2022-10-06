@@ -1,4 +1,4 @@
-﻿using Paradox_Editor.A_All_New_Methods;
+﻿using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 using System;

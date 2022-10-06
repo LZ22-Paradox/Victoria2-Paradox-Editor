@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Paradox_Editor.A_All_New_Methods
+namespace Paradox_Editor.A_Map_Functions
 {
     //For use in important CSV file reading.
     public sealed class MainCsvIndexSyntax : ClassMap<ProvinceFile>
@@ -31,14 +31,14 @@ namespace Paradox_Editor.A_All_New_Methods
     {
         private string MasterDirectory;
         private DirectoryStructure Directories = new();
-        
+
         private Dictionary<uint, ProvinceFile> Provinces = new();
 
         //Temporary lists that may be sorted later
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
         private Dictionary<string, Color> CountryNamesToColors = new();
-        
+
         public DataAcquisition() { }
         public DataAcquisition(string directory)
         {
@@ -64,7 +64,7 @@ namespace Paradox_Editor.A_All_New_Methods
             PopulateProvinceColorsToIDs();
             PopulateTagsToCountryNames();
             PopulateCountryNamesToColours();
-            
+
         }
         public DataAcquisition ReturnAcquisitionAllData(string directory)
         {

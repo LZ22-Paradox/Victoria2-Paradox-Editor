@@ -5,29 +5,28 @@ using System.Windows.Media;
 using Point = System.Windows.Point;
 using System.Collections.Generic;
 using Image = System.Windows.Controls.Image;
-using Paradox_Editor.C_Window_Functions;
 using Cursors = System.Windows.Input.Cursors;
 using Application = System.Windows.Application;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Paradox_Editor.D_Types;
-using Paradox_Editor.A_All_New_Methods;
 using System.Drawing;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Interop;
+using System.Diagnostics;
+using System.Linq;
 
-namespace Paradox_Editor
+namespace Paradox_Editor.C_Window_Functions
 {
 
     public class NavigationHandler
     {
         private Point start;
-        private List<Image> Maps = new();
         private Canvas Canvas;
-        private Dictionary<int, Image> SpareMaps;
+        private Dictionary<int, Image> Maps;
 
         public MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
 
@@ -40,7 +39,7 @@ namespace Paradox_Editor
         public NavigationHandler(Canvas canvas, Dictionary<int, Image> maps)
         {
             Canvas = canvas;
-            SpareMaps = maps;
+            Maps = maps;
         }
 
         public void MouseLeave(object sender, MouseEventArgs e)
@@ -61,7 +60,7 @@ namespace Paradox_Editor
             start = e.MouseDevice.GetPosition(Canvas);
             Canvas.CaptureMouse();
         }
-        
+
         public void MoveTimerTick() //Add compatibility for alternate control mode
         {
             var velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
@@ -73,58 +72,47 @@ namespace Paradox_Editor
 
             if (MainWindow.scrollViewer.IsFocused && MainWindow.ControlMode.SelectedItem.Equals(MainWindow.Mode_Modern))
             {
-                Maps.ForEach(image =>
+                foreach (var (image, matrix) in from image in Maps.Values let matrix = image.RenderTransform.Value select (image, matrix))
                 {
-                    var matrix = image.RenderTransform.Value;
-
                     if (Keyboard.IsKeyDown(Key.W) || Keyboard.IsKeyDown(Key.Up)) //UP
                     {
                         matrix.Translate(0, flipCheck * Math.Abs(velocity));
                     }
+
                     if (Keyboard.IsKeyDown(Key.A) || Keyboard.IsKeyDown(Key.Left)) //LEFT
                     {
                         matrix.Translate(Math.Abs(velocity), 0);
                     }
+
                     if (Keyboard.IsKeyDown(Key.S) || Keyboard.IsKeyDown(Key.Down)) //DOWN
                     {
                         matrix.Translate(0, -flipCheck * Math.Abs(velocity));
                     }
+
                     if (Keyboard.IsKeyDown(Key.D) || Keyboard.IsKeyDown(Key.Right)) //RIGHT
                     {
                         matrix.Translate(-Math.Abs(velocity), 0);
                     }
 
                     image.RenderTransform = new MatrixTransform(matrix);
-                });
-
+                }
             }
 
         }
 
         public void MouseLeftClick(object sender, MouseButtonEventArgs e) //Fix up
         {
-            //BitmapSource source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap
-
-
-            //if (MainWindow.mapModeButtons.GetMapMode() == 1)
-
-/*            var image = (Image)sender;
-            var source = (BitmapSource)MainWindow.mapProvinces.Source;  //make as WriteableBitmap*/
-
-
-            _ = SpareMaps.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);  //make as WriteableBitmap
-            var source = (BitmapSource)mapMode.Source;
-
+            _ = Maps.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
+            var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source);
             var image = (Image)sender;
             var mousePos = e.GetPosition(image);
-            var pixelX = (int)((mousePos.X / image.ActualWidth * source.PixelWidth) - 0.1);
-            var pixelY = (int)((mousePos.Y / image.ActualHeight * source.PixelHeight) - 0.1);
-            var bitmap = BitmapFromSource(source);
-            var pixelColor = bitmap.GetPixel(pixelX, pixelY);
+            var pixelX = (int)(mousePos.X / image.ActualWidth * mapSource.PixelWidth - 0.1);
+            var pixelY = (int)(mousePos.Y / image.ActualHeight * mapSource.PixelHeight - 0.1);
+            var pixelColor = mapSource.GetPixel(pixelX, pixelY);
 
+            Debug.WriteLine(pixelColor + " : Pixel Colour, which is " + pixelColor.ToString());
 
-
-
+            ///!!!Bad Code Beware!!!!!
             var windowPos = e.GetPosition(MainWindow);
             //MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
             //Get positioning right. Also add animation?
@@ -150,7 +138,7 @@ namespace Paradox_Editor
             if (!Canvas.IsMouseCaptured) return;
 
             var end = e.MouseDevice.GetPosition(Canvas);
-            foreach (var image in SpareMaps.Values)
+            foreach (var image in Maps.Values)
             {
                 var m = image.RenderTransform.Value;
                 m.OffsetX = m.OffsetX - (start.X - end.X);
@@ -163,7 +151,7 @@ namespace Paradox_Editor
 
         public void MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Maps.ForEach(image =>
+            foreach (var image in Maps.Values)
             {
                 var p = e.MouseDevice.GetPosition(image);
                 var matrix = image.RenderTransform.Value;
@@ -222,22 +210,8 @@ namespace Paradox_Editor
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
-
-            });
-        }
-
-        private Bitmap BitmapFromSource(BitmapSource bitmapsource)
-        {
-            Bitmap bitmap;
-            using (MemoryStream outStream = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-
-                enc.Frames.Add(BitmapFrame.Create(bitmapsource));
-                enc.Save(outStream);
-                bitmap = new Bitmap(outStream);
             }
-            return bitmap;
         }
+
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Paradox_Editor.B_Data_Functions
+namespace Paradox_Editor.C_Old_Data_Functions
 {
     public class _tempBorders
     {
@@ -14,7 +14,7 @@ namespace Paradox_Editor.B_Data_Functions
 
         //Currently for edge detection || SLOWER THAN LOCKING BITMAPS || TOO COMPLICATED TO USE
         //(tebeco#0205 or Cif3#8372 Can assist)
-        void d1() 
+        void d1()
         {
 
             Bitmap input = new Bitmap("TestProvince.png");

@@ -98,7 +98,7 @@ namespace Paradox_Editor.D_Types
                             TradeGoods = value;
                             break;
                         case string when line.StartsWith("life_rating"):
-                            LifeRating = (short)Convert.ToDouble(value); //Can't handle floating point values
+                            LifeRating = (short)Convert.ToDouble(value);
                             break;
                         case string when line.StartsWith("colonial"):
                             Colonial = Convert.ToInt16(value); //Colonial = yes????

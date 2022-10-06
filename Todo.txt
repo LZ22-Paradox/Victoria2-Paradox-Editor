@@ -9,7 +9,7 @@ to editing them directly; which may cause more complications than necessary.
 D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     O_ CREATE NEW TEXT FILE
 
-
+    * Consolidate classes between Handlers and Functions (Also see about ImageTransformation being merged with another class)
     * Add "#" handling in province's PopulateHistoryData()
     * See about changing filelistview and the binding of the data source for the better
     * Reimplement Stored Opener
@@ -101,6 +101,8 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - Simplified: Reads history files. Blank files give black output. Others give certain colours.
         o Dig in game files
     - Add mode to read base-game terrain
+    //https://stackoverflow.com/questions/47386442/how-to-get-image-pixel-position-and-rgb-values-using-wpf-mvvm
+
 
 
 
