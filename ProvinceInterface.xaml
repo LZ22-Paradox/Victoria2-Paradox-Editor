@@ -7,7 +7,7 @@
              xmlns:types="clr-namespace:Paradox_Editor.D_Types"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             Height="270" Width="368" AllowDrop="True" Focusable="True"
+             Height="260" Width="368" AllowDrop="True" Focusable="True"
              DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
              >
 
@@ -232,7 +232,7 @@
                          Focusable="False" HorizontalAlignment="Left"/>
                 <DataGrid
                     x:Name="STATEBUILDING_GRID" 
-                    Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="4" FontFamily="Arial"
+                    Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="4" FontFamily="Arial" 
                     Background="{x:Null}" Foreground="Black"
                     Height="44"
                     FontSize="14"

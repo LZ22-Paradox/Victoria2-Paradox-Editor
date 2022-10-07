@@ -37,9 +37,9 @@ namespace Paradox_Editor.D_Types
         {
             if (!string.IsNullOrWhiteSpace(record.province)) //Faulty. Some provinces bug. (Tested Vanilla Vic2)
             {
-                if (uint.TryParse(record.red, out var red) &&
-                    uint.TryParse(record.green, out var green) &&
-                    uint.TryParse(record.blue, out var blue))
+                if (uint.TryParse(record.red.Replace(".",""), out var red) &&
+                    uint.TryParse(record.green.Replace(".", ""), out var green) &&
+                    uint.TryParse(record.blue.Replace(".", ""), out var blue))
                 {
                     this.red = red.ToString();
                     this.green = green.ToString();

@@ -45,6 +45,7 @@ namespace Paradox_Editor.A_Map_Functions
             Directories = CollectDirectoryData(directory);
             MasterDirectory = directory;
         }
+        public string GetMasterDirectory() => MasterDirectory;
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
         public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
@@ -155,6 +156,7 @@ namespace Paradox_Editor.A_Map_Functions
                 }
             }
         }
+
 
         /// <summary>
         /// Populates dictionary of province colour keys with province ID's.

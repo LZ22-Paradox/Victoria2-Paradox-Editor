@@ -8,16 +8,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
 
 namespace Paradox_Editor
 {
     [ToolboxItem(true)]
-
-    /// <summary>
-    /// Interaction logic for ProvinceInterface.xaml
-    /// </summary>
     public partial class ProvinceInterface : UserControl
     {
         private DataAcquisition ModData { get; set; }
@@ -32,12 +29,15 @@ namespace Paradox_Editor
                     DefaultStyleKeyProperty.OverrideMetadata(typeof(ProvinceInterface),
                         new FrameworkPropertyMetadata(typeof(ProvinceInterface)));
                 }*/
-        public ProvinceInterface() { InitializeComponent(); }
-        public ProvinceInterface(DataAcquisition modData)
+        public ProvinceInterface()
         {
             InitializeComponent();
-            ModData = modData;
             Set_Save_Icon_To_Saved();
+        }
+
+        public void SetModData(DataAcquisition modData)
+        {
+            ModData = modData;
         }
 
         public void PopulateInterface()
@@ -45,7 +45,7 @@ namespace Paradox_Editor
 
         }
 
-        public void Update()
+        public void UpdateUI()
         {
             background.Source = VisualHandler.InterfaceAssetSet.Interface_Background;
             AddCore_Image.Source = VisualHandler.InterfaceAssetSet.Add_Icon;
@@ -112,9 +112,7 @@ namespace Paradox_Editor
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
         }
 
-
-
-
+        #region //REWORKING THESE METHODS
         public void ResetCores(object sender, RoutedEventArgs e)
         {
             var rowCount = ProvinceInterfaceViewerGrid.RowDefinitions.Count;
@@ -165,6 +163,57 @@ namespace Paradox_Editor
             Cores.RemoveAt(COREGRID.SelectedIndex); //Removes Core
             //InterfaceHandler.RemoveInterfaceRow();
             Interface_Changed(sender, e); //Notify data has been changed.
+        }
+        #endregion
+
+
+        static uint GetRawColor(Color color) => (0xFFu << 24)
+            | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
+        //Adjust for proper data extraction
+        public void SetInterfaceData(Color color) //Crashes if the province has no owner
+        {
+
+            ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
+            ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
+            if (province != null)
+            {
+                PROVIDBOX.Text = Convert.ToString(province.ProvinceID);
+                NAMEBOX.Text = Convert.ToString(province.ProvinceName);
+                OWNERBOX.Text = Convert.ToString(province.Owner);
+                CONTROLLERBOX.Text = Convert.ToString(province.Controller);
+                COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
+                TRADEGOODBOX.Text = Convert.ToString(province.TradeGoods);
+                LIFERATINGBOX.Text = Convert.ToString(province.LifeRating);
+                COLONIALBOX.Text = Convert.ToString(province.Colonial);
+                NAVALBASEBOX.Text = Convert.ToString(province.Naval_Base);
+                TERRAINBOX.Text = Convert.ToString(province.Terrain);
+                FORTBOX.Text = Convert.ToString(province.Fort);
+                RAILROADBOX.Text = Convert.ToString(province.Railroad);
+
+                ///Below code is still under development
+                foreach (var core in province.Cores)
+                {
+                    Cores.Add(new Core(core));
+                }
+                foreach (var stateBuilding in province.State_Buildings)
+                {
+                    StateBuildings.Add(stateBuilding);
+                }
+
+                this.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
+                this.Visibility = Visibility.Hidden;
+            }
+
+
+
+
+
+
+
         }
 
     }

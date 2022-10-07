@@ -1,5 +1,6 @@
 ﻿using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -38,47 +39,38 @@ namespace Paradox_Editor
             SoundHandler.PlayClickSound();
         }
 
-        ///Do performance Update
-        public static void UpdateMapModeVisibility(int CurrentMapMode, MapMode_IconSet Assets) //Updates & Disables the other existing map modes
+        public void UpdateMapModeVisibility(int CurrentMapMode, MapMode_IconSet Assets) //Updates & Disables the other existing map modes
         {
-            var MainWindow = (MainWindow)Application.Current.MainWindow;
-             
-            if (CurrentMapMode == 0) //If Political is on
+            //var MainWindow = (MainWindow)Application.Current.MainWindow;
+            foreach (var entry in MapViewer.MapModes)
             {
-                MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOff;
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOn;
-                MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
-
-                MainWindow.mapPolitical.Visibility = Visibility.Visible;
-                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
-                MainWindow.mapTerrain.Visibility = Visibility.Hidden;
-            }
-            else if (CurrentMapMode == 1) //If Provinces is on
-            {
-                MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOn;
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
-                MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOff;
-
-                MainWindow.mapPolitical.Visibility = Visibility.Hidden;
-                MainWindow.mapProvinces.Visibility = Visibility.Visible;
-                MainWindow.mapTerrain.Visibility = Visibility.Hidden;
-            }
-            else if (CurrentMapMode == 2) //If Terrain is on
-            {
-                MainWindow.mapModeButtons.mapmodeButton_Provinces.Source = Assets.ProvinceOff;
-                MainWindow.mapModeButtons.mapmodeButton_Political.Source = Assets.PoliticalOff;
-                MainWindow.mapModeButtons.mapmodeButton_Terrain.Source = Assets.TerrainOn;
-
-                MainWindow.mapPolitical.Visibility = Visibility.Hidden;
-                MainWindow.mapProvinces.Visibility = Visibility.Hidden;
-                MainWindow.mapTerrain.Visibility = Visibility.Visible;
-
+                if (entry.Key == CurrentMapMode)
+                    entry.Value.Visibility = Visibility.Visible;
+                else
+                    entry.Value.Visibility = Visibility.Hidden;
             }
 
+            switch (CurrentMapMode)
+            {
+                case 0: //Political
+                    mapmodeButton_Political.Source = Assets.PoliticalOn;
+                    mapmodeButton_Provinces.Source = Assets.ProvinceOff;
+                    mapmodeButton_Terrain.Source = Assets.TerrainOff;
+                    break;
+                case 1: //Province Map
+                    mapmodeButton_Political.Source = Assets.PoliticalOff;
+                    mapmodeButton_Provinces.Source = Assets.ProvinceOn;
+                    mapmodeButton_Terrain.Source = Assets.TerrainOff;
+                    break;
+                case 2: //Terrain
+                    mapmodeButton_Political.Source = Assets.PoliticalOff;
+                    mapmodeButton_Provinces.Source = Assets.ProvinceOff;
+                    mapmodeButton_Terrain.Source = Assets.TerrainOn;
+                    break;
+            }
 
-            //\\
-
-
+            //D_
+            
         }
     }
 }

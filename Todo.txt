@@ -14,20 +14,16 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
     * See about changing filelistview and the binding of the data source for the better
     * Reimplement Stored Opener
     * Get name of mod folder. Check if Victoria 2 (based on game selected), and load the mod if not.
-    * 1825 : "Zouar"'s name is empty in the list preview. The name isn't being read in the CSV.
-        o The CSV has a mislabel for the province. It's last (BLUE) colour has a '.' in it.
-        String should be formatted and dot could be removed in ProvinceFile.AppendFromCSV
-            - 1825;208;17;223.;Zouar;x
+    * Read CSV for all province data, then override it. NOT history data first!
     * If file isn't found, find Vic2's default instead.
-
+    * Multilayer the color picker for Province & Country displays in a right-panel.
     BAD MOD INCOMPATABILITIES:
         * TTA - Duplicate Colours.
         * TOL - A history province has a number-only name.
-        * HTA - Missing countries on map.
+        * HTA - Missing countries on map. [Must read vanilla COUNTRY files]
         * PDM - Tester country name has no colour.
         * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format.
         * LZ22 - A history province has "COLONIAL = YES", rather than an integer for some reason.
-        o Most Mods - Two provinces in Afrika are missing. (DoD Allbored For Testing)
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
@@ -51,7 +47,6 @@ Fix weird state-building grid shrinking too small for certain provinces
         o See new class that saves what file was changed & its data
     - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
     - Add Date Compatability into the History Interface
-    - GET HOTSPOT DEBUGGING
     - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
 
     - Clicking "Exit" Saves data entered

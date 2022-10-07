@@ -5,6 +5,7 @@ using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System;
 using Paradox_Editor.A_Map_Functions;
+using Paradox_Editor.C_Window_Functions;
 
 namespace Paradox_Editor.A_Map_Navigation
 {

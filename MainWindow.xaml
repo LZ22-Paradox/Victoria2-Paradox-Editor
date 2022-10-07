@@ -30,8 +30,8 @@
 
     <Grid x:Name="mainWindowGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="73*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="100*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="270*"/>
@@ -40,6 +40,9 @@
 
         <local:MapModesControl x:Name="mapModeButtons" VerticalAlignment="Bottom" HorizontalAlignment="Right"
         Margin="0,0,18,15" Grid.Column="1" Panel.ZIndex="2" Height="64" Width="212" Grid.Row="1"/>
+
+        <local:MapViewer x:Name="mapViewer" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+         Grid.Column="1" Panel.ZIndex="0" Grid.Row="1" Grid.ColumnSpan="1" Margin="0,0,15,10"/>
 
         <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Height="270" Width="372" Panel.ZIndex="5" >
             <behaviors:Interaction.Behaviors>
@@ -60,8 +63,7 @@
         <!--Click does nothing at the moment-->
 
 
-
-        <DataGrid x:Name="fileListView" Margin="20,15,-5,0" AlternatingRowBackground="#FFE2E2E2"
+        <DataGrid x:Name="fileListView" Margin="20,15,5,10" AlternatingRowBackground="#FFE2E2E2"
                   ItemsSource="{Binding ProvinceData, Mode=TwoWay}" SelectedItem="{Binding SelectedItem}"
                   AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible"
                   Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
@@ -130,54 +132,6 @@
 
         </ComboBox>
 
-        <Grid x:Name="mapGrid" Margin="10,10,20,15" Background="Transparent" Grid.Column="1"
-              Panel.ZIndex="1" Grid.Row="1" Focusable="True">
-            <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
-                          HorizontalScrollBarVisibility="Auto">
 
-                <Canvas x:Name="mapCanvas" Background="Transparent" RenderTransformOrigin="0.5,0.5"
-                           MouseMove="Map_MouseMove"
-                           MouseWheel="Map_MouseWheel"
-                           MouseUp="Map_MouseUp"
-                           MouseLeave="Map_MouseLeave"
-                           >
-
-                    <Image x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
-                           Margin="-250,0,0,0" Stretch="Uniform"
-                           RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
-                           ClipToBounds="True" StretchDirection="Both"   
-                           MouseDown="Map_MouseDown"
-                           
-                           >
-
-                    </Image>
-
-                    <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
-                           Margin="-250,0,0,0" Stretch="Uniform"
-                           RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"
-                           MouseDown="Map_MouseDown"
-                           >
-
-                    </Image>
-
-
-                    <Image x:Name="mapTerrain" Height="700" Width="1446" 
-                           Margin="-250,0,0,0" Stretch="Uniform"
-                           RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"
-                           MouseDown="Map_MouseDown"
-                           >
-                    </Image>
-
-                    <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
-
-
-                </Canvas>
-            </ScrollViewer>
-        </Grid>
     </Grid>
 </Window>
