@@ -7,8 +7,8 @@
              xmlns:types="clr-namespace:Paradox_Editor.D_Types"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
-             Height="260" Width="368" AllowDrop="True" Focusable="True"
-             DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+             Height="400" Width="368" AllowDrop="True" Focusable="True"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              >
 
     <Grid>
@@ -53,33 +53,30 @@
         </Button>
 
         <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-                      Grid.RowSpan="4" HorizontalAlignment="Left" Width="300" Margin="35,10,0,-100">
+                      Grid.RowSpan="4" HorizontalAlignment="Left" Width="340" Margin="15,10,0,15">
             <Grid x:Name="ProvinceInterfaceViewerGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25" Name="CoreGridRow"/>
-                    <RowDefinition Height="25"/>
-
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25" Name="StateBuildingGridRow"/>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/> <!--RGB-->
+                    <RowDefinition Height="25"/> <!--Owner-->
+                    <RowDefinition Height="25"/> <!--Controller-->
+                    <RowDefinition Height="25"/> <!--Trade Good-->
+                    <RowDefinition Height="25"/> <!--Life Rating-->
+                    <RowDefinition Height="25"/> <!--Colonial Level-->
+                    <RowDefinition Height="*" Name="CoreGridRow"/>
+                    <RowDefinition Height="25"/> <!--Terrain-->
+                    <RowDefinition Height="25"/> <!--Naval Base-->
+                    <RowDefinition Height="25"/> <!--Fort-->
+                    <RowDefinition Height="25"/> <!--Railroad-->
+                    <RowDefinition Height="25"/> <!--State Buildings Text-->
+                    <RowDefinition Height="*" Name="StateBuildingGridRow"/>
+                    <RowDefinition Height="25"/> <!--Extra Row : NOT UTILIZED -->
 
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="*"/>
-
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Name="Color" Text="RGB" Grid.Row="0" Grid.Column="0" FontFamily="Arial"
@@ -135,37 +132,35 @@
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="Interface_Changed"/>
 
+                <!--Core Management-->
                 <TextBlock Name="CoresText" Text="Core(s)" Grid.Row="6" Grid.Column="0"
                          FontFamily="Arial" Background="{x:Null}"
                          Foreground="Black" Height="16"
                          TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"
                          VerticalAlignment="Top"/>
-
-                <Button Grid.Column="1" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
-                        HorizontalAlignment="Right" Panel.ZIndex="1"
+                        HorizontalAlignment="Center" Panel.ZIndex="1"
                         Click="AddBlankCore" ToolTip="Add new Core TAG"
                         VerticalAlignment="Top">
                     <Image Name="AddCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
                 </Button>
-
-                <Button Grid.Column="2" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                <Button Grid.Column="3" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Left" Panel.ZIndex="1"
                         Click="ResetCores" ToolTip="Reset Cores List"
                         VerticalAlignment="Top">
                     <Image Name="ResetCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
                 </Button>
-
-                <!--This datagrid is a pain. Loading list of cores into.-->
                 <DataGrid x:Name="COREGRID" Grid.Column="1" Grid.Row="6"
                           HeadersVisibility="None" AutoGenerateColumns="False"
                           Background="{x:Null}" FontSize="14" 
                           FontFamily="Arial" Grid.RowSpan="1" FontWeight="Normal"
-                          Width="64" Height="0" ItemsSource="{Binding Cores}"
+                          Width="63" Height="auto" 
                           HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
-                          VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}">
+                          VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}"
+                          ItemsSource="{Binding Cores}" HorizontalAlignment="Center">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding tag}" Width="40">
                             <DataGridTextColumn.ElementStyle>
@@ -226,21 +221,70 @@
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="Interface_Changed"/>
 
-                <TextBlock Name="State_Building" Text="State Buildings" Grid.Row="11" Grid.Column="0" FontFamily="Arial"
+                <!--State Building Management-->
+                <TextBlock Name="State_Buildings" Text="State Buildings:" Grid.Row="11" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"
                          Focusable="False" HorizontalAlignment="Left"/>
+                <Button Grid.Column="2" Grid.Row="11" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                        Background="{x:Null}" Height="25" Width="25"
+                        HorizontalAlignment="Center" Panel.ZIndex="1"
+                        Click="AddBlankBuilding" ToolTip="Add State Building"
+                        VerticalAlignment="Top">
+                    <Image x:Name="AddBuilding_Icon" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
+                </Button>
+                <Button Grid.Column="3" Grid.Row="11" Foreground="{x:Null}" BorderBrush="{x:Null}"
+                        Background="{x:Null}" Height="25" Width="25"
+                        HorizontalAlignment="Left" Panel.ZIndex="1"
+                        Click="ResetBuildings" ToolTip="Reset Cores List"
+                        VerticalAlignment="Top">
+                    <Image x:Name="ResetBuildings_Icon" Source="/Preloaded_Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
+                </Button>
                 <DataGrid
                     x:Name="STATEBUILDING_GRID" 
                     Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="4" FontFamily="Arial" 
-                    Background="{x:Null}" Foreground="Black"
-                    Height="44"
-                    FontSize="14"
-                    Focusable="False"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
+                    Background="{x:Null}" Foreground="Black" Margin="-7,0,0,0"
+                    Height="auto" FontSize="14" Focusable="False" HorizontalAlignment="Left" AutoGenerateColumns="False"
+                    VerticalAlignment="Top" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False"
+                    CanUserAddRows="False"
                     ItemsSource="{Binding StateBuildings}">
                     <DataGrid.Columns>
+                        <DataGridTextColumn Header="Level" Binding="{Binding Level}" Width="auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource theForegroundBrush}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Upgrade" Binding="{Binding Upgrade}" Width="auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource theForegroundBrush}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Building" Binding="{Binding Building}" Width="auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource theForegroundBrush}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Width="22">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Grid.Column="0" Foreground="{x:Null}"
+                                            BorderBrush="{x:Null}" Background="{x:Null}"
+                                            Height="20" Width="20" Panel.ZIndex="1"
+                                            Click="RemoveBuilding">
+                                        <Image Source="/Preloaded_Assets/VIC2/Icons/button_remove.png"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
 
                 </DataGrid>

@@ -24,6 +24,7 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         * PDM - Tester country name has no colour.
         * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format.
         * LZ22 - A history province has "COLONIAL = YES", rather than an integer for some reason.
+    * Fix UI "game mode" visuals
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
@@ -33,12 +34,7 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
                         DATAEXTRACTOR.CS - GET STATE BUILDING DATA [DONE]
                         ADD STATE BUILDING DATA TO THE TABLE
 
-Fixed the Reset-Rows button for cores to not affect State-buildings.
-Add add & reset buttons for state-buildings
 Do some heavy performance fixing!!! : Change how much RAM the program gets when testing
-
-Fix the entire Core List being Deleted [InterfaceRowHandler.cs : RemoveRowFromCoreList]
-Fix weird state-building grid shrinking too small for certain provinces
 
 1. Impliment basic province interfacing (click a province, get the file)
     - Fix Issue with interface cutoff
@@ -83,9 +79,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
             * See ways for specific replacement
-    - Merge variables and classes
-        o Try to merge some dictionaries that may not be needed when left alone, if possible.
-            * This requires a search-through for every dictionary
     - Speed up map navigation
     - See the tiny compatibility error (see DataAcquisition "...")
     - HistoryFile points to DataExtraction in HistoryExportHandler, can possible use the index of a history file instead of needing to reacquire its data.

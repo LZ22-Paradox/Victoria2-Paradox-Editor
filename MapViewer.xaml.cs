@@ -120,7 +120,7 @@ namespace Paradox_Editor
             //Get positioning right. Also add animation?
 
 
-            MainWindow.ProvinceInterface.SetInterfaceData(mapProvinces.SelectedColor);
+            MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
 
 /*            var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
                 MainWindow.SelectMap.StoredProvinceColorToID,

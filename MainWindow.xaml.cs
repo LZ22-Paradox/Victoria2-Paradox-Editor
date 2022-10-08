@@ -76,7 +76,7 @@ namespace Paradox_Editor
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
             fileListView.ItemsSource = ProvinceData;
 
-            ProvinceInterface.SetModData(ModData);
+            provinceInterface.SetModData(ModData);
             mapViewer.SetModData(ModData);
             mapViewer.LoadMaps();
             
@@ -90,25 +90,25 @@ namespace Paradox_Editor
 
         public void SelectGame(object sender, RoutedEventArgs e)
         {
-            if (GameSelectDropdown.SelectedItem.ToString().Contains("Victoria II"))
+            var game = GameSelectDropdown.SelectedItem.ToString();
+            switch (game)
             {
-                SoundHandler.SoundAssetChange("VIC2");
-                VisualHandler.ConductAssetChange("VIC2");
-
-                mapModeButtons.UpdateMapModeVisibility(mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
-            }
-            else if (GameSelectDropdown.SelectedItem.ToString().Contains("Europa Universalis IV"))
-            {
-                SoundHandler.SoundAssetChange("EU4");
-                VisualHandler.ConductAssetChange("EU4");
-                mapModeButtons.UpdateMapModeVisibility(mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
-            }
-            else
-            {
-                SoundHandler.SoundAssetChange("VIC2");
-                VisualHandler.ConductAssetChange("VIC2");
+                case string when game.Contains("Victoria II"): //Problem: It is ignoring state-buildings!
+                    SoundHandler.SoundAssetChange("VIC2");
+                    VisualHandler.ConductAssetChange("VIC2");
+                    break;
+                case string when game.Contains("Europa Universalis IV"):
+                    SoundHandler.SoundAssetChange("EU4");
+                    VisualHandler.ConductAssetChange("EU4");
+                    break;
+                default:
+                    SoundHandler.SoundAssetChange("VIC2");
+                    VisualHandler.ConductAssetChange("VIC2");
+                    break;
             }
 
+            provinceInterface.UpdateUI();
+            mapModeButtons.UpdateMapModeVisibility(mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
             SoundHandler.PlayConnectingSound();
         }
 

@@ -23,12 +23,12 @@ namespace Paradox_Editor.D_Types
         //History Data
         public string Owner { get; set; }
         public string Controller { get; set; }
-        public List<string> Cores = new();
+        public List<Core> Cores = new();
         public string TradeGoods { get; set; }
         public int LifeRating { get; set; }
         public string Terrain { get; set; }
         public int Colonial { get; set; }
-        public List<StateBuilding> State_Buildings = new List<StateBuilding>();
+        public List<StateBuilding> State_Buildings = new();
         public int Naval_Base { get; set; }
         public int Fort { get; set; }
         public int Railroad { get; set; }
@@ -55,7 +55,7 @@ namespace Paradox_Editor.D_Types
         {
             bool isReadingBuildings = false;
             StateBuilding tempStateBuilding = new StateBuilding();
-            List<string> tempCoresList = new();
+            List<Core> tempCoresList = new();
             using StreamReader sr = new(HistoryFilePath);
             string line;
             while ((line = sr.ReadLine()) != null)
@@ -107,7 +107,7 @@ namespace Paradox_Editor.D_Types
                             Terrain = value;
                             break;
                         case string when line.StartsWith("add_core"):
-                            tempCoresList.Add(value);
+                            tempCoresList.Add(new Core(value));
                             break;
                         case string when line.StartsWith("naval_base"):
                             Naval_Base = Convert.ToInt16(value);
