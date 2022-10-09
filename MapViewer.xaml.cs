@@ -26,23 +26,22 @@ namespace Paradox_Editor
     {
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private Point start;
-        
+
+
         public static Dictionary<int, Image> MapModes { get; set; }
         private DataAcquisition ModData { get; set; }
         public static bool IsMapLoaded;
         public static bool IsImageFlipped { get; set; } //Possibly may be useless
 
-
-
         public MapViewer()
         {
             InitializeComponent();
-
+            this.DataContext = this;
             MapModes = new Dictionary<int, Image>
             {
                 { 0, mapPolitical},
                 { 1, mapProvinces },
-                { 2, mapTerrain }
+                { 2, mapTerrain },
             };
         }
 
@@ -56,20 +55,18 @@ namespace Paradox_Editor
             mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetMasterDirectory(), "map", "provinces.bmp")));
 
             ///Load Political Map
-            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source); //May be problem
-            //var writableImage = BitmapFactory.New(provinceMapSource.PixelWidth, provinceMapSource.PixelHeight); //Different dimensions than firstlayer
-            //writableImage.Clear(Colors.White); //Clears an image. Could be useful.
+            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+
+
             var politicalMap = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
-            
             mapPolitical.Source = politicalMap;
 
             ///Load D_ Map
 
 
             ///Load D_ Map
-            
-            IsMapLoaded = true;
 
+            IsMapLoaded = true;
         }
 
         #region Handling Mouse Inputs
@@ -89,6 +86,7 @@ namespace Paradox_Editor
             mapCanvas.CaptureMouse();
         }
 
+        ///WORK WITH THIS METHOD FOR ACCESSING PROVINCE DATA FROM POLITICAL
         public void Map_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //This is for the alternate types of interactions w. the map
@@ -106,32 +104,17 @@ namespace Paradox_Editor
         {
             _ = MapModes.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
             var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source);
-            //var image = (Image)sender;
-            //var mousePos = e.GetPosition(image);
-            //var pixelX = (int)(mousePos.X / image.ActualWidth * mapSource.PixelWidth - 0.1);
-            //var pixelY = (int)(mousePos.Y / image.ActualHeight * mapSource.PixelHeight - 0.1);
-
-            //var pixelColor = mapSource.GetPixel(pixelX, pixelY);
-
-
-            ///!!!Bad Code Beware!!!!!
+            ///!!!-===Bad Code Beware===-!!!!!
             Debug.WriteLine(mapProvinces.SelectedColor);
-            //MainWindow.FileInterface.Margin = new Thickness(windowPos.X - (MainWindow.FileInterface.Width / 2), windowPos.Y - (MainWindow.FileInterface.Height + 40), 0, 0);
-            //Get positioning right. Also add animation?
-
-
             MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
-
-/*            var boxBinding = new HistoryfileInterface(MainWindow, pixelColor,
-                MainWindow.SelectMap.StoredProvinceColorToID,
-                MainWindow.SelectMap.StoredProvinceIDToDataDictionaries,
-                MainWindow.SelectMap.StoredTagToCountryName);*/
-            /*
-            boxBinding.PutTAGDataIntoInferface();
-            boxBinding.PutOtherDataIntoInferface();
-            MainWindow.FileInterface.AddCoresAndBuildings(sender, e, MainWindow, pixelColor); //Clicking ocean bad
-            MainWindow.FileInterface.Set_Save_Icon_To_Saved();
-            */
+            
+            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+            var tempMapRenderer = new MapRenderer(); 
+            var singleProvince = tempMapRenderer.DrawSelectedProvince(provinceMapSource,
+                tempMapRenderer.GetRawColor(mapProvinces.SelectedColor));
+            FlashingProvince.Source = singleProvince;
+            ///Work on the below
+            SoundHandler.PlayClick();
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -195,6 +178,7 @@ namespace Paradox_Editor
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
+                FlashingProvince.RenderTransform = image.RenderTransform;
             }
         }
 
@@ -209,8 +193,8 @@ namespace Paradox_Editor
                 m.OffsetX -= (start.X - end.X);
                 m.OffsetY -= (start.Y - end.Y);
                 image.RenderTransform = new MatrixTransform(m);
+                FlashingProvince.RenderTransform = image.RenderTransform;
             }
-
             start = e.MouseDevice.GetPosition(mapCanvas);
         }
         #endregion
@@ -248,13 +232,12 @@ namespace Paradox_Editor
                         matrix.Translate(-Math.Abs(velocity), 0);
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
+                    FlashingProvince.RenderTransform = new MatrixTransform(matrix);
                 }
             }
         }
 
-
-
-        public static void InvertCanvas(Canvas canvas)
+        public void InvertCanvas(Canvas canvas)
         {
             var flipTrans = new ScaleTransform(); //creates instance for scale
             canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image

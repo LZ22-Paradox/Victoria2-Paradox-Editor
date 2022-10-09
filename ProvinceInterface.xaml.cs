@@ -18,11 +18,10 @@ namespace Paradox_Editor
     public partial class ProvinceInterface : UserControl
     {
         private DataAcquisition ModData { get; set; }
-        private int InterfaceActualRows;
+        private ProvinceFile CurrentProvince = new();
 
         //public ObservableCollection<Core> Cores { get; set; } = new ObservableCollection<Core>();
         public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName)
         { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
@@ -80,35 +79,83 @@ namespace Paradox_Editor
         public void CloseInterface(object sender, EventArgs e)
         {
             Visibility = Visibility.Hidden;
-            SoundHandler.PlayClickSound();
+            SoundHandler.PlayClick();
         }
 
         public void Save_Button_Pressed(object sender, RoutedEventArgs e)
         {
-            //Creates TEMPORARY test file
-            var fileName = "Test.txt";
-            var path = @"C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestPrimaryEnvironment(DoD)\output\" + fileName;
+            if (CurrentProvince.color != 0) { 
+                if (File.Exists(CurrentProvince.HistoryFilePath))
+                    File.Delete(CurrentProvince.HistoryFilePath);
 
-            if (File.Exists(path))
-                File.Delete(path);
+                var file = File.CreateText(CurrentProvince.HistoryFilePath);
 
-            File.CreateText(path);
-            using (StreamReader sr = File.OpenText(path)) // Open file
+                PopulateSaveFile(file);
+                Set_Save_Icon_To_Saved();
+            } else
             {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                    Debug.WriteLine(s);
+                SoundHandler.PlayError();
+                Debug.WriteLine("Province is null. Select a province.");
             }
-
-            Set_Save_Icon_To_Saved();
         }
 
+        void PopulateSaveFile(StreamWriter file)
+        {
+            if (!OWNERBOX.Text.Equals(""))
+                file.WriteLine("owner = " + OWNERBOX.Text);
+            if (!CONTROLLERBOX.Text.Equals(""))
+                file.WriteLine("controller = " + CONTROLLERBOX.Text);
+            if (!TRADEGOODBOX.Text.Equals(""))
+                file.WriteLine("trade_goods = " + TRADEGOODBOX.Text);
+            if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
+                file.WriteLine("life_rating = " + LIFERATINGBOX.Text);
+            if (!COLONIALBOX.Text.Equals("") && !COLONIALBOX.Text.Equals("0"))
+                file.WriteLine("colonial = " + COLONIALBOX.Text);
+            if (COREGRID.HasItems)
+            {
+                foreach (Core item in COREGRID.Items)
+                {
+                    if (item.TAG is not "" or null)
+                    {
+                        file.WriteLine("add_core = " + item.TAG);
+                    }
+                }
+            }
+            if (!TERRAINBOX.Text.Equals(""))
+                file.WriteLine("terrain = " + TERRAINBOX.Text);
+            if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
+                file.WriteLine("naval_base = " + NAVALBASEBOX.Text);
+            if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("0"))
+                file.WriteLine("fort = " + FORTBOX.Text);
+            if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
+                file.WriteLine("railroad = " + RAILROADBOX.Text);
+            if (STATEBUILDING_GRID.HasItems)
+            {
+                foreach (StateBuilding building in STATEBUILDING_GRID.Items)
+                {
+                    if (building.Building != null && building.Level != null && building.Upgrade != null)
+                    {
+                        file.WriteLine("state_building = {");
+                        file.WriteLine("\tlevel = " + building.Level);
+                        file.WriteLine("\tbuilding = " + building.Building);
+                        file.WriteLine("\tupgrade = " + building.Upgrade);
+                        file.WriteLine("}");
+                    }
+                }
+            }
+            file.Close();
+            SoundHandler.PlayConnecting(); //Perhaps change to success sound or change connecting sound to something else?
+        }
+
+        /// <summary>
+        /// Changes the Save Icon to Warning Gif
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void Interface_Changed(object sender, RoutedEventArgs e)
         {
-            //---------Changes the Save Icon to Warning Gif----------------
             var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif", UriKind.Relative));
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
-            //-------------------------------------------------------------
         }
 
         /// <summary>
@@ -165,6 +212,7 @@ namespace Paradox_Editor
         {
             ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
             ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
+            CurrentProvince = province;
             if (province != null)
             {
                 PROVIDBOX.Text = Convert.ToString(province.ProvinceID);

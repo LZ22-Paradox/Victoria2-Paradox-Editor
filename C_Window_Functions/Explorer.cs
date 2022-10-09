@@ -6,6 +6,8 @@ namespace Paradox_Editor.C_Window_Functions
 {
     public class Explorer
     {
+        public Explorer() { }
+
         public string OpenFolderSelect()
         {
             var dialog = new FolderBrowserDialog();
@@ -25,10 +27,10 @@ namespace Paradox_Editor.C_Window_Functions
 
         public void OpenFile(string argument)
         {
-            var fileOpener = new Process();
-            fileOpener.StartInfo.FileName = "explorer";
-            fileOpener.StartInfo.Arguments = argument;
-            fileOpener.Start();
+            using Process fileopener = new();
+            fileopener.StartInfo.FileName = "explorer";
+            fileopener.StartInfo.Arguments = "\"" + argument + "\"";
+            fileopener.Start();
         }
 
     }

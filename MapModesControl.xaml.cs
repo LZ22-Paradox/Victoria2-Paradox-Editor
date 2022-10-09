@@ -22,21 +22,21 @@ namespace Paradox_Editor
         {
             CurrentMapMode = 0;
             UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
-            SoundHandler.PlayClickSound();
+            SoundHandler.PlayClick();
         }
 
         private void MapmodeButton_Provinces_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 1;
             UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
-            SoundHandler.PlayClickSound();
+            SoundHandler.PlayClick();
         }
 
         private void MapmodeButton_Terrain_Click(object sender, RoutedEventArgs e)
         {
             CurrentMapMode = 2;
             UpdateMapModeVisibility(CurrentMapMode, VisualHandler.MapModeIconSet);
-            SoundHandler.PlayClickSound();
+            SoundHandler.PlayClick();
         }
 
         public void UpdateMapModeVisibility(int CurrentMapMode, MapMode_IconSet Assets) //Updates & Disables the other existing map modes

@@ -84,7 +84,10 @@ namespace Paradox_Editor
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
-        { Explorer fileSelector = new(); fileSelector.OpenFile(SelectedItem.HistoryFilePath); }
+        {
+            Explorer fileSelector = new();
+            fileSelector.OpenFile(SelectedItem.HistoryFilePath);
+        }
 
         public static explicit operator MainWindow(WindowCollection v) => throw new NotImplementedException();
 
@@ -93,7 +96,7 @@ namespace Paradox_Editor
             var game = GameSelectDropdown.SelectedItem.ToString();
             switch (game)
             {
-                case string when game.Contains("Victoria II"): //Problem: It is ignoring state-buildings!
+                case string when game.Contains("Victoria II"):
                     SoundHandler.SoundAssetChange("VIC2");
                     VisualHandler.ConductAssetChange("VIC2");
                     break;
@@ -109,7 +112,7 @@ namespace Paradox_Editor
 
             provinceInterface.UpdateUI();
             mapModeButtons.UpdateMapModeVisibility(mapModeButtons.GetMapMode(), VisualHandler.MapModeIconSet);
-            SoundHandler.PlayConnectingSound();
+            SoundHandler.PlayConnecting();
         }
 
         private void ChangeControlScheme(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

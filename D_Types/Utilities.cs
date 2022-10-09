@@ -11,37 +11,27 @@ namespace Paradox_Editor.D_Types
 {
     public class Core
     {
-        private string TAG { get; set; }
+        private string tag { get; set; }
 
         public Core(string TAG)
         {
-            tag = TAG;
+            this.TAG = TAG;
         }
 
-        public string tag
+        public string TAG
         {
-            get => TAG;
-            set => TAG = value;
+            get => tag;
+            set => tag = value;
         }
-
-        /*public string TAG
-        {
-            get { return tag; }
-            set { tag = value; }
-        }*/
-
     }
 
-    public class StateBuilding
+    public class Building {
+    
+    }
+
+    public class StateBuilding : Building
     {
         public StateBuilding()
-        {
-            Level = level;
-            Building = building;
-            Upgrade = upgrade;
-        }
-
-        public StateBuilding(string tag)
         {
             Level = level;
             Building = building;

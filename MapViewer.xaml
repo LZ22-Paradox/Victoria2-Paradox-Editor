@@ -23,7 +23,7 @@
 
         <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto">
-            <Canvas x:Name="mapCanvas" Background="Transparent" RenderTransformOrigin="0.5,0.5"
+            <Canvas x:Name="mapCanvas" RenderTransformOrigin="0.5,0.5"
                            MouseMove="Map_MouseMove"
                            MouseWheel="Map_MouseWheel"
                            MouseUp="Map_MouseUp"
@@ -33,13 +33,32 @@
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
                            ClipToBounds="True" StretchDirection="Both"   
-                           MouseDown="Map_MouseDown"
-                           >
-
-                    </colorpickercontrols:ImageColorPicker>
+                           MouseDown="Map_MouseDown">
+                </colorpickercontrols:ImageColorPicker>
 
 
-                <Image Source="/Preloaded_Assets/EU4/Icons/button_reset.png" Opacity="1">
+                <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
+                           Margin="-250,0,0,0" Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
+                           StretchDirection="Both"
+                           MouseDown="Map_MouseDown">
+                </Image>
+
+                <Image x:Name="mapTerrain" Height="700" Width="1446" 
+                        Margin="-250,0,0,0" Stretch="Uniform"
+                        RenderOptions.BitmapScalingMode="NearestNeighbor"
+                        RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
+                        StretchDirection="Both"
+                        MouseDown="Map_MouseDown">
+                </Image>
+
+                <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
+
+                <Image x:Name="FlashingProvince" Height="700" Width="1446" IsHitTestVisible="False"
+                           Margin="-250,0,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           RenderTransformOrigin="0.5,0.5" OverridesDefaultStyle="True" ClipToBounds="True"
+                           StretchDirection="Both" Panel.ZIndex="10">
                     <Image.Style>
                         <Style>
                             <Style.Triggers>
@@ -55,28 +74,6 @@
                         </Style>
                     </Image.Style>
                 </Image>
-
-                <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
-                           Margin="-250,0,0,0" Stretch="Uniform"
-                           RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"
-                           MouseDown="Map_MouseDown"
-                           >
-                </Image>
-
-
-                    <Image x:Name="mapTerrain" Height="700" Width="1446" 
-                           Margin="-250,0,0,0" Stretch="Uniform"
-                           RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"
-                           MouseDown="Map_MouseDown"
-                           >
-                    </Image>
-
-                    <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
-
 
                 </Canvas>
             </ScrollViewer>

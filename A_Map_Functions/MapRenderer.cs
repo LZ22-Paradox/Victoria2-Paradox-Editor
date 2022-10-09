@@ -17,8 +17,9 @@ namespace Paradox_Editor.A_Map_Navigation
         {
             ModData = modData;
         }
+        public MapRenderer() { }
 
-        static uint GetRawColor(Color color) =>(0xFFu << 24)
+        public uint GetRawColor(Color color) => (0xFFu << 24)
             | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
 
         /// <summary>
@@ -47,11 +48,11 @@ namespace Paradox_Editor.A_Map_Navigation
                     foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
                     ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
                     pixels[index] = GetRawColor(countryColor);
-                } 
+                }
                 else if (province?.Owner == null)
-                if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true)
+                    if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true)
                         pixels[index] = GetRawColor(Colors.Black); //Uncolonized
-                else
+                    else
                         pixels[index] = GetRawColor(Colors.White); //Ocean
             });
 
@@ -70,6 +71,32 @@ namespace Paradox_Editor.A_Map_Navigation
         }
 
         public void DrawPopulationMap()
+        {
+
+        }
+
+        public unsafe WriteableBitmap DrawSelectedProvince(WriteableBitmap image, uint color)
+        {
+            image.Lock();
+            var pixels = (uint*)image.BackBuffer;
+
+            var pixelCount = image.PixelWidth * image.PixelHeight;
+
+            Parallel.For(0, pixelCount, (index) =>
+            {
+                var rawPixel = pixels[index];
+
+                if (rawPixel == color)
+                    pixels[index] = GetRawColor(Colors.WhiteSmoke);
+                else
+                    pixels[index] = 0;
+            });
+
+            image.Unlock();
+            return image;
+        }
+
+        public void ReplaceColour()
         {
 
         }

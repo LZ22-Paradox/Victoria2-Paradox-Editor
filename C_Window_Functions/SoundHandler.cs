@@ -10,7 +10,8 @@ namespace Paradox_Editor.C_Window_Functions
         public static string ValidClick { get; set; }
         public static string Gamemode { get; set; }
         public static string SoundAssetsPath = @"/Preloaded_Assets/VIC2/Sounds/"; //The Resource Path for the Icons
-        
+        private static string PorkingDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+
         public static void SoundAssetChange(string Game)
         {
             if (Game == "VIC2")
@@ -27,21 +28,25 @@ namespace Paradox_Editor.C_Window_Functions
             Gamemode = Game;
         }
 
-        public static void PlayClickSound() //Updates & Disables the other existing map modes
+        public static void PlayClick()
         {
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            var soundDirectory = new Uri(projectDirectory + SoundAssetsPath + "validClick.wav", UriKind.Relative);
+            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "validClick.wav", UriKind.Relative);
             var soundFileStream = File.OpenRead(soundDirectory.ToString());
             var splayer = new SoundPlayer(soundFileStream);
 
             splayer.Play();
         }
-        public static void PlayConnectingSound()
+        public static void PlayConnecting()
         {
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            var soundDirectory = new Uri(projectDirectory + SoundAssetsPath + "connecting.wav", UriKind.Relative);
+            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "connecting.wav", UriKind.Relative);
+            var soundFileStream = File.OpenRead(soundDirectory.ToString());
+            var splayer = new SoundPlayer(soundFileStream);
+            splayer.Play();
+        }
+
+        public static void PlayError()
+        {
+            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "error.wav", UriKind.Relative);
             var soundFileStream = File.OpenRead(soundDirectory.ToString());
             var splayer = new SoundPlayer(soundFileStream);
             splayer.Play();
