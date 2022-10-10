@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.D_Types;
 
 namespace Paradox_Editor.A_Map_Navigation
 {
@@ -42,27 +43,29 @@ namespace Paradox_Editor.A_Map_Navigation
                 ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
 
                 bool foundOwner = false;
-
+                
                 if (province?.Owner != null)
                 {
                     foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
                     ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
                     pixels[index] = GetRawColor(countryColor);
                 }
-                else if (province?.Owner == null)
+                else
+                {
                     if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true)
                         pixels[index] = GetRawColor(Colors.Black); //Uncolonized
                     else
                         pixels[index] = GetRawColor(Colors.White); //Ocean
+                }
+                    
             });
-
             image.Unlock();
             return image;
         }
 
         public void DrawStateMap()
         {
-
+            //States, aka "regions" are found in ...mod/map/region.txt whilst continent provinces are located in continent.txt
         }
 
         public void DrawCultureMap()
@@ -79,7 +82,6 @@ namespace Paradox_Editor.A_Map_Navigation
         {
             image.Lock();
             var pixels = (uint*)image.BackBuffer;
-
             var pixelCount = image.PixelWidth * image.PixelHeight;
 
             Parallel.For(0, pixelCount, (index) =>
@@ -96,10 +98,34 @@ namespace Paradox_Editor.A_Map_Navigation
             return image;
         }
 
-        public void ReplaceColour()
+        ///Begin work trying to get single province to update. Input specific province color, then look for it,
+        ///then replace with province's TAG's color
+        /*public unsafe WriteableBitmap ReRenderPoliticalProvince(WriteableBitmap image, ProvinceFile province)
         {
+            image.Lock();
+            var pixels = (uint*)image.BackBuffer;
+            var pixelCount = image.PixelWidth * image.PixelHeight;
 
-        }
+            ModData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
+            ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
+            ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
+            ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var oldCountryColor);
+            var oldColor = GetRawColor(oldCountryColor);
+
+            Parallel.For(0, pixelCount, (index) =>
+            {
+                var rawPixel = pixels[index];
+
+                if (rawPixel == oldColor)
+                {
+                    pixels[index] = GetRawColor(newCountryColor);
+                }
+
+            });
+
+            image.Unlock();
+            return image;
+    }*/
 
     }
 }

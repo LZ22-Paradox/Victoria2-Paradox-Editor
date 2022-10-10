@@ -1,4 +1,5 @@
 ﻿using Paradox_Editor.A_Map_Functions;
+using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 using System;
@@ -17,11 +18,12 @@ namespace Paradox_Editor
     [ToolboxItem(true)]
     public partial class ProvinceInterface : UserControl
     {
+        private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private DataAcquisition ModData { get; set; }
         private ProvinceFile CurrentProvince = new();
 
-        //public ObservableCollection<Core> Cores { get; set; } = new ObservableCollection<Core>();
         public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName)
         { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
@@ -84,15 +86,26 @@ namespace Paradox_Editor
 
         public void Save_Button_Pressed(object sender, RoutedEventArgs e)
         {
-            if (CurrentProvince.color != 0) { 
+            if (CurrentProvince.color != 0)
+            {
                 if (File.Exists(CurrentProvince.HistoryFilePath))
                     File.Delete(CurrentProvince.HistoryFilePath);
 
                 var file = File.CreateText(CurrentProvince.HistoryFilePath);
 
                 PopulateSaveFile(file);
+
+                ///Begin work trying to get single province to update. Input specific province color, then look for it,
+                ///then replace with province's TAG's color
+/*                var tempMapRenderer = new MapRenderer(ModData);
+
+                var newPoliticalMap = tempMapRenderer.ReRenderPoliticalProvince(MapViewer.GetMap(0),
+                    ModData_Look_For_The_province_Needed_By_Color!!!);
+                MapViewer.SetMap(0, newPoliticalMap);*/
+
                 Set_Save_Icon_To_Saved();
-            } else
+            }
+            else
             {
                 SoundHandler.PlayError();
                 Debug.WriteLine("Province is null. Select a province.");
@@ -101,36 +114,72 @@ namespace Paradox_Editor
 
         void PopulateSaveFile(StreamWriter file)
         {
+            ProvinceFile tempFile = new();
+            tempFile = ModData.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
+            {
                 file.WriteLine("owner = " + OWNERBOX.Text);
+                tempFile.Owner = OWNERBOX.Text;
+            }
             if (!CONTROLLERBOX.Text.Equals(""))
+            {
                 file.WriteLine("controller = " + CONTROLLERBOX.Text);
+                tempFile.Controller = CONTROLLERBOX.Text;
+            }
             if (!TRADEGOODBOX.Text.Equals(""))
+            {
                 file.WriteLine("trade_goods = " + TRADEGOODBOX.Text);
+                tempFile.TradeGoods = TRADEGOODBOX.Text;
+            }
             if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
+            {
                 file.WriteLine("life_rating = " + LIFERATINGBOX.Text);
+                tempFile.LifeRating = Convert.ToInt16(LIFERATINGBOX.Text);
+            }
             if (!COLONIALBOX.Text.Equals("") && !COLONIALBOX.Text.Equals("0"))
+            {
                 file.WriteLine("colonial = " + COLONIALBOX.Text);
+                tempFile.Colonial = Convert.ToInt16(COLONIALBOX.Text);
+            }
             if (COREGRID.HasItems)
             {
+                tempFile.Cores.Clear();
                 foreach (Core item in COREGRID.Items)
                 {
                     if (item.TAG is not "" or null)
                     {
                         file.WriteLine("add_core = " + item.TAG);
+                        tempFile.Cores.Add(item);
                     }
                 }
             }
             if (!TERRAINBOX.Text.Equals(""))
+            {
                 file.WriteLine("terrain = " + TERRAINBOX.Text);
+                tempFile.Terrain = TERRAINBOX.Text;
+            }
+
             if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
+            {
                 file.WriteLine("naval_base = " + NAVALBASEBOX.Text);
+                tempFile.Naval_Base = Convert.ToInt16(NAVALBASEBOX.Text);
+            }
+
             if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("0"))
+            {
                 file.WriteLine("fort = " + FORTBOX.Text);
+                tempFile.Fort = Convert.ToInt16(FORTBOX.Text);
+            }
+
             if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
+            {
                 file.WriteLine("railroad = " + RAILROADBOX.Text);
+                tempFile.Railroad = Convert.ToInt16(RAILROADBOX.Text);
+            }
+
             if (STATEBUILDING_GRID.HasItems)
             {
+                tempFile.State_Buildings.Clear();
                 foreach (StateBuilding building in STATEBUILDING_GRID.Items)
                 {
                     if (building.Building != null && building.Level != null && building.Upgrade != null)
@@ -141,9 +190,13 @@ namespace Paradox_Editor
                         file.WriteLine("\tupgrade = " + building.Upgrade);
                         file.WriteLine("}");
                     }
+                    tempFile.State_Buildings.Add(building);
                 }
             }
+
             file.Close();
+
+            ModData.ReplaceProvince(tempFile);
             SoundHandler.PlayConnecting(); //Perhaps change to success sound or change connecting sound to something else?
         }
 
@@ -173,12 +226,10 @@ namespace Paradox_Editor
             Cores.Clear();
             Interface_Changed(sender, e); //Notify data has been changed.
         }
-
         public void AddBlankCore(object sender, RoutedEventArgs e)
         {
             Cores.Add(new Core(""));
         }
-
         public void RemoveCore(object sender, RoutedEventArgs e)
         {
             Cores.RemoveAt(COREGRID.SelectedIndex);
@@ -232,9 +283,14 @@ namespace Paradox_Editor
                 ResetCores(sender, e);
                 ResetBuildings(sender, e);
                 foreach (var core in province.Cores) //Populates Core List
+                {
                     Cores.Add(core);
+                }
+
                 foreach (var stateBuilding in province.State_Buildings)
+                {
                     StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
+                }
 
                 this.Visibility = Visibility.Visible;
             }

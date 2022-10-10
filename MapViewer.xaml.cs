@@ -47,6 +47,17 @@ namespace Paradox_Editor
 
         public void SetModData(DataAcquisition modData) => ModData = modData;
 
+        public static WriteableBitmap GetMap(int index)
+        {
+            var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MapModes[index].Source);
+            return mapSource;
+        }
+
+        public static void SetMap(int index, WriteableBitmap image)
+        {
+            MapModes[index].Source = image;
+        }
+
         public void LoadMaps()
         {
             ///Load Province Map
@@ -56,10 +67,7 @@ namespace Paradox_Editor
 
             ///Load Political Map
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-
-
-            var politicalMap = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
-            mapPolitical.Source = politicalMap;
+            mapPolitical.Source = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
 
             ///Load D_ Map
 
@@ -99,13 +107,11 @@ namespace Paradox_Editor
                 MouseLeftClick(sender, e);
             }
         }
-        
+
         public void MouseLeftClick(object sender, MouseButtonEventArgs e) //Requires Completion
         {
             _ = MapModes.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
             var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source);
-            ///!!!-===Bad Code Beware===-!!!!!
-            Debug.WriteLine(mapProvinces.SelectedColor);
             MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
             
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
@@ -113,7 +119,7 @@ namespace Paradox_Editor
             var singleProvince = tempMapRenderer.DrawSelectedProvince(provinceMapSource,
                 tempMapRenderer.GetRawColor(mapProvinces.SelectedColor));
             FlashingProvince.Source = singleProvince;
-            ///Work on the below
+
             SoundHandler.PlayClick();
         }
 

@@ -1,22 +1,21 @@
 ﻿[] Environment = WPF with .NET 5.0 core
 
 [Definition.csv] - province;red;green;blue;provincename;x
-* FolderSelect is the master folder that executes the methods needed
 
-Theorie suggests that the program may need to create it's own text files, as opposed
-to editing them directly; which may cause more complications than necessary.
+    #1 PRIORITY : Local refresh of province
+    #2 SECONDARY : Selectable province in other map modes
 
-D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
-    O_ CREATE NEW TEXT FILE
-
-    * Consolidate classes between Handlers and Functions (Also see about ImageTransformation being merged with another class)
     * Add "#" handling in province's PopulateHistoryData()
-    * See about changing filelistview and the binding of the data source for the better
     * Reimplement Stored Opener
     * Get name of mod folder. Check if Victoria 2 (based on game selected), and load the mod if not.
     * Read CSV for all province data, then override it. NOT history data first!
     * If file isn't found, find Vic2's default instead.
-    * Multilayer the color picker for Province & Country displays in a right-panel.
+    * Multilayer the color picker
+
+    (!) Read cultures.txt first before handling anything editing pops.
+        o This is needed for population name and cultures.
+    * Pops file "C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestEnvironment(DoD)\history\pops"
+        o Pops files are labelled by country, but each file contains data based on provinces.
     BAD MOD INCOMPATABILITIES:
         * TTA - Duplicate Colours.
         * TOL - A history province has a number-only name.
@@ -24,7 +23,6 @@ D_ CHOOSE BETWEEN TWO MAJOR LOADING OPTIONS:
         * PDM - Tester country name has no colour.
         * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format.
         * LZ22 - A history province has "COLONIAL = YES", rather than an integer for some reason.
-    * Fix UI "game mode" visuals
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY

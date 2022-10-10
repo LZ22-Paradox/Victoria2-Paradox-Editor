@@ -130,7 +130,6 @@
             <ListBoxItem x:Name="Mode_Classic" Content="Classic"/>
             <ListBoxItem x:Name="Mode_Modern" Content="Modern"/>
             <ListBoxItem x:Name="Mode_PaintDotNet" Content="Paint.NET"/>
-
         </ComboBox>
 
 

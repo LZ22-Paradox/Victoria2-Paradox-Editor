@@ -50,6 +50,15 @@ namespace Paradox_Editor.A_Map_Functions
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
         public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
         public Dictionary<string, Color> GetCountryNamesToColours() => CountryNamesToColors;
+        public ProvinceFile GetProvince(uint provinceID)
+        {
+            _ = Provinces.TryGetValue(provinceID, out ProvinceFile province);
+            return province;
+        }
+        public void ReplaceProvince(ProvinceFile province)
+        {
+            Provinces[(uint)province.ProvinceID] = province;
+        }
 
 
         /// <summary>
@@ -99,7 +108,7 @@ namespace Paradox_Editor.A_Map_Functions
         /// </summary>
         public void GetHistoryFiles()
         {
-            ///<!!!!!!DOES NOT READ FILES THAT ONLY HAVE SPACES (IE, LIKE "1337 Prome")!!!!!>
+            ///<!!!!!!DOES NOT READ FILES THAT ONLY HAVE SPACES (IE, LIKE "1337 Prome")!!!!! : performance-instease this>
             foreach (string fileEntry in Directories.HistoryProvincePaths)
             {
                 var fileName = Path.GetFileName(fileEntry).Replace(".txt", ""); //FileEntry = Filepath
@@ -119,14 +128,14 @@ namespace Paradox_Editor.A_Map_Functions
                     else
                     {
                         Provinces.Add((uint)IDValue, tempProvinceFile);
-                        Provinces[(uint)IDValue].PopulateHistoryData(); //1st Province (Fez) Isn't getting its data!
+                        Provinces[(uint)IDValue].PopulateHistoryData();
                     }
                 }
                 else
                     Debug.WriteLine("Error listing history provinces. File {0} could not be split.", fileName);
-                Provinces.OrderBy(x => x.Key);
-                //var sorts = from pair in HistoryProvinces orderby pair.Value.ProvinceID ascending select pair;
+                _ = Provinces.OrderBy(x => x.Key);
             }
+
         }
 
         /// <summary>
@@ -146,14 +155,14 @@ namespace Paradox_Editor.A_Map_Functions
             csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
             var records = csv.GetRecords<ProvinceCSVDefinition>().Skip(1);
             {
-                foreach (var record in records)
+                Parallel.ForEach(records, record =>
                 {
                     if (!string.IsNullOrWhiteSpace(record.province))
                     {
                         if (Provinces.ContainsKey(Convert.ToUInt32(record.province)))
                             Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record);
                     }
-                }
+                });
             }
         }
 

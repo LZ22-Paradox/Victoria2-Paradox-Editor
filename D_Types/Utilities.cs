@@ -26,7 +26,7 @@ namespace Paradox_Editor.D_Types
     }
 
     public class Building {
-    
+
     }
 
     public class StateBuilding : Building
@@ -90,6 +90,22 @@ namespace Paradox_Editor.D_Types
         public string[] HistoryProvincePaths { get; set; }
         public string CountriesTxt { get; set; }
         public string DefinitionCSVPath { get; set; }
+
+    }
+
+    public class EventModifier {
+    
+    }
+
+    public class Pop
+    {
+        public string culture { get; set; }
+        public string religion { get; set; }
+        public string size { get; set; }
+    }
+
+    public class Goods //May be useless; see about goods editing
+    {
 
     }
 
