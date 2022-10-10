@@ -40,7 +40,7 @@ namespace Paradox_Editor.A_Map_Navigation
                 var rawPixel = pixels[index];
 
                 ModData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
-                ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
+                var province = ModData.GetProvince((uint)provinceID);
 
                 bool foundOwner = false;
                 
@@ -78,6 +78,12 @@ namespace Paradox_Editor.A_Map_Navigation
 
         }
 
+        /// <summary>
+        /// Redraws the given province that has been selected.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public unsafe WriteableBitmap DrawSelectedProvince(WriteableBitmap image, uint color)
         {
             image.Lock();
@@ -100,32 +106,43 @@ namespace Paradox_Editor.A_Map_Navigation
 
         ///Begin work trying to get single province to update. Input specific province color, then look for it,
         ///then replace with province's TAG's color
-        /*public unsafe WriteableBitmap ReRenderPoliticalProvince(WriteableBitmap image, ProvinceFile province)
+        public unsafe WriteableBitmap RefreshProvincePolitical(WriteableBitmap provinceMap, WriteableBitmap overWrittenMap, uint provinceColor)
         {
-            image.Lock();
-            var pixels = (uint*)image.BackBuffer;
-            var pixelCount = image.PixelWidth * image.PixelHeight;
+            provinceMap.Lock();
+            overWrittenMap.Lock();
+            var givenPixels = (uint*)provinceMap.BackBuffer;
+            var overWrittenPixels = (uint*)overWrittenMap.BackBuffer;
+            var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
 
             ModData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
-            ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
-            ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
-            ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var oldCountryColor);
-            var oldColor = GetRawColor(oldCountryColor);
+            var province = ModData.GetProvince((uint)provinceID);
+
+            Color countryColor;
+
+            if (province.Owner != null)
+            {
+                ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
+                ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out countryColor);
+            } else
+                countryColor = Colors.Black;
+
+            var newColor = GetRawColor(countryColor);
 
             Parallel.For(0, pixelCount, (index) =>
             {
-                var rawPixel = pixels[index];
+                var rawPixel = givenPixels[index];
 
-                if (rawPixel == oldColor)
+                if (rawPixel == provinceColor)
                 {
-                    pixels[index] = GetRawColor(newCountryColor);
+                    overWrittenPixels[index] = newColor;
                 }
-
             });
 
-            image.Unlock();
-            return image;
-    }*/
+            provinceMap.Unlock();
+            overWrittenMap.Unlock();
+
+            return overWrittenMap;
+        }
 
     }
 }

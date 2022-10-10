@@ -36,7 +36,8 @@ namespace Paradox_Editor
         public MapViewer()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
+            
             MapModes = new Dictionary<int, Image>
             {
                 { 0, mapPolitical},

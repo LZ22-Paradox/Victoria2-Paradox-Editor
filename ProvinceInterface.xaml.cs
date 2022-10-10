@@ -20,7 +20,8 @@ namespace Paradox_Editor
     {
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private DataAcquisition ModData { get; set; }
-        private ProvinceFile CurrentProvince = new();
+        private ProvinceFile _currentProvince = new();
+        private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
 
         public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
 
@@ -95,13 +96,8 @@ namespace Paradox_Editor
 
                 PopulateSaveFile(file);
 
-                ///Begin work trying to get single province to update. Input specific province color, then look for it,
-                ///then replace with province's TAG's color
-/*                var tempMapRenderer = new MapRenderer(ModData);
-
-                var newPoliticalMap = tempMapRenderer.ReRenderPoliticalProvince(MapViewer.GetMap(0),
-                    ModData_Look_For_The_province_Needed_By_Color!!!);
-                MapViewer.SetMap(0, newPoliticalMap);*/
+                MapViewer.SetMap(0, new MapRenderer(ModData)
+                    .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
                 Set_Save_Icon_To_Saved();
             }
@@ -118,13 +114,39 @@ namespace Paradox_Editor
             tempFile = ModData.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
             {
-                file.WriteLine("owner = " + OWNERBOX.Text);
-                tempFile.Owner = OWNERBOX.Text;
+                ModData.GetTagsToCountryNames().TryGetValue(OWNERBOX.Text, out var countryTAG);
+                if (countryTAG != null)
+                {
+                    file.WriteLine("owner = " + OWNERBOX.Text);
+                    tempFile.Owner = OWNERBOX.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Country TAG invalid! : " + OWNERBOX.Text);
+                    tempFile.Owner = null;
+                }
+            }
+            else
+            {
+                tempFile.Owner = null;
             }
             if (!CONTROLLERBOX.Text.Equals(""))
             {
-                file.WriteLine("controller = " + CONTROLLERBOX.Text);
-                tempFile.Controller = CONTROLLERBOX.Text;
+                ModData.GetTagsToCountryNames().TryGetValue(CONTROLLERBOX.Text, out var countryTAG);
+                if (countryTAG != null)
+                {
+                    file.WriteLine("controller = " + CONTROLLERBOX.Text);
+                    tempFile.Controller = CONTROLLERBOX.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Country TAG invalid! : " + CONTROLLERBOX.Text);
+                    tempFile.Controller = null;
+                }
+            }
+            else
+            {
+                tempFile.Owner = null;
             }
             if (!TRADEGOODBOX.Text.Equals(""))
             {
@@ -158,25 +180,21 @@ namespace Paradox_Editor
                 file.WriteLine("terrain = " + TERRAINBOX.Text);
                 tempFile.Terrain = TERRAINBOX.Text;
             }
-
             if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
             {
                 file.WriteLine("naval_base = " + NAVALBASEBOX.Text);
                 tempFile.Naval_Base = Convert.ToInt16(NAVALBASEBOX.Text);
             }
-
             if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("0"))
             {
                 file.WriteLine("fort = " + FORTBOX.Text);
                 tempFile.Fort = Convert.ToInt16(FORTBOX.Text);
             }
-
             if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
             {
                 file.WriteLine("railroad = " + RAILROADBOX.Text);
                 tempFile.Railroad = Convert.ToInt16(RAILROADBOX.Text);
             }
-
             if (STATEBUILDING_GRID.HasItems)
             {
                 tempFile.State_Buildings.Clear();
@@ -262,7 +280,7 @@ namespace Paradox_Editor
         public void PopulateInterface(Color color)
         {
             ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
-            ModData.GetProvinces().TryGetValue((uint)provinceID, out var province);
+            ProvinceFile province = ModData.GetProvince((uint)provinceID);
             CurrentProvince = province;
             if (province != null)
             {
@@ -280,17 +298,14 @@ namespace Paradox_Editor
                 RAILROADBOX.Text = Convert.ToString(province.Railroad);
 
                 object sender = this; RoutedEventArgs e = new();
-                ResetCores(sender, e);
-                ResetBuildings(sender, e);
-                foreach (var core in province.Cores) //Populates Core List
-                {
-                    Cores.Add(core);
-                }
 
+                ResetCores(sender, e);
+                foreach (var core in province.Cores) //Populates Core List
+                    Cores.Add(core);
+                ResetBuildings(sender, e);
                 foreach (var stateBuilding in province.State_Buildings)
-                {
                     StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
-                }
+
 
                 this.Visibility = Visibility.Visible;
             }

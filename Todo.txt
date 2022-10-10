@@ -2,8 +2,11 @@
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
-    #1 PRIORITY : Local refresh of province
     #2 SECONDARY : Selectable province in other map modes
+
+    Override selectedprovince with selectedcolor. Whole layer is used for selected countries.
+    Perhaps save old TAG instead, and with political map search for that tags color and override with the province’s new tag’s colour
+    Do a check before hand to see if both tags aren’t equal. Don’t want to waste time.
 
     * Add "#" handling in province's PopulateHistoryData()
     * Reimplement Stored Opener
