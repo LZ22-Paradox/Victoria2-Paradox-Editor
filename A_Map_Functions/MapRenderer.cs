@@ -52,7 +52,7 @@ namespace Paradox_Editor.A_Map_Navigation
                 }
                 else
                 {
-                    if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true)
+                    if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true) //Checking if province is History
                         pixels[index] = GetRawColor(Colors.Black); //Uncolonized
                     else
                         pixels[index] = GetRawColor(Colors.White); //Ocean

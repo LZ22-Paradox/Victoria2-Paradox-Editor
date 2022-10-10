@@ -20,7 +20,7 @@
             <Rectangle Fill="{Binding ElementName=mapProvinces, Path=SelectedColor,
 					Converter={StaticResource colorToBrushConverter}}"/>
         </Border>
-
+        
         <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto">
             <Canvas x:Name="mapCanvas" RenderTransformOrigin="0.5,0.5"
@@ -37,19 +37,19 @@
                 </colorpickercontrols:ImageColorPicker>
 
 
-                <Image x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
+                <colorpickercontrols:ImageColorPicker x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
-                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                           StretchDirection="Both"
+                           RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
+                           ClipToBounds="True" StretchDirection="Both"
                            MouseDown="Map_MouseDown">
-                </Image>
+                </colorpickercontrols:ImageColorPicker>
 
                 <Image x:Name="mapTerrain" Height="700" Width="1446" 
                         Margin="-250,0,0,0" Stretch="Uniform"
                         RenderOptions.BitmapScalingMode="NearestNeighbor"
-                        RenderTransformOrigin="0,0" OverridesDefaultStyle="True" ClipToBounds="True"
-                        StretchDirection="Both"
+                        RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
+                        ClipToBounds="True" StretchDirection="Both"
                         MouseDown="Map_MouseDown">
                 </Image>
 

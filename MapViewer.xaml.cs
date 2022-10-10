@@ -37,7 +37,7 @@ namespace Paradox_Editor
         {
             InitializeComponent();
             DataContext = this;
-            
+
             MapModes = new Dictionary<int, Image>
             {
                 { 0, mapPolitical},
@@ -95,10 +95,8 @@ namespace Paradox_Editor
             mapCanvas.CaptureMouse();
         }
 
-        ///WORK WITH THIS METHOD FOR ACCESSING PROVINCE DATA FROM POLITICAL
         public void Map_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //This is for the alternate types of interactions w. the map
             if (e.MiddleButton.Equals(MouseButtonState.Pressed))
             {
                 MouseDown(sender, e);
@@ -109,19 +107,56 @@ namespace Paradox_Editor
             }
         }
 
-        public void MouseLeftClick(object sender, MouseButtonEventArgs e) //Requires Completion
+        /// <summary>
+        /// For alternate accesses to other maps.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void MouseLeftClick(object sender, MouseButtonEventArgs e)
         {
             _ = MapModes.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
-            var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source);
-            MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
-            
+            ///var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source); ///Map source maybe used for later
+
+            var politicalMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapPolitical.Source);
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-            var tempMapRenderer = new MapRenderer(); 
-            var singleProvince = tempMapRenderer.DrawSelectedProvince(provinceMapSource,
-                tempMapRenderer.GetRawColor(mapProvinces.SelectedColor));
-            FlashingProvince.Source = singleProvince;
+
+            switch (MainWindow.mapModeButtons.GetMapMode())
+            {
+                case 0: //Political Map
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl))
+                    {   
+                        var pickedColor = mapPolitical.PickColor(mapProvinces);
+                        MainWindow.provinceInterface.PopulateInterface(pickedColor);
+                        SelectColor(provinceMapSource, pickedColor);
+                    }
+                    else
+                    {
+                        SelectColor(politicalMapSource, mapPolitical.SelectedColor);
+                        MainWindow.provinceInterface.Visibility = Visibility.Hidden;
+                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); ///Implement opening of countries
+                    }
+                    break;
+                case 1: //Province Map
+                        MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
+                        SelectColor(provinceMapSource, mapProvinces.SelectedColor);
+                    break;
+                case 2: //Terrain Map
+                    break;
+            }
+
+
+
+
 
             SoundHandler.PlayClick();
+        }
+
+        public void SelectColor(WriteableBitmap source, Color selectedColor)
+        {
+            var tempMapRenderer = new MapRenderer();
+            var singleProvince = tempMapRenderer.DrawSelectedProvince(source,
+                tempMapRenderer.GetRawColor(selectedColor));
+            FlashingProvince.Source = singleProvince;
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)

@@ -202,7 +202,7 @@ namespace ColorPickerControls
                     DrawingImage drawingImage = Source as DrawingImage;
                     if (drawingImage != null)
                     {
-                        DrawingVisual drawingVisual = new DrawingVisual();
+                        DrawingVisual drawingVisual = new();
                         using (DrawingContext drawingContext = drawingVisual.RenderOpen())
                         {
                             drawingContext.DrawDrawing(drawingImage.Drawing);
@@ -237,7 +237,7 @@ namespace ColorPickerControls
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
-        {
+        { 
             /*            base.OnMouseMove(e);
                         if (e.LeftButton == MouseButtonState.Pressed)
                             SetPositionIfInBounds(e.GetPosition(this));*/
@@ -355,5 +355,87 @@ namespace ColorPickerControls
 
             throw new InvalidOperationException("Unsupported Image Source Type");
         }
+
+
+        public Color PickColor(Image image)
+        {
+            if (image.Source == null)
+                throw new InvalidOperationException("Image Source not set");
+
+            BitmapSource bitmapSource = image.Source as BitmapSource;
+            if (bitmapSource != null)
+            { // Get color from bitmap pixel.
+              // Convert coopdinates from WPF pixels to Bitmap pixels and restrict them by the Bitmap bounds.
+                position.X *= bitmapSource.PixelWidth / ActualWidth;
+                if ((int)position.X > bitmapSource.PixelWidth - 1)
+                    position.X = bitmapSource.PixelWidth - 1;
+                else if (position.X < 0)
+                    position.X = 0;
+                position.Y *= bitmapSource.PixelHeight / ActualHeight;
+                if ((int)position.Y > bitmapSource.PixelHeight - 1)
+                    position.Y = bitmapSource.PixelHeight - 1;
+                else if (position.Y < 0)
+                    position.Y = 0;
+                if (bitmapSource.Format == PixelFormats.Indexed4)
+                {
+                    byte[] pixels = new byte[1];
+                    int stride = (bitmapSource.PixelWidth * bitmapSource.Format.BitsPerPixel + 3) / 4;
+                    bitmapSource.CopyPixels(new Int32Rect((int)position.X, (int)position.Y, 1, 1), pixels, stride, 0);
+
+                    Debug.Assert(bitmapSource.Palette != null, "bitmapSource.Palette != null");
+                    Debug.Assert(bitmapSource.Palette.Colors.Count == 16, "bitmapSource.Palette.Colors.Count == 16");
+                    return bitmapSource.Palette.Colors[pixels[0] >> 4];
+                }
+                else if (bitmapSource.Format == PixelFormats.Indexed8)
+                {
+                    byte[] pixels = new byte[1];
+                    int stride = (bitmapSource.PixelWidth * bitmapSource.Format.BitsPerPixel + 7) / 8;
+                    bitmapSource.CopyPixels(new Int32Rect((int)position.X, (int)position.Y, 1, 1), pixels, stride, 0);
+
+                    Debug.Assert(bitmapSource.Palette != null, "bitmapSource.Palette != null");
+                    Debug.Assert(bitmapSource.Palette.Colors.Count == 256, "bitmapSource.Palette.Colors.Count == 256");
+                    return bitmapSource.Palette.Colors[pixels[0]];
+                }
+                else
+                {
+                    byte[] pixels = new byte[4];
+                    int stride = (bitmapSource.PixelWidth * bitmapSource.Format.BitsPerPixel + 7) / 8;
+                    bitmapSource.CopyPixels(new Int32Rect((int)position.X, (int)position.Y, 1, 1), pixels, stride, 0);
+
+                    return Color.FromArgb(pixels[3], pixels[2], pixels[1], pixels[0]);
+                }
+            }
+
+            DrawingImage drawingImage = Source as DrawingImage;
+            if (drawingImage != null)
+            { // Get color from drawing pixel.
+                RenderTargetBitmap targetBitmap = TargetBitmap;
+                Debug.Assert(targetBitmap != null, "targetBitmap != null");
+
+                // Convert coopdinates from WPF pixels to Bitmap pixels and restrict them by the Bitmap bounds.
+                position.X *= targetBitmap.PixelWidth / ActualWidth;
+                if ((int)position.X > targetBitmap.PixelWidth - 1)
+                    position.X = targetBitmap.PixelWidth - 1;
+                else if (position.X < 0)
+                    position.X = 0;
+                position.Y *= targetBitmap.PixelHeight / ActualHeight;
+                if ((int)position.Y > targetBitmap.PixelHeight - 1)
+                    position.Y = targetBitmap.PixelHeight - 1;
+                else if (position.Y < 0)
+                    position.Y = 0;
+
+                // TargetBitmap is always in PixelFormats.Pbgra32 format.
+                // Pbgra32 is a sRGB format with 32 bits per pixel (BPP). Each channel (blue, green, red, and alpha)
+                // is allocated 8 bits per pixel (BPP). Each color channel is pre-multiplied by the alpha value. 
+                byte[] pixels = new byte[4];
+                int stride = (targetBitmap.PixelWidth * targetBitmap.Format.BitsPerPixel + 7) / 8;
+                targetBitmap.CopyPixels(new Int32Rect((int)position.X, (int)position.Y, 1, 1), pixels, stride, 0);
+                return Color.FromArgb(pixels[3], pixels[2], pixels[1], pixels[0]);
+            }
+
+            throw new InvalidOperationException("Unsupported Image Source Type");
+        }
+
+
     }
 }

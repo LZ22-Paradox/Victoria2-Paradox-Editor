@@ -96,6 +96,7 @@ namespace Paradox_Editor
 
                 PopulateSaveFile(file);
 
+                ///Currently only refreshes political map
                 MapViewer.SetMap(0, new MapRenderer(ModData)
                     .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
@@ -279,6 +280,15 @@ namespace Paradox_Editor
         /// <param name="color"></param>
         public void PopulateInterface(Color color)
         {
+/*            switch (mapMode)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                default:
+                    break;
+            }*/
             ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
             ProvinceFile province = ModData.GetProvince((uint)provinceID);
             CurrentProvince = province;
@@ -305,7 +315,6 @@ namespace Paradox_Editor
                 ResetBuildings(sender, e);
                 foreach (var stateBuilding in province.State_Buildings)
                     StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
-
 
                 this.Visibility = Visibility.Visible;
             }

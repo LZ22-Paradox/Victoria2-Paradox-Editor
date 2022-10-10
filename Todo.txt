@@ -2,7 +2,9 @@
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
-    #2 SECONDARY : Selectable province in other map modes
+    #1 PRIMARY : Selectable province in other map modes
+        o See about making a method that will get the ImageColorPicker point and return the color of a different source map
+    #2 SECONDARY : CREATE POPULATION PROVINCE INTERFACE
 
     Override selectedprovince with selectedcolor. Whole layer is used for selected countries.
     Perhaps save old TAG instead, and with political map search for that tags color and override with the province’s new tag’s colour
