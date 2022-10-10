@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 
 namespace Paradox_Editor.A_Map_Functions
 {
@@ -29,7 +30,8 @@ namespace Paradox_Editor.A_Map_Functions
 
     public class DataAcquisition
     {
-        private string MasterDirectory;
+        private string GameDirectory;
+        private string ModDirectory;
         private DirectoryStructure Directories = new();
 
         private Dictionary<uint, ProvinceFile> Provinces = new();
@@ -42,10 +44,17 @@ namespace Paradox_Editor.A_Map_Functions
         public DataAcquisition() { }
         public DataAcquisition(string directory)
         {
+            if (!directory.Equals(MainWindow.CurrentGameMode)) ///May need fixing later
+            {
+                GameDirectory = Directory.GetParent(directory).Parent.ToString();
+            }
+            ModDirectory = directory;
             Directories = CollectDirectoryData(directory);
-            MasterDirectory = directory;
         }
-        public string GetMasterDirectory() => MasterDirectory;
+
+        public string GetModDirectory() => ModDirectory;
+        public string GetGameDirectory() => GameDirectory;
+
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
         public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
@@ -92,7 +101,12 @@ namespace Paradox_Editor.A_Map_Functions
             string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
             string[] countryCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
             string countriesCommonFilePath = Path.Combine(directory, "common", "countries.txt");
-            string CSVFilePath = Path.Combine(directory, "map", "definition.csv");
+            string CSVFilePath;
+            if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
+                CSVFilePath = Path.Combine(directory, "map", "definition.csv");
+            else
+                CSVFilePath = Path.Combine(GameDirectory, "map", "definition.csv");
+            
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,
@@ -122,10 +136,16 @@ namespace Paradox_Editor.A_Map_Functions
                     var tempProvinceFile = new ProvinceFile();
                     tempProvinceFile.ProvinceID = IDValue;
                     tempProvinceFile.HistoryFilePath = fileEntry;
-                    tempProvinceFile.ProvinceFileName = splitName[1].Trim();
-                    if (Provinces.ContainsKey((uint)IDValue))
-                        Debug.WriteLine("Repeated Entry | " + IDValue);
-                    else
+
+                    if (splitName.Length == 1) //Fix for in case name is only a number
+                    {
+                        tempProvinceFile.ProvinceFileName = splitName[0].Trim(); 
+                    } else
+                    {
+                        tempProvinceFile.ProvinceFileName = splitName[1].Trim();
+                    }
+
+                    if (!Provinces.ContainsKey((uint)IDValue))
                     {
                         Provinces.Add((uint)IDValue, tempProvinceFile);
                         Provinces[(uint)IDValue].PopulateHistoryData();
@@ -164,6 +184,7 @@ namespace Paradox_Editor.A_Map_Functions
                     }
                 });
             }
+            csv.Dispose();
         }
 
 
@@ -174,18 +195,19 @@ namespace Paradox_Editor.A_Map_Functions
         {
             foreach (ProvinceFile province in Provinces.Values)
             {
-                ColorsToProvinceIDs.Add(province.color, province.ProvinceID);
+                if (!ColorsToProvinceIDs.ContainsKey(province.color))
+                    ColorsToProvinceIDs.Add(province.color, province.ProvinceID);
             }
         }
 
         /// <summary>
         /// Gets given game TAG's and country names, based on the common/...name.txt files.
         /// </summary>
-        public void PopulateTagsToCountryNames() //Requires fixing up and efficiency-working (also implement into provinces)
+        public void PopulateTagsToCountryNames() 
         {
-            foreach (var line in File.ReadAllLines(Directories.CountriesTxt)) //Check Path_CountriesTxt
+            foreach (var line in File.ReadAllLines(Directories.CountriesTxt))
             {
-                var input = line;
+                var input = line.Trim();
                 var index = input.IndexOf("#");
                 if (index >= 0)
                     input = input.Substring(0, index);
@@ -225,7 +247,7 @@ namespace Paradox_Editor.A_Map_Functions
                 }
                 else
                 {
-                    foreach (var line in File.ReadAllLines(countryFile)) //Where the magic happens
+                    foreach (var line in File.ReadAllLines(countryFile))
                     {
                         if (line.Contains("color =", StringComparison.Ordinal)) //color = { #  #  # }
                         {
@@ -233,17 +255,20 @@ namespace Paradox_Editor.A_Map_Functions
                             var fixedColorData = splitData[1].Replace("{", "").Replace("}", "").Trim();
                             var splitColors = fixedColorData.Split(" ");
                             seperatedColors = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+
                         }
-                        else { }
+
                     }
                 }
                 if (!CountryNamesToColors.ContainsKey(name))
                 {
+                    if (!String.IsNullOrEmpty(seperatedColors[0]))
                     CountryNamesToColors.Add(name,
                         Color.FromRgb(
-                            (byte)Convert.ToInt32(seperatedColors[0]),
-                            (byte)Convert.ToInt32(seperatedColors[1]),
-                            (byte)Convert.ToInt32(seperatedColors[2])
+                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[0], "[A-Za-z ]", "")),
+                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[1], "[A-Za-z ]", "")),
+                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[2], "[A-Za-z ]", ""))
                         ));
                 }
             }

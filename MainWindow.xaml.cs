@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 
@@ -27,7 +19,7 @@ namespace Paradox_Editor
         private DataAcquisition ModData { get; set; }
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public int CurrentControlMode { get; set; }
-        public int CurrentGameMode { get; set; }
+        public static string CurrentGameMode { get; set; }
 
 
         /// <summary>
@@ -63,8 +55,7 @@ namespace Paradox_Editor
         {
             //var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
             
-            Explorer filesector = new();
-            string selectedDirectory = filesector.OpenFolderSelect();
+            string selectedDirectory = Explorer.OpenFolderSelect();
             if (selectedDirectory == null)
                 return;
 
@@ -85,8 +76,7 @@ namespace Paradox_Editor
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
         {
-            Explorer fileSelector = new();
-            fileSelector.OpenFile(SelectedItem.HistoryFilePath);
+            Explorer.OpenFile(SelectedItem.HistoryFilePath);
         }
 
         public static explicit operator MainWindow(WindowCollection v) => throw new NotImplementedException();
@@ -119,7 +109,5 @@ namespace Paradox_Editor
         {
             CurrentControlMode = ControlMode.SelectedIndex;
         }
-
-
     }
 }

@@ -41,7 +41,7 @@
                  FontFamily="Impact" Foreground="{x:Null}"
                  Height="20" Width="20" Margin="0,0,10,0" Background="{x:Null}" BorderBrush="{x:Null}"
                  Click="Save_Button_Pressed">
-            <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="Preloaded_Assets/save_confirm_button.gif"/>
+            <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="Assets/save_confirm_button.gif"/>
         </Button>
 
         <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0"
@@ -49,7 +49,7 @@
                 Background="{x:Null}" Click="CloseInterface" Margin="0,20,5,0"
                 HorizontalAlignment="Right" VerticalAlignment="Top"
                 >
-            <Image Name="ExitButton_Image" Source="/Preloaded_Assets/VIC2/Icons/button_exit.png" Stretch="UniformToFill"/>
+            <Image Name="ExitButton_Image" Source="/Assets/VIC2/Icons/button_exit.png" Stretch="UniformToFill"/>
         </Button>
 
         <ScrollViewer Name="FileInterfaceViewer" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
@@ -144,14 +144,14 @@
                         HorizontalAlignment="Center" Panel.ZIndex="1"
                         Click="AddBlankCore" ToolTip="Add new Core TAG"
                         VerticalAlignment="Top">
-                    <Image Name="AddCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
+                    <Image Name="AddCore_Image" Source="/Assets/VIC2/Icons/button_add.png"/>
                 </Button>
                 <Button Grid.Column="3" Grid.Row="6" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Left" Panel.ZIndex="1"
                         Click="ResetCores" ToolTip="Reset Cores List"
                         VerticalAlignment="Top">
-                    <Image Name="ResetCore_Image" Source="/Preloaded_Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
+                    <Image Name="ResetCore_Image" Source="/Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
                 </Button>
                 <DataGrid x:Name="COREGRID" Grid.Column="1" Grid.Row="6"
                           HeadersVisibility="None" AutoGenerateColumns="False"
@@ -177,7 +177,7 @@
                                             BorderBrush="{x:Null}" Background="{x:Null}"
                                             Height="20" Width="20" Panel.ZIndex="1"
                                             Click="RemoveCore">
-                                        <Image Source="/Preloaded_Assets/VIC2/Icons/button_remove.png"/>
+                                        <Image Source="/Assets/VIC2/Icons/button_remove.png"/>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -231,14 +231,14 @@
                         HorizontalAlignment="Center" Panel.ZIndex="1"
                         Click="AddBlankBuilding" ToolTip="Add State Building"
                         VerticalAlignment="Top">
-                    <Image x:Name="AddBuilding_Icon" Source="/Preloaded_Assets/VIC2/Icons/button_add.png"/>
+                    <Image x:Name="AddBuilding_Icon" Source="/Assets/VIC2/Icons/button_add.png"/>
                 </Button>
                 <Button Grid.Column="3" Grid.Row="11" Foreground="{x:Null}" BorderBrush="{x:Null}"
                         Background="{x:Null}" Height="25" Width="25"
                         HorizontalAlignment="Left" Panel.ZIndex="1"
                         Click="ResetBuildings" ToolTip="Reset Cores List"
                         VerticalAlignment="Top">
-                    <Image x:Name="ResetBuildings_Icon" Source="/Preloaded_Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
+                    <Image x:Name="ResetBuildings_Icon" Source="/Assets/VIC2/Icons/button_reset.png" Stretch="Uniform"/>
                 </Button>
                 <DataGrid
                     x:Name="STATEBUILDING_GRID" 
@@ -280,7 +280,7 @@
                                             BorderBrush="{x:Null}" Background="{x:Null}"
                                             Height="20" Width="20" Panel.ZIndex="1"
                                             Click="RemoveBuilding">
-                                        <Image Source="/Preloaded_Assets/VIC2/Icons/button_remove.png"/>
+                                        <Image Source="/Assets/VIC2/Icons/button_remove.png"/>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -293,7 +293,7 @@
 
         </ScrollViewer>
 
-        <Image x:Name="background" Source="/Preloaded_Assets/VIC2/Images/provinceInterface.png"
+        <Image x:Name="background" Source="/Assets/VIC2/Images/provinceInterface.png"
                Grid.RowSpan="6" Grid.Row="0" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
     </Grid>
 

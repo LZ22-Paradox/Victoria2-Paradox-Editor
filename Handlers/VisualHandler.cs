@@ -16,8 +16,8 @@ namespace Paradox_Editor.C_Window_Functions
         public static MapMode_IconSet MapModeIconSet { get; set; }
         public static Interface_AssetSet InterfaceAssetSet { get; set; }
 
-        private static string IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
-        private static string ImageAssetsPath = @"/Preloaded_Assets/VIC2/Icons/"; //The Resource Path for the Icons
+        private static string IconAssetsPath = @"/Assets/VIC2/Icons/"; //The Resource Path for the Icons
+        private static string ImageAssetsPath = @"/Assets/VIC2/Icons/"; //The Resource Path for the Icons
 
         //public MainWindow MainWindow { get; set; } = (MainWindow)System.Windows.Application.Current.MainWindow;
 
@@ -30,20 +30,20 @@ namespace Paradox_Editor.C_Window_Functions
             switch (Gamemode)
             {
                 case "VIC2":
-                    IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/";
-                    ImageAssetsPath = @"/Preloaded_Assets/VIC2/Images/";
+                    IconAssetsPath = @"/Assets/VIC2/Icons/";
+                    ImageAssetsPath = @"/Assets/VIC2/Images/";
                     textColor = Brushes.Black;
                     boxColor = Brushes.White;
                     break;
                 case "EU4":
-                    IconAssetsPath = @"/Preloaded_Assets/EU4/Icons/";
-                    ImageAssetsPath = @"/Preloaded_Assets/EU4/Images/";
+                    IconAssetsPath = @"/Assets/EU4/Icons/";
+                    ImageAssetsPath = @"/Assets/EU4/Images/";
                     textColor = Brushes.White;
                     boxColor = (SolidColorBrush)new BrushConverter().ConvertFromString("#191F23"); //#2B353C - EU4 Background
                     break;
                 default:
-                    IconAssetsPath = @"/Preloaded_Assets/VIC2/Icons/";
-                    ImageAssetsPath = @"/Preloaded_Assets/VIC2/Images/";
+                    IconAssetsPath = @"/Assets/VIC2/Icons/";
+                    ImageAssetsPath = @"/Assets/VIC2/Images/";
                     textColor = Brushes.Black;
                     boxColor = Brushes.White;
                     break;

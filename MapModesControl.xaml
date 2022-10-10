@@ -22,13 +22,13 @@
         </Grid.RowDefinitions>
 
         <Button Name="PoliticalButton" Height="30" Width="35" Grid.Column="0" Margin="5,0,0,0" Grid.Row="0" Click="MapmodeButton_Political_Click" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image x:Name="mapmodeButton_Political" Source="/Preloaded_Assets/VIC2/Icons/mapmode_PoliticalOff.png" Stretch="Fill"/>
+            <Image x:Name="mapmodeButton_Political" Source="/Assets/VIC2/Icons/mapmode_PoliticalOff.png" Stretch="Fill"/>
         </Button>
         <Button Name="ProvincesButton" Height="30" Width="35" Grid.Column="1" Margin="2,0,0,0" Grid.Row="0" Click="MapmodeButton_Provinces_Click" BorderBrush="{x:Null}" Background="{x:Null}">
-            <Image x:Name="mapmodeButton_Provinces" Source="/Preloaded_Assets/VIC2/Icons/mapmode_ProvincesOff.png" Stretch="Fill"/>
+            <Image x:Name="mapmodeButton_Provinces" Source="/Assets/VIC2/Icons/mapmode_ProvincesOff.png" Stretch="Fill"/>
         </Button>
         <Button Name="TerrainButton" Height="30" Width="35" Grid.Column="2" Margin="2,0,0,0" Grid.Row="0" Click="MapmodeButton_Terrain_Click" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image x:Name="mapmodeButton_Terrain" Source="/Preloaded_Assets/VIC2/Icons/mapmode_TerrainOff.png" Stretch="Fill"/>
+            <Image x:Name="mapmodeButton_Terrain" Source="/Assets/VIC2/Icons/mapmode_TerrainOff.png" Stretch="Fill"/>
         </Button>
 
         <Canvas Background="#FF494949" Height="100" Width="400" Margin="-10,0,0,0" Panel.ZIndex="-1"/>

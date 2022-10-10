@@ -5,19 +5,13 @@ using Paradox_Editor.C_Window_Functions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 
 namespace Paradox_Editor
 {
@@ -64,7 +58,13 @@ namespace Paradox_Editor
             ///Load Province Map
             InvertCanvas(mapCanvas);
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetMasterDirectory(), "map", "provinces.bmp")));
+            if (File.Exists(Path.Combine(ModData.GetModDirectory(), "map", "provinces.bmp")))
+            {
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetModDirectory(), "map", "provinces.bmp")));
+            } else
+            {
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetGameDirectory(), "map", "provinces.bmp")));
+            }
 
             ///Load Political Map
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
@@ -124,10 +124,8 @@ namespace Paradox_Editor
             {
                 case 0: //Political Map
                     if (Keyboard.IsKeyDown(Key.LeftCtrl))
-                    {   
-                        var pickedColor = mapPolitical.PickColor(mapProvinces);
-                        MainWindow.provinceInterface.PopulateInterface(pickedColor);
-                        SelectColor(provinceMapSource, pickedColor);
+                    {
+                        Populate(mapPolitical, mapProvinces);
                     }
                     else
                     {
@@ -137,18 +135,32 @@ namespace Paradox_Editor
                     }
                     break;
                 case 1: //Province Map
+                    if (Keyboard.IsKeyDown(Key.LeftShift))
+                    {
+                        Populate(mapProvinces, mapPolitical);
+                        MainWindow.provinceInterface.Visibility = Visibility.Hidden;
+                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); ///Implement opening of countries
+                    }
+                    else
+                    {
                         MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
                         SelectColor(provinceMapSource, mapProvinces.SelectedColor);
+                    }
+                    
                     break;
                 case 2: //Terrain Map
                     break;
             }
 
 
-
-
-
             SoundHandler.PlayClick();
+        }
+
+        void Populate(ImageColorPicker image, ImageColorPicker colorImageSource)
+        {
+            var pickedColor = image.PickColor(colorImageSource); ///Split following code into perhaps its own method
+            MainWindow.provinceInterface.PopulateInterface(pickedColor);
+            SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorImageSource.Source), pickedColor);
         }
 
         public void SelectColor(WriteableBitmap source, Color selectedColor)
@@ -156,7 +168,7 @@ namespace Paradox_Editor
             var tempMapRenderer = new MapRenderer();
             var singleProvince = tempMapRenderer.DrawSelectedProvince(source,
                 tempMapRenderer.GetRawColor(selectedColor));
-            FlashingProvince.Source = singleProvince;
+            flashingSelection.Source = singleProvince;
         }
 
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -166,7 +178,7 @@ namespace Paradox_Editor
                 var p = e.MouseDevice.GetPosition(image);
                 var matrix = image.RenderTransform.Value;
 
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
                     switch (e.Delta)
                     {
@@ -180,9 +192,9 @@ namespace Paradox_Editor
 
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
-                else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                else if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
-                    if (MapViewer.IsImageFlipped)
+                    if (IsImageFlipped)
                     {
                         switch (e.Delta)
                         {
@@ -220,7 +232,7 @@ namespace Paradox_Editor
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
                 }
-                FlashingProvince.RenderTransform = image.RenderTransform;
+                flashingSelection.RenderTransform = image.RenderTransform;
             }
         }
 
@@ -235,7 +247,7 @@ namespace Paradox_Editor
                 m.OffsetX -= (start.X - end.X);
                 m.OffsetY -= (start.Y - end.Y);
                 image.RenderTransform = new MatrixTransform(m);
-                FlashingProvince.RenderTransform = image.RenderTransform;
+                flashingSelection.RenderTransform = image.RenderTransform;
             }
             start = e.MouseDevice.GetPosition(mapCanvas);
         }
@@ -274,7 +286,7 @@ namespace Paradox_Editor
                         matrix.Translate(-Math.Abs(velocity), 0);
                     }
                     image.RenderTransform = new MatrixTransform(matrix);
-                    FlashingProvince.RenderTransform = new MatrixTransform(matrix);
+                    flashingSelection.RenderTransform = new MatrixTransform(matrix);
                 }
             }
         }

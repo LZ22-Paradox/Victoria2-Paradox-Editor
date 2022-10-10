@@ -226,7 +226,7 @@ namespace Paradox_Editor
         /// <param name="e"></param>
         public void Interface_Changed(object sender, RoutedEventArgs e)
         {
-            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_warning_button.gif", UriKind.Relative));
+            var newGif = new BitmapImage(new Uri(@"/Assets/save_warning_button.gif", UriKind.Relative));
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
         }
 
@@ -235,7 +235,7 @@ namespace Paradox_Editor
         /// </summary>
         public void Set_Save_Icon_To_Saved()
         {
-            var newGif = new BitmapImage(new Uri(@"/Preloaded_Assets/save_confirm_button.gif", UriKind.Relative));
+            var newGif = new BitmapImage(new Uri(@"/Assets/save_confirm_button.gif", UriKind.Relative));
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
         }
 

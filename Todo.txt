@@ -2,31 +2,24 @@
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
-    #1 PRIMARY : Selectable province in other map modes
-        o See about making a method that will get the ImageColorPicker point and return the color of a different source map
+    #1 PRIMARY : ADD CTRL-S KEYBOARD SHORTCUT 
     #2 SECONDARY : CREATE POPULATION PROVINCE INTERFACE
-
-    Override selectedprovince with selectedcolor. Whole layer is used for selected countries.
-    Perhaps save old TAG instead, and with political map search for that tags color and override with the province’s new tag’s colour
-    Do a check before hand to see if both tags aren’t equal. Don’t want to waste time.
 
     * Add "#" handling in province's PopulateHistoryData()
     * Reimplement Stored Opener
     * Get name of mod folder. Check if Victoria 2 (based on game selected), and load the mod if not.
     * Read CSV for all province data, then override it. NOT history data first!
     * If file isn't found, find Vic2's default instead.
-    * Multilayer the color picker
+    * Add tracker for provinces most recently edited
 
     (!) Read cultures.txt first before handling anything editing pops.
         o This is needed for population name and cultures.
     * Pops file "C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestEnvironment(DoD)\history\pops"
         o Pops files are labelled by country, but each file contains data based on provinces.
     BAD MOD INCOMPATABILITIES:
-        * TTA - Duplicate Colours.
-        * TOL - A history province has a number-only name.
         * HTA - Missing countries on map. [Must read vanilla COUNTRY files]
-        * PDM - Tester country name has no colour.
-        * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format.
+        * CrimeaMod - Numerous provinces simply left ignored : May be CSV in stranger format. //Unknown how to support\
+        * EiF - Country files are named weirdly with their tags, but only partially
         * LZ22 - A history province has "COLONIAL = YES", rather than an integer for some reason.
 
 ----====Must Do====----
@@ -55,28 +48,11 @@ Do some heavy performance fixing!!! : Change how much RAM the program gets when 
         o Have borders for all provinces to distinguish
     - Add sound-effects to FileInterface buttons
 
-#. Compatibilities
-    - Add State_Building Compatibility
-        * Interfaced but not implimented
-
 #. Add setting for country painting
-
-#. Make it so clicking in political map mode w. specific button pressed opens province history interface
 
 2. Fix Two Problem Provinces [Vanilla Environment] {Space between ID and name | See DataAcquision for if implemented}
 Problem File(s) | Collection Extractor | 1337  Prome.txt
 Problem File(s) | Collection Extractor | 3246  JanMayen.txt
-
-#. Making & Flickering Province || Copy all pixels of certain color
-    - Invert
-        o make new bitmap
-            * Put on new layer 
-                [] Flicker when color selected
-
-    - Use Child Window for File Interface
-        * Copy File & Override the respective-line
-
-#. Add warnings for any amount of letters over 3 for TAGS
 
 #. Optimize for performance
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
@@ -84,7 +60,9 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
             * See ways for specific replacement
     - Speed up map navigation
     - See the tiny compatibility error (see DataAcquisition "...")
-    - HistoryFile points to DataExtraction in HistoryExportHandler, can possible use the index of a history file instead of needing to reacquire its data.
+    [METHODS THAT MAY NEED PERFORMANCE CHECK]:
+        o DataAcquisition.PopulateTagsToCountryNames()
+
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.
@@ -93,8 +71,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
         o Dig in game files
     - Add mode to read base-game terrain
     //https://stackoverflow.com/questions/47386442/how-to-get-image-pixel-position-and-rgb-values-using-wpf-mvvm
-
-
 
 
 #. Game-tester button to open the respective game with the mod

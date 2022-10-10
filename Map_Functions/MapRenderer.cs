@@ -23,6 +23,7 @@ namespace Paradox_Editor.A_Map_Navigation
         public uint GetRawColor(Color color) => (0xFFu << 24)
             | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
 
+        #region Drawing Navigatable Maps
         /// <summary>
         /// Draws the political map.
         /// </summary>
@@ -44,7 +45,7 @@ namespace Paradox_Editor.A_Map_Navigation
 
                 bool foundOwner = false;
                 
-                if (province?.Owner != null)
+                if (!String.IsNullOrEmpty(province?.Owner))
                 {
                     foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
                     ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
@@ -77,6 +78,7 @@ namespace Paradox_Editor.A_Map_Navigation
         {
 
         }
+        #endregion
 
         /// <summary>
         /// Redraws the given province that has been selected.
@@ -104,8 +106,13 @@ namespace Paradox_Editor.A_Map_Navigation
             return image;
         }
 
-        ///Begin work trying to get single province to update. Input specific province color, then look for it,
-        ///then replace with province's TAG's color
+        /// <summary>
+        /// Refreshes a single province in the political map. Could be rewritten in the future to accomodate for other map types.
+        /// </summary>
+        /// <param name="provinceMap"></param>
+        /// <param name="overWrittenMap"></param>
+        /// <param name="provinceColor"></param>
+        /// <returns></returns>
         public unsafe WriteableBitmap RefreshProvincePolitical(WriteableBitmap provinceMap, WriteableBitmap overWrittenMap, uint provinceColor)
         {
             provinceMap.Lock();

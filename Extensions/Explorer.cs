@@ -4,11 +4,9 @@ using System.Windows.Forms;
 
 namespace Paradox_Editor.C_Window_Functions
 {
-    public class Explorer
+    public static class Explorer
     {
-        public Explorer() { }
-
-        public string OpenFolderSelect()
+        public static string OpenFolderSelect()
         {
             var dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() != DialogResult.OK)
@@ -25,7 +23,7 @@ namespace Paradox_Editor.C_Window_Functions
             return selectDirectory;
         }
 
-        public void OpenFile(string argument)
+        public static void OpenFile(string argument)
         {
             using Process fileopener = new();
             fileopener.StartInfo.FileName = "explorer";

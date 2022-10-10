@@ -101,7 +101,12 @@ namespace Paradox_Editor.D_Types
                             LifeRating = (short)Convert.ToDouble(value);
                             break;
                         case string when line.StartsWith("colonial"):
-                            Colonial = Convert.ToInt16(value); //Colonial = yes????
+                            if (int.TryParse(value, out int result))
+                                Colonial = Convert.ToInt16(result);
+                            else if (value.Equals("yes"))
+                                Colonial = Convert.ToInt16(1);
+                            else
+                                Colonial = Convert.ToInt16(0);
                             break;
                         case string when line.StartsWith("terrain"):
                             Terrain = value;

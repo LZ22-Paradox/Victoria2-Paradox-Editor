@@ -24,11 +24,9 @@
         <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
                           HorizontalScrollBarVisibility="Auto">
             <Canvas x:Name="mapCanvas" RenderTransformOrigin="0.5,0.5"
-                           MouseMove="Map_MouseMove"
-                           MouseWheel="Map_MouseWheel"
-                           MouseUp="Map_MouseUp"
-                           MouseLeave="Map_MouseLeave">
-                <colorpickercontrols:ImageColorPicker x:Name="mapProvinces" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
+                           MouseMove="Map_MouseMove" MouseWheel="Map_MouseWheel" MouseUp="Map_MouseUp" MouseLeave="Map_MouseLeave"
+                           Background="Transparent">
+                <colorpickercontrols:ImageColorPicker x:Name="mapProvinces" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
@@ -37,7 +35,7 @@
                 </colorpickercontrols:ImageColorPicker>
 
 
-                <colorpickercontrols:ImageColorPicker x:Name="mapPolitical" Height="700" Width="1446" Source="/Preloaded_Assets/blank_world_map.png"
+                <colorpickercontrols:ImageColorPicker x:Name="mapPolitical" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
@@ -55,7 +53,7 @@
 
                 <Image x:Name="ControllerLayer" Margin="400,100,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor" Height="500" Width="500" Visibility="Hidden"/>
 
-                <Image x:Name="FlashingProvince" Height="700" Width="1446" IsHitTestVisible="False"
+                <Image x:Name="flashingSelection" Height="700" Width="1446" IsHitTestVisible="False"
                            Margin="-250,0,0,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0.5,0.5" OverridesDefaultStyle="True" ClipToBounds="True"
                            StretchDirection="Both" Panel.ZIndex="10">
