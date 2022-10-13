@@ -17,7 +17,7 @@ namespace Paradox_Editor.Extensions.Types
 
     public class PopFile
     {
-        List<Pop> Pop;
+        List<Pop> Pop = new();
         public void TestPop()
         {
             Pop.Add(new Pop{Profession = "aristocrats", Culture = "scandanavian", Religion = "protestant", Size = 1400000});

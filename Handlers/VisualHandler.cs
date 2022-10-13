@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Paradox_Editor.C_Window_Functions
+namespace Paradox_Editor.Handlers
 {
     public static class VisualHandler
     {

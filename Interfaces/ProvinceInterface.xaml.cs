@@ -1,8 +1,7 @@
-﻿using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.A_Map_Navigation;
-using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D_Types;
+﻿using Paradox_Editor.Data_Handling;
+using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
+using Paradox_Editor.Handlers;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,7 +20,7 @@ namespace Paradox_Editor
     public partial class ProvinceInterface : UserControl
     {
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
-        private DataAcquisition ModData { get; set; }
+        private ProvinceDataAcquisition ModData { get; set; }
         private ProvinceFile _currentProvince = new();
         private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
 
@@ -41,7 +40,7 @@ namespace Paradox_Editor
             Set_Save_Icon_To_Saved();
         }
 
-        public void SetModData(DataAcquisition modData)
+        public void SetModData(ProvinceDataAcquisition modData)
         {
             ModData = modData;
         }

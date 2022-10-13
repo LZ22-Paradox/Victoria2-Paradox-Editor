@@ -1,7 +1,6 @@
 ﻿using ColorPickerControls;
-using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.A_Map_Navigation;
-using Paradox_Editor.C_Window_Functions;
+using Paradox_Editor.Data_Handling;
+using Paradox_Editor.Handlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +22,7 @@ namespace Paradox_Editor
 
 
         public static Dictionary<int, Image> MapModes { get; set; }
-        private DataAcquisition ModData { get; set; }
+        private ProvinceDataAcquisition ModData { get; set; }
         public static bool IsMapLoaded;
         public static bool IsImageFlipped { get; set; } //Possibly may be useless
 
@@ -40,7 +39,7 @@ namespace Paradox_Editor
             };
         }
 
-        public void SetModData(DataAcquisition modData) => ModData = modData;
+        public void SetModData(ProvinceDataAcquisition modData) => ModData = modData;
 
         public static WriteableBitmap GetMap(int index)
         {

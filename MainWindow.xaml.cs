@@ -3,11 +3,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
-using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.Data_Handling;
+using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
+using Paradox_Editor.Handlers;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -17,7 +19,7 @@ namespace Paradox_Editor
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private DataAcquisition ModData { get; set; }
+        private ProvinceDataAcquisition ModData { get; set; }
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public int CurrentControlMode { get; set; }
         public static string CurrentGameMode { get; set; }
@@ -50,8 +52,6 @@ namespace Paradox_Editor
             mapModeButtons.UpdateMapModeVisibility(1, VisualHandler.MapModeIconSet);
         }
 
-
-
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
             //var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
@@ -60,7 +60,7 @@ namespace Paradox_Editor
             if (selectedDirectory == null)
                 return;
 
-            ModData = new DataAcquisition(selectedDirectory);
+            ModData = new ProvinceDataAcquisition(selectedDirectory);
 
             ///For the History File Lister
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
@@ -69,8 +69,6 @@ namespace Paradox_Editor
             provinceInterface.SetModData(ModData);
             mapViewer.SetModData(ModData);
             mapViewer.LoadMaps();
-            
-
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)

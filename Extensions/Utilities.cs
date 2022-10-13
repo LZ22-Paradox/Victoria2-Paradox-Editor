@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace Paradox_Editor.D_Types
+namespace Paradox_Editor.Extensions
 {
     public class Core
     {

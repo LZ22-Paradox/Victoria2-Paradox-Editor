@@ -2,7 +2,7 @@
 using System.IO;
 using System.Media;
 
-namespace Paradox_Editor.C_Window_Functions
+namespace Paradox_Editor.Handlers
 {
     public static class SoundHandler
     {

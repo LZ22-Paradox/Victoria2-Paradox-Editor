@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
 using Paradox_Editor.Extensions.Types;
+using Paradox_Editor.Extensions;
 
-namespace Paradox_Editor.A_Map_Functions
+namespace Paradox_Editor.Data_Handling
 {
     //For use in important CSV file reading.
     public sealed class MainCsvIndexSyntax : ClassMap<ProvinceFile>
@@ -29,40 +30,25 @@ namespace Paradox_Editor.A_Map_Functions
         }
     }
 
-    public class DataAcquisition
+    public class ProvinceDataAcquisition : DataAcquisition
     {
-        private string GameDirectory;
-        private string ModDirectory;
-        private DirectoryStructure Directories = new();
-
         private Dictionary<uint, ProvinceFile> Provinces = new();
-
-        //Temporary lists that may be sorted later
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
         private Dictionary<string, Color> CountryNamesToColors = new();
 
-        public DataAcquisition() { }
-        public DataAcquisition(string directory)
+        /// <summary>
+        /// Derives directory data extraction from the DataAcquisition parent class.
+        /// </summary>
+        /// <param name="directory"></param>
+        public ProvinceDataAcquisition(string directory) : base(directory)
         {
-            if (!directory.Equals(MainWindow.CurrentGameMode)) ///May need fixing later
-            {
-                GameDirectory = Directory.GetParent(directory).Parent.ToString();
-            }
-            ModDirectory = directory;
-            Directories = CollectDirectoryData(directory);
-
-            CollectDirectoryData(directory);
             GetHistoryFiles();
-
             PopulateAppendProvinceCSVData();
             PopulateProvinceColorsToIDs();
             PopulateTagsToCountryNames();
             PopulateCountryNamesToColours();
         }
-
-        public string GetModDirectory() => ModDirectory;
-        public string GetGameDirectory() => GameDirectory;
 
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
@@ -73,37 +59,7 @@ namespace Paradox_Editor.A_Map_Functions
             _ = Provinces.TryGetValue(provinceID, out ProvinceFile province);
             return province;
         }
-        public void ReplaceProvince(ProvinceFile province)
-        {
-            Provinces[(uint)province.ProvinceID] = province;
-        }
-
-
-        /// <summary>
-        /// Gets Victoria 2's directory paths.
-        /// </summary>
-        /// <param name="directory"></param>
-        public DirectoryStructure CollectDirectoryData(string directory)
-        {
-            string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
-            string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            string[] countryCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
-            string countriesCommonFilePath = Path.Combine(directory, "common", "countries.txt");
-            string CSVFilePath;
-            if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
-                CSVFilePath = Path.Combine(directory, "map", "definition.csv");
-            else
-                CSVFilePath = Path.Combine(GameDirectory, "map", "definition.csv");
-            
-            return new DirectoryStructure()
-            {
-                PrimaryDirectories = masterFolder,
-                Countries = countryCommonFiles,
-                CountriesTxt = countriesCommonFilePath,
-                DefinitionCSVPath = CSVFilePath,
-                HistoryProvincePaths = historyProvincePaths
-            };
-        }
+        public void ReplaceProvince(ProvinceFile province) => Provinces[(uint)province.ProvinceID] = province;
 
         /// <summary>
         /// Populates an initial list of provinces.
@@ -113,7 +69,7 @@ namespace Paradox_Editor.A_Map_Functions
             ///<!!!!!!DOES NOT READ FILES THAT ONLY HAVE SPACES (IE, LIKE "1337 Prome")!!!!! : performance-instease this>
             foreach (string fileEntry in Directories.HistoryProvincePaths)
             {
-                var fileName = Path.GetFileName(fileEntry).Replace(".txt", ""); //FileEntry = Filepath
+                var fileName = Path.GetFileName(fileEntry).Replace(".txt", "");
                 string[] splitName = null;
                 if (!fileEntry.Contains("-"))
                     splitName = fileName.Split(' ');
@@ -162,17 +118,18 @@ namespace Paradox_Editor.A_Map_Functions
             using var reader = new StreamReader(Directories.DefinitionCSVPath);
             using var csv = new CsvReader(reader, cfg);
             csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
-            var records = csv.GetRecords<ProvinceCSVDefinition>().Skip(1);
-            {
-                Parallel.ForEach(records, record =>
+            var records = csv.GetRecords<ProvinceCSVDefinition>();
+            string regexFilter = @"/province/i";
+            Regex rg = new Regex(regexFilter);
+            Parallel.ForEach(records, record =>
                 {
-                    if (!string.IsNullOrWhiteSpace(record.province))
+                    if (!string.IsNullOrWhiteSpace(record.province) && !Regex.IsMatch(record.province, @"\bprovince\b"))
                     {
                         if (Provinces.ContainsKey(Convert.ToUInt32(record.province)))
                             Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record);
                     }
                 });
-            }
+            
             csv.Dispose();
         }
 

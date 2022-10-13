@@ -4,17 +4,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System;
-using Paradox_Editor.A_Map_Functions;
-using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
 
-namespace Paradox_Editor.A_Map_Navigation
+namespace Paradox_Editor.Data_Handling
 {
     public class MapRenderer
     {
-        private DataAcquisition ModData;
+        private ProvinceDataAcquisition ModData;
 
-        public MapRenderer(DataAcquisition modData)
+        public MapRenderer(ProvinceDataAcquisition modData)
         {
             ModData = modData;
         }

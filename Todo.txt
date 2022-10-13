@@ -2,8 +2,19 @@
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
+    ~!FIX : Load all default game countries first before loading modded ones.
+            Hitting CTRL-S should un-focus whatever you have in the Province Interface
     
-    #2 SECONDARY : CREATE POPULATION PROVINCE INTERFACE
+    #1 PRIMARY : CREATE POPULATION PROVINCE INTERFACE
+        - Read Pop Types First
+            o Read every file; each file stores a province ID which contains its own data. Province ID does not equal the province itself.
+        - Religions can be read and stored
+            o If a line contains a tab, then it can be a religion under a religious GROUP.
+                [] Religion icons exist in the files. Perhaps extract them for use with the editor.
+
+    #2 SECONDARY : CREATE COUNTRY EDITOR
+        - Starting country brigades "TAG_oob.txt" is sent into [Mod -> History -> Units]
+        - List of pickable countries in Province Editor + wipe tag buttons
 
     # : ADD PROVINCE POSITIONS EDITOR
 

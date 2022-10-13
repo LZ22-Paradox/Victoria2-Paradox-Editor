@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Paradox_Editor.C_Window_Functions
+namespace Paradox_Editor.Extensions
 {
     public static class Explorer
     {

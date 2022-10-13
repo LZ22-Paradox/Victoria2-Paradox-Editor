@@ -20,7 +20,6 @@ namespace Paradox_Editor.Extensions.Types
         public string blue { get; set; }
         public uint color { get; set; }
 
-        //public HistoryFile HistoryData { get; set; }
         //History Data
         public string Owner { get; set; }
         public string Controller { get; set; }

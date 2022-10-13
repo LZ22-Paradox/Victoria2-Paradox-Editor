@@ -1,5 +1,5 @@
-﻿using Paradox_Editor.C_Window_Functions;
-using Paradox_Editor.D_Types;
+﻿using Paradox_Editor.D_Types;
+using Paradox_Editor.Handlers;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
