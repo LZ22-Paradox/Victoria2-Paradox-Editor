@@ -2,8 +2,10 @@
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
-    #1 PRIMARY : ADD CTRL-S KEYBOARD SHORTCUT 
+    
     #2 SECONDARY : CREATE POPULATION PROVINCE INTERFACE
+
+    # : ADD PROVINCE POSITIONS EDITOR
 
     * Add "#" handling in province's PopulateHistoryData()
     * Reimplement Stored Opener
@@ -11,6 +13,7 @@
     * Read CSV for all province data, then override it. NOT history data first!
     * If file isn't found, find Vic2's default instead.
     * Add tracker for provinces most recently edited
+    * Check if valid tag is entered in cores
 
     (!) Read cultures.txt first before handling anything editing pops.
         o This is needed for population name and cultures.

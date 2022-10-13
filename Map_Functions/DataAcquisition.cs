@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
+using Paradox_Editor.Extensions.Types;
 
 namespace Paradox_Editor.A_Map_Functions
 {
@@ -24,7 +25,7 @@ namespace Paradox_Editor.A_Map_Functions
             Map(m => m.red).Index(1);
             Map(m => m.green).Index(2);
             Map(m => m.blue).Index(3);
-            Map(m => m.ProvinceName).Index(3);
+            Map(m => m.ProvinceName).Index(4);
         }
     }
 
@@ -50,6 +51,14 @@ namespace Paradox_Editor.A_Map_Functions
             }
             ModDirectory = directory;
             Directories = CollectDirectoryData(directory);
+
+            CollectDirectoryData(directory);
+            GetHistoryFiles();
+
+            PopulateAppendProvinceCSVData();
+            PopulateProvinceColorsToIDs();
+            PopulateTagsToCountryNames();
+            PopulateCountryNamesToColours();
         }
 
         public string GetModDirectory() => ModDirectory;
@@ -69,27 +78,6 @@ namespace Paradox_Editor.A_Map_Functions
             Provinces[(uint)province.ProvinceID] = province;
         }
 
-
-        /// <summary>
-        /// Calls for a read of all data.
-        /// </summary>
-        /// <param name="directory"></param>
-        public void AcquisitionAllData(string directory)
-        {
-            CollectDirectoryData(directory);
-            GetHistoryFiles();
-
-            PopulateAppendProvinceCSVData();
-            PopulateProvinceColorsToIDs();
-            PopulateTagsToCountryNames();
-            PopulateCountryNamesToColours();
-
-        }
-        public DataAcquisition ReturnAcquisitionAllData(string directory)
-        {
-            AcquisitionAllData(directory);
-            return this;
-        }
 
         /// <summary>
         /// Gets Victoria 2's directory paths.
@@ -169,6 +157,7 @@ namespace Paradox_Editor.A_Map_Functions
             {
                 Delimiter = ";",
                 HasHeaderRecord = false,
+                MissingFieldFound = null
             };
             using var reader = new StreamReader(Directories.DefinitionCSVPath);
             using var csv = new CsvReader(reader, cfg);

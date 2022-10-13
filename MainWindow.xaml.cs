@@ -7,6 +7,7 @@ using System.Windows;
 using Paradox_Editor.A_Map_Functions;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.Extensions.Types;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -59,9 +60,7 @@ namespace Paradox_Editor
             if (selectedDirectory == null)
                 return;
 
-            
-            DataAcquisition provinceData = new(selectedDirectory);
-            ModData = provinceData.ReturnAcquisitionAllData(selectedDirectory);
+            ModData = new DataAcquisition(selectedDirectory);
 
             ///For the History File Lister
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);

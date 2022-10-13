@@ -81,6 +81,8 @@ namespace Paradox_Editor.D_Types
         public string green { get; set; }
         public string blue { get; set; }
         public string name { get; set; }
+        public string color { get; set; }
+
     }
 
     public struct DirectoryStructure

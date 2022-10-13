@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Paradox_Editor.D_Types;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Paradox_Editor.D_Types
+namespace Paradox_Editor.Extensions.Types
 {
     public class ProvinceFile
     {
@@ -32,6 +33,8 @@ namespace Paradox_Editor.D_Types
         public int Naval_Base { get; set; }
         public int Fort { get; set; }
         public int Railroad { get; set; }
+
+        //Population info
 
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {

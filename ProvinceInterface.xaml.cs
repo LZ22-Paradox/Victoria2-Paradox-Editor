@@ -2,6 +2,7 @@
 using Paradox_Editor.A_Map_Navigation;
 using Paradox_Editor.C_Window_Functions;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.Extensions.Types;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WpfAnimatedGif;
@@ -85,7 +87,9 @@ namespace Paradox_Editor
             SoundHandler.PlayClick();
         }
 
-        public void Save_Button_Pressed(object sender, RoutedEventArgs e)
+        public void Save_Button_Pressed(object sender, RoutedEventArgs e) => Save();
+
+        private void Save()
         {
             if (CurrentProvince.color != 0)
             {
@@ -111,8 +115,7 @@ namespace Paradox_Editor
 
         void PopulateSaveFile(StreamWriter file)
         {
-            ProvinceFile tempFile = new();
-            tempFile = ModData.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
+            ProvinceFile tempFile = ModData.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
             {
                 ModData.GetTagsToCountryNames().TryGetValue(OWNERBOX.Text, out var countryTAG);
@@ -123,7 +126,7 @@ namespace Paradox_Editor
                 }
                 else
                 {
-                    MessageBox.Show("Country TAG invalid! : " + OWNERBOX.Text);
+                    MessageBox.Show("Owner TAG invalid! : " + OWNERBOX.Text);
                     tempFile.Owner = null;
                 }
             }
@@ -141,13 +144,13 @@ namespace Paradox_Editor
                 }
                 else
                 {
-                    MessageBox.Show("Country TAG invalid! : " + CONTROLLERBOX.Text);
+                    MessageBox.Show("Controller TAG invalid! : " + CONTROLLERBOX.Text);
                     tempFile.Controller = null;
                 }
             }
             else
             {
-                tempFile.Owner = null;
+                tempFile.Controller = null;
             }
             if (!TRADEGOODBOX.Text.Equals(""))
             {
@@ -156,12 +159,12 @@ namespace Paradox_Editor
             }
             if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
             {
-                file.WriteLine("life_rating = " + LIFERATINGBOX.Text);
+                file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
                 tempFile.LifeRating = Convert.ToInt16(LIFERATINGBOX.Text);
             }
             if (!COLONIALBOX.Text.Equals("") && !COLONIALBOX.Text.Equals("0"))
             {
-                file.WriteLine("colonial = " + COLONIALBOX.Text);
+                file.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
                 tempFile.Colonial = Convert.ToInt16(COLONIALBOX.Text);
             }
             if (COREGRID.HasItems)
@@ -183,17 +186,17 @@ namespace Paradox_Editor
             }
             if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
             {
-                file.WriteLine("naval_base = " + NAVALBASEBOX.Text);
+                file.WriteLine("naval_base = " + NAVALBASEBOX.Text  + "\t");
                 tempFile.Naval_Base = Convert.ToInt16(NAVALBASEBOX.Text);
             }
-            if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("0"))
+            if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("\t"))
             {
-                file.WriteLine("fort = " + FORTBOX.Text);
+                file.WriteLine("fort = " + FORTBOX.Text + "\t");
                 tempFile.Fort = Convert.ToInt16(FORTBOX.Text);
             }
             if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
             {
-                file.WriteLine("railroad = " + RAILROADBOX.Text);
+                file.WriteLine("railroad = " + RAILROADBOX.Text + "\t");
                 tempFile.Railroad = Convert.ToInt16(RAILROADBOX.Text);
             }
             if (STATEBUILDING_GRID.HasItems)
@@ -280,15 +283,6 @@ namespace Paradox_Editor
         /// <param name="color"></param>
         public void PopulateInterface(Color color)
         {
-/*            switch (mapMode)
-            {
-                case 0:
-                    break;
-                case 1:
-                    break;
-                default:
-                    break;
-            }*/
             ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
             ProvinceFile province = ModData.GetProvince((uint)provinceID);
             CurrentProvince = province;
@@ -322,6 +316,23 @@ namespace Paradox_Editor
             {
                 Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
                 this.Visibility = Visibility.Hidden;
+            }
+            Set_Save_Icon_To_Saved();
+        }
+
+        private void Interface_Loaded(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+            window.KeyDown += HandleKeyPress;
+        }
+        private void HandleKeyPress(object sender, KeyEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) // Is Alt key pressed
+            {
+                if (Keyboard.IsKeyDown(Key.S))
+                {
+                    Save();
+                }
             }
         }
 

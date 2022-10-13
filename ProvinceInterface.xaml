@@ -8,7 +8,7 @@
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              Height="400" Width="368" AllowDrop="True" Focusable="True"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}" Loaded="Interface_Loaded"
              >
 
     <Grid>
