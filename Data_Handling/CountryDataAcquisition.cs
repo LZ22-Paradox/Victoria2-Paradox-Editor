@@ -1,5 +1,4 @@
-﻿using CSVFile;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Paradox_Editor.D_Types;
 using System;
@@ -21,7 +20,7 @@ namespace Paradox_Editor.Data_Handling
     public class CountryDataAcquisition : DataAcquisition
     {
 
-        public CountryDataAcquisition(string directory)
+        public CountryDataAcquisition(string directory) : base(directory)
         {
 
         }

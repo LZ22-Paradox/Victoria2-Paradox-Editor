@@ -55,15 +55,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSVFile" Version="3.1.0" />
-    <PackageReference Include="CsvHelper" Version="28.0.1" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.0-rc1" />
+    <PackageReference Include="CsvHelper" Version="29.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0-rc.1.22426.10" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0-rc.2.22472.3" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,7 +77,9 @@
     <Resource Include="Assets\EU4\Icons\mapmode_TerrainOff.png" />
     <Resource Include="Assets\EU4\Icons\mapmode_TerrainOn.png" />
     <Resource Include="Assets\EU4\Images\provinceInterface.png" />
-    <Resource Include="Assets\save_confirm_button.gif" />
+    <Resource Include="Assets\save_confirm_button.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\save_notif_button.png" />
     <Resource Include="Assets\VIC2\Icons\button_add.png" />
     <Resource Include="Assets\VIC2\Icons\button_exit.png" />

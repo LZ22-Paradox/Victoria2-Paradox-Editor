@@ -24,10 +24,7 @@ namespace Paradox_Editor
         public int CurrentControlMode { get; set; }
         public static string CurrentGameMode { get; set; }
 
-
-        /// <summary>
-        /// Numerous calls, constructors and methods to allow Province Data to bind to the History-File-List DataGrid.
-        /// </summary>
+        #region Calls / constructors methods allowing Province Data to bind to the History-File-List DataGrid.
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName)
         { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
@@ -35,6 +32,7 @@ namespace Paradox_Editor
         private ObservableCollection<ProvinceFile> _provincedata = new();
         public ObservableCollection<ProvinceFile> ProvinceData
         { get => _provincedata; set { _provincedata = value; NotifyPropertyChange(nameof(ProvinceData)); } }
+        #endregion
 
         public MainWindow()
         {
@@ -55,12 +53,12 @@ namespace Paradox_Editor
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
             //var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
-            
-            string selectedDirectory = Explorer.OpenFolderSelect();
-            if (selectedDirectory == null)
+
+            string selectedModFile = Explorer.OpenFolderSelect();
+            if (selectedModFile == null)
                 return;
 
-            ModData = new ProvinceDataAcquisition(selectedDirectory);
+            ModData = new ProvinceDataAcquisition(selectedModFile);
 
             ///For the History File Lister
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);

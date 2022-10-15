@@ -17,10 +17,18 @@ namespace Paradox_Editor.Extensions
             Console.WriteLine(dialog.SelectedPath);
             var selectDirectory = dialog.SelectedPath;
 
-            var storedOpener = dialog.SelectedPath; //Unused; Reimpliment stored opener.
-
             Console.ReadLine();
             return selectDirectory;
+        }
+
+        public static string OpenFileSelect()
+        {
+            var dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return null;
+
+            MessageBox.Show("You selected Filepath: " + dialog.FileName);
+            return dialog.FileName;
         }
 
         public static void OpenFile(string argument)

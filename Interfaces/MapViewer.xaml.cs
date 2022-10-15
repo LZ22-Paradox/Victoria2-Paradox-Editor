@@ -20,7 +20,6 @@ namespace Paradox_Editor
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private Point start;
 
-
         public static Dictionary<int, Image> MapModes { get; set; }
         private ProvinceDataAcquisition ModData { get; set; }
         public static bool IsMapLoaded;
@@ -39,7 +38,10 @@ namespace Paradox_Editor
             };
         }
 
-        public void SetModData(ProvinceDataAcquisition modData) => ModData = modData;
+        public void SetModData(ProvinceDataAcquisition modData)
+        {
+            ModData = modData;
+        }
 
         public static WriteableBitmap GetMap(int index)
         {
@@ -57,9 +59,9 @@ namespace Paradox_Editor
             ///Load Province Map
             InvertCanvas(mapCanvas);
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            if (File.Exists(Path.Combine(ModData.GetModDirectory(), "map", "provinces.bmp")))
+            if (File.Exists(Path.Combine(ModData.GetModFolder(), "map", "provinces.bmp")))
             {
-                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetModDirectory(), "map", "provinces.bmp")));
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetModFolder(), "map", "provinces.bmp")));
             } else
             {
                 mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetGameDirectory(), "map", "provinces.bmp")));

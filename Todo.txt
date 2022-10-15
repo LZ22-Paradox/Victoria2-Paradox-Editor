@@ -4,7 +4,10 @@
 
     ~!FIX : Load all default game countries first before loading modded ones.
             Hitting CTRL-S should un-focus whatever you have in the Province Interface
-    
+            Read .mod descriptor to find vanilla override
+            State buildings selected by dropdown
+            Rename MainWindow's ModData to ProvinceData
+
     #1 PRIMARY : CREATE POPULATION PROVINCE INTERFACE
         - Read Pop Types First
             o Read every file; each file stores a province ID which contains its own data. Province ID does not equal the province itself.
@@ -16,7 +19,12 @@
         - Starting country brigades "TAG_oob.txt" is sent into [Mod -> History -> Units]
         - List of pickable countries in Province Editor + wipe tag buttons
 
+    # : IMPLEMENT CULTURE EDITOR
+
     # : ADD PROVINCE POSITIONS EDITOR
+    # : ADD WARS, ALLIANCE, PUPPETS EDITOR
+    # : ADD EVENT & DECISIONS EDITING
+    # : MAKE MOD SELECTABLE BY .MOD FILE
 
     * Add "#" handling in province's PopulateHistoryData()
     * Reimplement Stored Opener
@@ -38,28 +46,12 @@
 
 ----====Must Do====----
         o NEW IDEA: CUT PAST THE # IN TEXT FILES WHEN READING, DON'T DELETE/IGNORE THE ENTIRE LINE/ENTRY
+                var reg = new Regex(@"[^#]*");
+                string testString = "	north_german = { #Elbian";
+                Debug.WriteLine(reg.Match(testString).ToString());
 
-                        >>>> 0. RE-SEPERATE TODO LIST IN MANAGABLE STEPS <<<
-
-                        DATAEXTRACTOR.CS - GET STATE BUILDING DATA [DONE]
-                        ADD STATE BUILDING DATA TO THE TABLE
-
-Do some heavy performance fixing!!! : Change how much RAM the program gets when testing
-
-1. Impliment basic province interfacing (click a province, get the file)
-    - Fix Issue with interface cutoff
-        o Perhaps use VisualOffset instead of RenderTransform
-    - Add potential "Stored Data" of edited provinces
-        o See new class that saves what file was changed & its data
-    - Rename MouseDown events between MainWindow.cs & NavigationHandler to something more readable
-    - Add Date Compatability into the History Interface
-    - Add CTRL+S Keystroke to lock & load the file back (FINALLY, EXPORTING!!)
-
-    - Clicking "Exit" Saves data entered
-        o Opens a menu asking wether or not to save province data you entered
     - Add Stripey Lines for Controllers (Owners are the flat colour)
-    - Click & Edit provinces in country map mode
-        o Have borders for all provinces to distinguish
+    - Have borders for all provinces
     - Add sound-effects to FileInterface buttons
 
 #. Add setting for country painting
@@ -76,7 +68,6 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
     - See the tiny compatibility error (see DataAcquisition "...")
     [METHODS THAT MAY NEED PERFORMANCE CHECK]:
         o DataAcquisition.PopulateTagsToCountryNames()
-
 
 #. Impliment visibility for SIMPLE terrain map mode.
     - Detailed: Get the existing terrain map and just have a layer to display it.
@@ -129,13 +120,10 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 #. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
     - These apply to province history files
 
-
-
 #. Impliment complex terrain map mode
 
 #. Save game editing
 
-#. Replace old example map with one that is fixed. (Denmark is hideous)
 #. Display the name and ID of a province while hovering over it
 #. Fix StoredOpener to be convienent for those reusing the program's loading
 #. Make custom control settings

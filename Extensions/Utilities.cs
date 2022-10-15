@@ -91,8 +91,9 @@ namespace Paradox_Editor.Extensions
         public string[] Countries { get; set; }
         public string[] HistoryProvincePaths { get; set; }
         public string CountriesTxt { get; set; }
-        public string DefinitionCSVPath { get; set; }
+        public string CulturesTxt { get; set; }
 
+        public string DefinitionCSVPath { get; set; }
     }
 
     public class EventModifier {
