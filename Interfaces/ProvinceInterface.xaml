@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Paradox_Editor"
-             xmlns:types="clr-namespace:Paradox_Editor.D_Types"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              mc:Ignorable="d" 
              Height="400" Width="368" AllowDrop="True" Focusable="True"
@@ -40,8 +39,8 @@
         <Button Name="STATUSBOX" Grid.Row="1" Grid.Column="2"
                  FontFamily="Impact" Foreground="{x:Null}"
                  Height="20" Width="20" Margin="0,0,10,0" Background="{x:Null}" BorderBrush="{x:Null}"
-                 Click="Save_Button_Pressed">
-            <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="/Assets/save_confirm_button.gif" Source="/Assets/save_confirm_button.gif"/>
+                 Click="SaveButtonPressed">
+            <Image Name="Save_Button" gif:ImageBehavior.AnimatedSource="/Assets/save_confirm_button.gif" Source="/Assets/save_notif_button.png"/>
         </Button>
 
         <Button Grid.Column="2" BorderBrush="{x:Null}" Grid.RowSpan="2" Grid.Row="0"

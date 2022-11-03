@@ -10,7 +10,8 @@ namespace Paradox_Editor.Handlers
         public static string ValidClick { get; set; }
         public static string Gamemode { get; set; }
         public static string SoundAssetsPath = @"/Assets/VIC2/Sounds/"; //The Resource Path for the Icons
-        private static string PorkingDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        //private static string WorkingDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private static string WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
         public static void SoundAssetChange(string Game)
         {
@@ -30,7 +31,7 @@ namespace Paradox_Editor.Handlers
 
         public static void PlayClick()
         {
-            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "validClick.wav", UriKind.Relative);
+            var soundDirectory = new Uri(WorkingDirectory + SoundAssetsPath + "validClick.wav", UriKind.Relative);
             var soundFileStream = File.OpenRead(soundDirectory.ToString());
             var splayer = new SoundPlayer(soundFileStream);
 
@@ -38,7 +39,7 @@ namespace Paradox_Editor.Handlers
         }
         public static void PlayConnecting()
         {
-            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "connecting.wav", UriKind.Relative);
+            var soundDirectory = new Uri(WorkingDirectory + SoundAssetsPath + "connecting.wav", UriKind.Relative);
             var soundFileStream = File.OpenRead(soundDirectory.ToString());
             var splayer = new SoundPlayer(soundFileStream);
             splayer.Play();
@@ -46,7 +47,7 @@ namespace Paradox_Editor.Handlers
 
         public static void PlayError()
         {
-            var soundDirectory = new Uri(PorkingDirectory + SoundAssetsPath + "error.wav", UriKind.Relative);
+            var soundDirectory = new Uri(WorkingDirectory + SoundAssetsPath + "error.wav", UriKind.Relative);
             var soundFileStream = File.OpenRead(soundDirectory.ToString());
             var splayer = new SoundPlayer(soundFileStream);
             splayer.Play();

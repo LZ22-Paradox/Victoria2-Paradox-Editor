@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Extensions;
 using System.Windows;
+using Paradox_Editor.Cultures;
 
 namespace Paradox_Editor.Data_Handling
 {
@@ -22,8 +23,8 @@ namespace Paradox_Editor.Data_Handling
     {
         protected string DotModFile;
         protected string ModName;
-        public string GameFolder { get; set; }
-        public string ModFolder { get; set; }
+        protected string GameFolder { get; set; }
+        protected string ModFolder { get; set; }
         protected DirectoryStructure ModDirectories = new();
 
         public DataAcquisition() { }
@@ -72,6 +73,7 @@ namespace Paradox_Editor.Data_Handling
 
         public string GetModFolder() => ModFolder;
         public string GetGameDirectory() => GameFolder;
+        public CulturesFile CulturesData;
 
         /// <summary>
         /// Gets Victoria 2's directory paths.
@@ -79,6 +81,7 @@ namespace Paradox_Editor.Data_Handling
         /// <param name="directory"></param>
         public DirectoryStructure CollectModData(string directory)
         {
+            Debug.WriteLine("Collect Data Called! (Should be only once.)");
             string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
             string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
             string[] countryCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
@@ -90,6 +93,8 @@ namespace Paradox_Editor.Data_Handling
             else
                 CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
 
+            CulturesData = CulturesFile.Parse(culturesCommonFilePath);
+            
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,

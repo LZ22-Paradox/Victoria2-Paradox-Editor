@@ -32,10 +32,10 @@ namespace Paradox_Editor.Data_Handling
     public class ProvinceDataAcquisition : DataAcquisition
     {
         private Dictionary<uint, ProvinceFile> Provinces = new();
-        protected CulturesFile CultureData;
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
         private Dictionary<string, string> TagsToCountryNames = new();
         private Dictionary<string, Color> CountryNamesToColors = new();
+        //protected CulturesFile CultureData;
 
         /// <summary>
         /// Derives directory data extraction from the DataAcquisition parent class.
@@ -48,7 +48,6 @@ namespace Paradox_Editor.Data_Handling
             PopulateProvinceColorsToIDs();
             PopulateTagsToCountryNames();
             PopulateCountryNamesToColours();
-            CultureData = new CulturesFile(ModDirectories.CulturesTxt);
         }
 
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
@@ -67,7 +66,6 @@ namespace Paradox_Editor.Data_Handling
         /// </summary>
         public void GetHistoryFiles()
         {
-            ///<!!!!!!DOES NOT READ FILES THAT ONLY HAVE SPACES (IE, LIKE "1337 Prome")!!!!! : performance-instease this>
             foreach (string fileEntry in ModDirectories.HistoryProvincePaths)
             {
                 var fileName = Path.GetFileName(fileEntry).Replace(".txt", "");

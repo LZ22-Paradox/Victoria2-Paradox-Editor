@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -9,6 +8,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>zorg.ico</ApplicationIcon>
     <Nullable>disable</Nullable>
+    <StartupObject>Paradox_Editor.App</StartupObject>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NeutralLanguage>en</NeutralLanguage>
+    <FileVersion>1.0</FileVersion>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,6 +21,10 @@
 
   <ItemGroup>
     <None Remove=".editorconfig" />
+    <None Remove="Assets\EU4\Sounds\error.wav" />
+    <None Remove="Assets\VIC2\Images\main_bg.png" />
+    <None Remove="Assets\VIC2\Images\provinceInterface.png" />
+    <None Remove="Assets\VIC2\Sounds\error.wav" />
     <None Remove="BackgroundSelectEU4.png" />
     <None Remove="BackgroundSelectVIC2.png" />
     <None Remove="blank_world_map.png" />
@@ -40,8 +48,6 @@
     <None Remove="Assets\VIC2\Icons\button_remove.png" />
     <None Remove="Assets\VIC2\Icons\button_reset.png" />
     <None Remove="Assets\VIC2\Icons\VIC2_Exit.png" />
-    <None Remove="Assets\VIC2\Images\main_bg.png" />
-    <None Remove="Assets\VIC2\Images\provinceInterface.png" />
     <None Remove="Assets\VIC2\mapmode_PoliticalOff.png" />
     <None Remove="Assets\VIC2\mapmode_PoliticalOn.png" />
     <None Remove="Assets\VIC2\mapmode_ProvincesOff.png" />
@@ -57,48 +63,121 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="29.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0-rc.2.22472.3" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="WriteableBitmapEx" Version="1.6.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\BackgroundSelectEU4.png" />
-    <Resource Include="Assets\blank_world_map.png" />
-    <Resource Include="Assets\BackgroundSelectVIC2.png" />
-    <Resource Include="Assets\EU4\Icons\button_add.png" />
-    <Resource Include="Assets\EU4\Icons\button_exit.png" />
-    <Resource Include="Assets\EU4\Icons\button_remove.png" />
-    <Resource Include="Assets\EU4\Icons\button_reset.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_PoliticalOff.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_PoliticalOn.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_ProvincesOff.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_ProvincesOn.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_TerrainOff.png" />
-    <Resource Include="Assets\EU4\Icons\mapmode_TerrainOn.png" />
-    <Resource Include="Assets\EU4\Images\provinceInterface.png" />
-    <Resource Include="Assets\save_confirm_button.gif">
+    <Content Include="Assets\BackgroundSelectEU4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\save_notif_button.png" />
-    <Resource Include="Assets\VIC2\Icons\button_add.png" />
-    <Resource Include="Assets\VIC2\Icons\button_exit.png" />
-    <Resource Include="Assets\VIC2\Icons\button_remove.png" />
-    <Resource Include="Assets\VIC2\Icons\button_reset.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_PoliticalOff.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_PoliticalOn.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_ProvincesOff.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_ProvincesOn.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_TerrainOff.png" />
-    <Resource Include="Assets\VIC2\Icons\mapmode_TerrainOn.png" />
-    <Resource Include="Assets\VIC2\Icons\VIC2_Exit.png" />
-    <Resource Include="Assets\VIC2\Images\main_bg.png" />
-    <Resource Include="Assets\VIC2\Images\provinceInterface.png" />
-    <Resource Include="Assets\EU4\Sounds\connecting.wav" />
-    <Resource Include="Assets\EU4\Sounds\validClick.wav" />
-    <Resource Include="Assets\VIC2\Sounds\connecting.wav" />
-    <Resource Include="Assets\VIC2\Sounds\validClick.wav" />
-    <Resource Include="Assets\save_warning_button.gif" />
+    </Content>
+    <Content Include="Assets\blank_world_map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\BackgroundSelectVIC2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\button_add.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\button_exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\button_remove.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\button_reset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_PoliticalOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_PoliticalOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_ProvincesOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_ProvincesOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_TerrainOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Icons\mapmode_TerrainOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Images\provinceInterface.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Sounds\error.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\save_confirm_button.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\save_notif_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\button_add.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\button_exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\button_remove.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\button_reset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_PoliticalOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_PoliticalOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_ProvincesOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_ProvincesOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_TerrainOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\mapmode_TerrainOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Icons\VIC2_Exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Sounds\connecting.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EU4\Sounds\validClick.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Images\main_bg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Images\provinceInterface.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Sounds\connecting.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Sounds\error.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\VIC2\Sounds\validClick.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\save_warning_button.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

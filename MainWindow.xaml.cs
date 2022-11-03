@@ -104,5 +104,10 @@ namespace Paradox_Editor
         {
             CurrentControlMode = ControlMode.SelectedIndex;
         }
+
+        private void provinceInterface_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -86,7 +86,7 @@ namespace Paradox_Editor
             SoundHandler.PlayClick();
         }
 
-        public void Save_Button_Pressed(object sender, RoutedEventArgs e) => Save();
+        public void SaveButtonPressed(object sender, RoutedEventArgs e) => Save();
 
         private void Save()
         {
@@ -177,6 +177,9 @@ namespace Paradox_Editor
                         tempFile.Cores.Add(item);
                     }
                 }
+            } else
+            {
+                tempFile.Cores.Clear();
             }
             if (!TERRAINBOX.Text.Equals(""))
             {
@@ -245,11 +248,12 @@ namespace Paradox_Editor
         public void ResetCores(object sender, RoutedEventArgs e)
         {
             Cores.Clear();
-            Interface_Changed(sender, e); //Notify data has been changed.
+            Interface_Changed(sender, e);
         }
         public void AddBlankCore(object sender, RoutedEventArgs e)
         {
             Cores.Add(new Core(""));
+            Interface_Changed(sender, e);
         }
         public void RemoveCore(object sender, RoutedEventArgs e)
         {
@@ -265,13 +269,13 @@ namespace Paradox_Editor
         public void AddBlankBuilding(object sender, RoutedEventArgs e)
         {
             StateBuildings.Add(new StateBuilding());
+            Interface_Changed(sender, e);
         }
         public void RemoveBuilding(object sender, RoutedEventArgs e)
         {
             StateBuildings.RemoveAt(STATEBUILDING_GRID.SelectedIndex);
             Interface_Changed(sender, e);
         }
-
         #endregion
 
 
@@ -327,12 +331,8 @@ namespace Paradox_Editor
         private void HandleKeyPress(object sender, KeyEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) // Is Alt key pressed
-            {
                 if (Keyboard.IsKeyDown(Key.S))
-                {
                     Save();
-                }
-            }
         }
 
         //D_

@@ -7,6 +7,24 @@
             Read .mod descriptor to find vanilla override
             State buildings selected by dropdown
             Rename MainWindow's ModData to ProvinceData
+            Napoleon's Legacy Compatability
+
+- See about possible re-run of DataAcquisition
+https://stackoverflow.com/questions/65439908/add-function-to-pre-existing-struct
+
+keys and strings must be put into ""s.
+
+comments must be removed. # indicates comment until newline.
+
+{} is used for both lists and dicts:
+germanic = {} is a dict.
+color = {} is a list.
+if the {} contains '=', it is probably a dict. else, it is a list.
+then, {} is replaced with [].
+
+newlines always end with ',', except the last one.
+And so on.
+
 
     #1 PRIMARY : CREATE POPULATION PROVINCE INTERFACE
         - Read Pop Types First
@@ -168,3 +186,5 @@ CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
 
    //ZBAGI | SPR2(Unavailable for 2 weeks) | tannergooding (PERFORMANCE)\\
+   //Salix#2517 - Someone from the Rust server
+   //Windows10CE#8553
