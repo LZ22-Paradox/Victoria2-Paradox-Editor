@@ -60,7 +60,7 @@ namespace Paradox_Editor
 
             ModData = new ProvinceDataAcquisition(selectedModFile);
 
-            ///For the History File Lister
+            //For the History File Lister
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
             fileListView.ItemsSource = ProvinceData;
 

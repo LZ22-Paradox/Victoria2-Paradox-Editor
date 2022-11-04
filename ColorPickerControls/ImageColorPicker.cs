@@ -61,13 +61,6 @@ namespace ColorPickerControls
         /// <summary>
         /// Gets or sets the selector drawing.
         /// </summary>
-        /// <value>The selector drawing. Must not be null</value>
-        /// <remarks>
-        /// <see cref="SelectorDrawing"/> is the <see cref="System.Windows.Media.Drawing"/> using
-        /// to mark the position where the color is selected.
-        /// <para>The <see cref="ImageColorPicker"/> desn't pose any restrictions on the size of
-        /// this drawing. It's the user duty to choose it resonably.</para>
-        /// </remarks>
         public Drawing Selector
         {
             get { return (Drawing)GetValue(SelectorProperty); }

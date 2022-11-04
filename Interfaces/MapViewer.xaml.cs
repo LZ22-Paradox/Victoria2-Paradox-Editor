@@ -56,7 +56,7 @@ namespace Paradox_Editor
 
         public void LoadMaps()
         {
-            ///Load Province Map
+            //Load Province Map
             InvertCanvas(mapCanvas);
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
             if (File.Exists(Path.Combine(ModData.GetModFolder(), "map", "provinces.bmp")))
@@ -67,14 +67,14 @@ namespace Paradox_Editor
                 mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetGameDirectory(), "map", "provinces.bmp")));
             }
 
-            ///Load Political Map
+            //Load Political Map
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
             mapPolitical.Source = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
 
-            ///Load D_ Map
+            //Load D_ Map
 
 
-            ///Load D_ Map
+            //Load D_ Map
 
             IsMapLoaded = true;
         }
@@ -116,7 +116,7 @@ namespace Paradox_Editor
         public void MouseLeftClick(object sender, MouseButtonEventArgs e)
         {
             _ = MapModes.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
-            ///var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source); ///Map source maybe used for later
+            //var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source); //Map source maybe used for later
 
             var politicalMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapPolitical.Source);
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
@@ -132,7 +132,7 @@ namespace Paradox_Editor
                     {
                         SelectColor(politicalMapSource, mapPolitical.SelectedColor);
                         MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); ///Implement opening of countries
+                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
                     }
                     break;
                 case 1: //Province Map
@@ -140,7 +140,7 @@ namespace Paradox_Editor
                     {
                         Populate(mapProvinces, mapPolitical);
                         MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); ///Implement opening of countries
+                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
                     }
                     else
                     {
@@ -159,7 +159,7 @@ namespace Paradox_Editor
 
         void Populate(ImageColorPicker image, ImageColorPicker colorImageSource)
         {
-            var pickedColor = image.PickColor(colorImageSource); ///Split following code into perhaps its own method
+            var pickedColor = image.PickColor(colorImageSource); //Split following code into perhaps its own method
             MainWindow.provinceInterface.PopulateInterface(pickedColor);
             SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorImageSource.Source), pickedColor);
         }

@@ -102,10 +102,8 @@ namespace Paradox_Editor.Data_Handling
         }
 
         /// <summary>
-        /// Populates existing provinces with CSV colour & filename data.
+        /// Populates existing provinces with CSV colour and filename data.
         /// </summary>
-        /// <param name="pathToCSVFile"></param>
-        /// <returns name="Dictionary<uint, string>"></returns>
         public void PopulateAppendProvinceCSVData()
         {
             var cfg = new CsvConfiguration(CultureInfo.InvariantCulture)

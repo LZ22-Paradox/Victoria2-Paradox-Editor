@@ -99,7 +99,7 @@ namespace Paradox_Editor
 
                 PopulateSaveFile(file);
 
-                ///Currently only refreshes political map
+                //Currently only refreshes political map
                 MapViewer.SetMap(0, new MapRenderer(ModData)
                     .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
