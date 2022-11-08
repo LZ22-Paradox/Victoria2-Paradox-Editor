@@ -220,7 +220,6 @@
                          Height="20" TextAlignment="Center" FontSize="14" IsTabStop="False"
                          TextChanged="Interface_Changed"/>
 
-                <!--State Building Management-->
                 <TextBlock Name="State_Buildings" Text="State Buildings:" Grid.Row="11" Grid.Column="0" FontFamily="Arial"
                          Background="{x:Null}" Foreground="Black"
                          Height="16" TextAlignment="Center" FontSize="14"

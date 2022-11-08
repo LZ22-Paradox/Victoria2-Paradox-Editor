@@ -21,7 +21,6 @@ namespace Paradox_Editor
         private Point start;
 
         public static Dictionary<int, Image> MapModes { get; set; }
-        private ProvinceDataAcquisition ModData { get; set; }
         public static bool IsMapLoaded;
         public static bool IsImageFlipped { get; set; } //Possibly may be useless
 
@@ -36,11 +35,6 @@ namespace Paradox_Editor
                 { 1, mapProvinces },
                 { 2, mapTerrain },
             };
-        }
-
-        public void SetModData(ProvinceDataAcquisition modData)
-        {
-            ModData = modData;
         }
 
         public static WriteableBitmap GetMap(int index)
@@ -59,17 +53,17 @@ namespace Paradox_Editor
             //Load Province Map
             InvertCanvas(mapCanvas);
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            if (File.Exists(Path.Combine(ModData.GetModFolder(), "map", "provinces.bmp")))
+            if (File.Exists(Path.Combine(ModData.IO_DATA.GetModFolder(), "map", "provinces.bmp")))
             {
-                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetModFolder(), "map", "provinces.bmp")));
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.IO_DATA.GetModFolder(), "map", "provinces.bmp")));
             } else
             {
-                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.GetGameDirectory(), "map", "provinces.bmp")));
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.IO_DATA.GetGameDirectory(), "map", "provinces.bmp")));
             }
 
             //Load Political Map
             var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-            mapPolitical.Source = new MapRenderer(ModData).DrawPoliticalMap(provinceMapSource);
+            mapPolitical.Source = new MapRenderer(ModData.PROVINCE_DATA).DrawPoliticalMap(provinceMapSource);
 
             //Load D_ Map
 

@@ -9,9 +9,6 @@
             Rename MainWindow's ModData to ProvinceData
             Napoleon's Legacy Compatability
 
-- See about possible re-run of DataAcquisition
-https://stackoverflow.com/questions/65439908/add-function-to-pre-existing-struct
-
 keys and strings must be put into ""s.
 
 comments must be removed. # indicates comment until newline.
@@ -38,6 +35,42 @@ And so on.
         - List of pickable countries in Province Editor + wipe tag buttons
 
     # : IMPLEMENT CULTURE EDITOR
+
+    <Expander x:Name="ControlsExpander" Grid.Column="1" Grid.Row="0" VerticalAlignment="Top" Header="Controls"
+                  Height="200" Margin="0,12,120,0" Width="200" HorizontalAlignment="Right" IsExpanded="False" Panel.ZIndex="2" Grid.RowSpan="2">
+            <Grid Background="#FFE5E5E5" IsHitTestVisible="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Pan Map" Grid.Row="0" FontSize="12"/>
+                <TextBlock Text="Middle Mouse Button" FontSize="10" Grid.Row="1" FontStyle="Oblique"/>
+                <TextBlock Text="Scroll Left/Right" Grid.Row="2" FontSize="12"/>
+                <TextBlock Text="Control + ScrollWheel" FontSize="10" Grid.Row="3" FontStyle="Oblique"/>
+                <TextBlock Text="Scroll Up/Down" Grid.Row="4" FontSize="12"/>
+                <TextBlock Text="Shift + ScrollWheel" FontSize="10" Grid.Row="5" FontStyle="Oblique"/>
+                <TextBlock Text="Zoom In/Out" Grid.Row="6" FontSize="12"/>
+                <TextBlock Text="ScrollWheel" FontSize="10" Grid.Row="7" FontStyle="Oblique"/>
+                <TextBlock Text="Select Above" Grid.Row="8" FontSize="12"/>
+                <TextBlock Text="Shift-Click" FontSize="10" Grid.Row="9" FontStyle="Oblique"/>
+                <TextBlock Text="Select" Grid.Row="10" FontSize="12"/>
+                <TextBlock Text="Click" FontSize="10" Grid.Row="11" FontStyle="Oblique"/>
+                <TextBlock Text="Select Below" Grid.Row="12" FontSize="12"/>
+                <TextBlock Text="Ctrl-Click" FontSize="10" Grid.Row="14" FontStyle="Oblique"/>
+            </Grid>
+        </Expander>
 
     # : ADD PROVINCE POSITIONS EDITOR
     # : ADD WARS, ALLIANCE, PUPPETS EDITOR

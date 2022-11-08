@@ -19,16 +19,16 @@ using Paradox_Editor.Cultures;
 namespace Paradox_Editor.Data_Handling
 {
     //For use in important CSV file reading.
-    public class DataAcquisition
+    public class IODataAcquisition
     {
-        protected string DotModFile;
-        protected string ModName;
-        protected string GameFolder { get; set; }
-        protected string ModFolder { get; set; }
-        protected DirectoryStructure ModDirectories = new();
+        public string DotModFile;
+        public string ModName;
+        public string GameFolder { get; set; }
+        public string ModFolder { get; set; }
+        public DirectoryStructure ModDirectories = new();
 
-        public DataAcquisition() { }
-        public DataAcquisition(string directory)
+        public IODataAcquisition() { }
+        public IODataAcquisition(string directory)
         {
             ModFolder = directory;
             ModDirectories = CollectModData(directory);
@@ -73,7 +73,6 @@ namespace Paradox_Editor.Data_Handling
 
         public string GetModFolder() => ModFolder;
         public string GetGameDirectory() => GameFolder;
-        public CulturesFile CulturesData;
 
         /// <summary>
         /// Gets Victoria 2's directory paths.
@@ -93,7 +92,7 @@ namespace Paradox_Editor.Data_Handling
             else
                 CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
 
-            CulturesData = CulturesFile.Parse(culturesCommonFilePath);
+            ModData.SetCulturesData(culturesCommonFilePath);
             
             return new DirectoryStructure()
             {

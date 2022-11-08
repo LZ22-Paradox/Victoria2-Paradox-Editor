@@ -5,8 +5,9 @@ using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System;
 using Paradox_Editor.D_Types;
+using Paradox_Editor.Data_Handling;
 
-namespace Paradox_Editor.Data_Handling
+namespace Paradox_Editor.Handlers
 {
     public class MapRenderer
     {
@@ -20,8 +21,8 @@ namespace Paradox_Editor.Data_Handling
         }
         public MapRenderer() { }
 
-        public uint GetRawColor(Color color) => (0xFFu << 24)
-            | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
+        public uint GetRawColor(Color color) => 0xFFu << 24
+            | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
 
         #region Drawing Navigatable Maps
         /// <summary>
@@ -44,8 +45,8 @@ namespace Paradox_Editor.Data_Handling
                 var province = ModData.GetProvince((uint)provinceID);
 
                 bool foundOwner = false;
-                
-                if (!String.IsNullOrEmpty(province?.Owner))
+
+                if (!string.IsNullOrEmpty(province?.Owner))
                 {
                     foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
                     ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
@@ -58,7 +59,7 @@ namespace Paradox_Editor.Data_Handling
                     else
                         pixels[index] = GetRawColor(Colors.White); //Ocean
                 }
-                    
+
             });
             image.Unlock();
             return image;
@@ -130,7 +131,8 @@ namespace Paradox_Editor.Data_Handling
             {
                 ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
                 ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out countryColor);
-            } else
+            }
+            else
                 countryColor = Colors.Black;
 
             var newColor = GetRawColor(countryColor);

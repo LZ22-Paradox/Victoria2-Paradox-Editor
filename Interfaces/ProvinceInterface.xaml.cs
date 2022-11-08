@@ -20,7 +20,6 @@ namespace Paradox_Editor
     public partial class ProvinceInterface : UserControl
     {
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
-        private ProvinceDataAcquisition ModData { get; set; }
         private ProvinceFile _currentProvince = new();
         private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
 
@@ -38,11 +37,6 @@ namespace Paradox_Editor
             InitializeComponent();
             this.DataContext = this;
             Set_Save_Icon_To_Saved();
-        }
-
-        public void SetModData(ProvinceDataAcquisition modData)
-        {
-            ModData = modData;
         }
 
         public void UpdateUI()
@@ -99,8 +93,8 @@ namespace Paradox_Editor
 
                 PopulateSaveFile(file);
 
-                //Currently only refreshes political map
-                MapViewer.SetMap(0, new MapRenderer(ModData)
+                //vCurrently only refreshes political map
+                MapViewer.SetMap(0, new MapRenderer(ModData.PROVINCE_DATA)
                     .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
                 Set_Save_Icon_To_Saved();
@@ -114,10 +108,10 @@ namespace Paradox_Editor
 
         void PopulateSaveFile(StreamWriter file)
         {
-            ProvinceFile tempFile = ModData.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
+            ProvinceFile tempFile = ModData.PROVINCE_DATA.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
             {
-                ModData.GetTagsToCountryNames().TryGetValue(OWNERBOX.Text, out var countryTAG);
+                ModData.PROVINCE_DATA.GetTagsToCountryNames().TryGetValue(OWNERBOX.Text, out var countryTAG);
                 if (countryTAG != null)
                 {
                     file.WriteLine("owner = " + OWNERBOX.Text);
@@ -135,7 +129,7 @@ namespace Paradox_Editor
             }
             if (!CONTROLLERBOX.Text.Equals(""))
             {
-                ModData.GetTagsToCountryNames().TryGetValue(CONTROLLERBOX.Text, out var countryTAG);
+                ModData.PROVINCE_DATA.GetTagsToCountryNames().TryGetValue(CONTROLLERBOX.Text, out var countryTAG);
                 if (countryTAG != null)
                 {
                     file.WriteLine("controller = " + CONTROLLERBOX.Text);
@@ -220,7 +214,7 @@ namespace Paradox_Editor
 
             file.Close();
 
-            ModData.ReplaceProvince(tempFile);
+            ModData.PROVINCE_DATA.ReplaceProvince(tempFile);
             SoundHandler.PlayConnecting(); //Perhaps change to success sound or change connecting sound to something else?
         }
 
@@ -286,8 +280,8 @@ namespace Paradox_Editor
         /// <param name="color"></param>
         public void PopulateInterface(Color color)
         {
-            ModData.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
-            ProvinceFile province = ModData.GetProvince((uint)provinceID);
+            ModData.PROVINCE_DATA.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
+            ProvinceFile province = ModData.PROVINCE_DATA.GetProvince((uint)provinceID);
             CurrentProvince = province;
             if (province != null)
             {

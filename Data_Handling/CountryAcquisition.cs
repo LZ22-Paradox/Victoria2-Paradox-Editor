@@ -17,10 +17,10 @@ using Paradox_Editor.Extensions;
 namespace Paradox_Editor.Data_Handling
 {
     //For use in important CSV file reading.
-    public class CountryDataAcquisition : DataAcquisition
+    public class CountryAcquisition : IODataAcquisition
     {
 
-        public CountryDataAcquisition(string directory) : base(directory)
+        public CountryAcquisition(string directory) : base(directory)
         {
 
         }

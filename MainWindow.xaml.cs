@@ -19,7 +19,6 @@ namespace Paradox_Editor
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private ProvinceDataAcquisition ModData { get; set; }
         public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
         public int CurrentControlMode { get; set; }
         public static string CurrentGameMode { get; set; }
@@ -54,18 +53,17 @@ namespace Paradox_Editor
         {
             //var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
 
-            string selectedModFile = Explorer.OpenFolderSelect();
-            if (selectedModFile == null)
+            string selectedModFolder = Explorer.OpenFolderSelect();
+            if (selectedModFolder == null)
                 return;
 
-            ModData = new ProvinceDataAcquisition(selectedModFile);
+            ModData.AcquisitionIOData(selectedModFolder);
+            ModData.AcquisitionProvinceData(selectedModFolder);
 
             //For the History File Lister
-            ProvinceData = new ObservableCollection<ProvinceFile>(ModData.GetProvinces().Values);
+            ProvinceData = new ObservableCollection<ProvinceFile>(ModData.PROVINCE_DATA.GetProvinces().Values);
             fileListView.ItemsSource = ProvinceData;
 
-            provinceInterface.SetModData(ModData);
-            mapViewer.SetModData(ModData);
             mapViewer.LoadMaps();
         }
 
