@@ -66,7 +66,7 @@ namespace Paradox_Editor.Data_Handling
         /// </summary>
         public void GetHistoryFiles()
         {
-            foreach (string fileEntry in ModData.IO_DATA.ModDirectories.HistoryProvincePaths)
+            foreach (string fileEntry in ModData.IO_DATA.GetModDirectories().HistoryProvincePaths)
             {
                 var fileName = Path.GetFileName(fileEntry).Replace(".txt", "");
                 string[] splitName = null;
@@ -112,7 +112,7 @@ namespace Paradox_Editor.Data_Handling
                 HasHeaderRecord = false,
                 MissingFieldFound = null
             };
-            using var reader = new StreamReader(ModData.IO_DATA.ModDirectories.DefinitionCSVPath);
+            using var reader = new StreamReader(ModData.IO_DATA.GetModDirectories().DefinitionCSVPath);
             using var csv = new CsvReader(reader, cfg);
             csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
             var records = csv.GetRecords<ProvinceCSVDefinition>();
@@ -148,7 +148,7 @@ namespace Paradox_Editor.Data_Handling
         /// </summary>
         public void PopulateTagsToCountryNames() 
         {
-            foreach (var line in File.ReadAllLines(ModData.IO_DATA.ModDirectories.CountriesTxt))
+            foreach (var line in File.ReadAllLines(ModData.COUNTRY_DATA.GetCountryTextFile()))
             {
                 var input = line.Trim();
                 var index = input.IndexOf("#");
@@ -176,7 +176,7 @@ namespace Paradox_Editor.Data_Handling
         /// </summary>
         public void PopulateCountryNamesToColours()
         {
-            foreach (var countryFile in ModData.IO_DATA.ModDirectories.Countries)
+            foreach (var countryFile in ModData.COUNTRY_DATA.GetCountriesCommonFiles())
             {
                 string[] seperatedColors = new string[3];
                 string name = Path.GetFileName(countryFile).Replace(".txt", "");
