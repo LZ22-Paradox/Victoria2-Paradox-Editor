@@ -17,15 +17,25 @@ using Paradox_Editor.Extensions;
 namespace Paradox_Editor.Data_Handling
 {
     //For use in important CSV file reading.
-    public class CountryAcquisition : IODataAcquisition
+    public class CountryAcquisition
     {
-
-        public CountryAcquisition(string directory) : base(directory)
+        private string[] CountriesCommonFiles;
+        private string CountriesCommonTextFile;
+        public CountryAcquisition(string directory)
         {
+			CountriesCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
+			CountriesCommonTextFile = Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
+		}
 
+        public string GetCountryTextFile() => CountriesCommonTextFile;
+        public string[] GetCountriesCommonFiles() => CountriesCommonFiles;
+
+        public bool DoesCountrysHaveItsFlags()
+        {
+            //Check the game files for all of the flags needed. Differentiate between vic2 and eu4
+            return true; //temp
         }
 
-
-    }
+	}
 
 }

@@ -21,11 +21,11 @@ namespace Paradox_Editor.Data_Handling
     //For use in important CSV file reading.
     public class IODataAcquisition
     {
-        public string DotModFile;
-        public string ModName;
-        public string GameFolder { get; set; }
-        public string ModFolder { get; set; }
-        public DirectoryStructure ModDirectories = new();
+        private string DotModFile;
+		private string ModName;
+		private string GameFolder { get; set; }
+		private string ModFolder { get; set; }
+		private DirectoryStructure ModDirectories = new();
 
         public IODataAcquisition() { }
         public IODataAcquisition(string directory)
@@ -49,10 +49,10 @@ namespace Paradox_Editor.Data_Handling
                             case string when line.Contains("name ="):
                                 ModName = reg.Match(line).ToString();
                                 break;
-                            case string when line.Contains("nuts"):
+                            case string when line.Contains("nuts"): //Nuts?
                                 break;
-                            case string when line.Contains("nuts"):
-                                break;
+                            case string when line.Contains("nuts"): //Nuts?
+								break;
                             default:
                                 break;
                         }
@@ -73,18 +73,16 @@ namespace Paradox_Editor.Data_Handling
 
         public string GetModFolder() => ModFolder;
         public string GetGameDirectory() => GameFolder;
-
-        /// <summary>
-        /// Gets Victoria 2's directory paths.
-        /// </summary>
-        /// <param name="directory"></param>
-        public DirectoryStructure CollectModData(string directory)
+		public DirectoryStructure GetModDirectories() => ModDirectories;
+		/// <summary>
+		/// Gets Victoria 2's directory paths.
+		/// </summary>
+		/// <param name="directory"></param>
+		public DirectoryStructure CollectModData(string directory)
         {
             Debug.WriteLine("Collect Data Called! (Should be only once.)");
             string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
             string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            string[] countryCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
-            string countriesCommonFilePath = Path.Combine(directory, "common", "countries.txt"); //Find if overwritten
             string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten
             string CSVFilePath;
             if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
@@ -92,14 +90,12 @@ namespace Paradox_Editor.Data_Handling
             else
                 CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
 
-            ModData.SetCulturesData(culturesCommonFilePath);
+			ModData.SetCulturesData(culturesCommonFilePath);
             
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,
                 CulturesTxt = culturesCommonFilePath,
-                Countries = countryCommonFiles,
-                CountriesTxt = countriesCommonFilePath,
                 DefinitionCSVPath = CSVFilePath,
                 HistoryProvincePaths = historyProvincePaths
             };

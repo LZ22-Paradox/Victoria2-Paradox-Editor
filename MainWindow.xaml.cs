@@ -57,8 +57,18 @@ namespace Paradox_Editor
             if (selectedModFolder == null)
                 return;
 
-            ModData.AcquisitionIOData(selectedModFolder);
-            ModData.AcquisitionProvinceData(selectedModFolder);
+            Thread thread = new Thread(() => ModData.AcquisitionIOData(selectedModFolder));
+            thread.Start();
+            thread.Join();
+            thread = new Thread(() => ModData.AcquisitionCountryData(selectedModFolder));
+            thread.Start();
+            thread.Join();
+            thread = new Thread(() => ModData.AcquisitionProvinceData(selectedModFolder));
+            thread.Start();
+            thread.Join();
+            /*ModData.AcquisitionIOData(selectedModFolder);
+			ModData.AcquisitionCountryData(selectedModFolder);
+			ModData.AcquisitionProvinceData(selectedModFolder);*/
 
             //For the History File Lister
             ProvinceData = new ObservableCollection<ProvinceFile>(ModData.PROVINCE_DATA.GetProvinces().Values);

@@ -12,6 +12,7 @@
 keys and strings must be put into ""s.
 Add type: continent, which is read from the game.
 Implement Multi-Selectable Provinces
+When clicking countries; differentiate the countries; not between the colours alone. (Issue is that selecting a colour selects all identicals)
 
 comments must be removed. # indicates comment until newline.
 
