@@ -4,6 +4,7 @@ using Paradox_Editor.Handlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -126,7 +127,7 @@ namespace Paradox_Editor
                     {
                         SelectColor(politicalMapSource, mapPolitical.SelectedColor);
                         MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
+                        Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
                     }
                     break;
                 case 1: //Province Map
@@ -134,7 +135,7 @@ namespace Paradox_Editor
                     {
                         Populate(mapProvinces, mapPolitical);
                         MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                        MessageBox.Show("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
+						Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
                     }
                     else
                     {
@@ -166,7 +167,8 @@ namespace Paradox_Editor
             flashingSelection.Source = singleProvince;
         }
 
-        public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
+		#region Map Navigation Controls
+		public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             foreach (var image in MapModes.Values)
             {
@@ -285,8 +287,9 @@ namespace Paradox_Editor
                 }
             }
         }
+		#endregion
 
-        public void InvertCanvas(Canvas canvas)
+		public void InvertCanvas(Canvas canvas)
         {
             var flipTrans = new ScaleTransform(); //creates instance for scale
             canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image

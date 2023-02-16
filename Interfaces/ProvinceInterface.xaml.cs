@@ -19,6 +19,7 @@ namespace Paradox_Editor
     [ToolboxItem(true)]
     public partial class ProvinceInterface : UserControl
     {
+        
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private ProvinceFile _currentProvince = new();
         private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }

@@ -19,7 +19,6 @@ namespace Paradox_Editor
         public static CulturesFile CULTURES_DATA;
 
 
-
         public static void SetCulturesData(string culturesTextFilePath) => CULTURES_DATA = CulturesFile.Parse(culturesTextFilePath);
         public static void AcquisitionIOData(string modFolder) => IO_DATA = new IODataAcquisition(modFolder);
         public static void AcquisitionProvinceData(string modFolder) => PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);

@@ -10,6 +10,8 @@
             Napoleon's Legacy Compatability
 
 keys and strings must be put into ""s.
+Add type: continent, which is read from the game.
+Implement Multi-Selectable Provinces
 
 comments must be removed. # indicates comment until newline.
 

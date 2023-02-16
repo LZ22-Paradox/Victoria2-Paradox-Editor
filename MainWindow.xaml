@@ -1,15 +1,17 @@
 ﻿<Window
     xmlns:local="clr-namespace:Paradox_Editor"
+    xmlns:interfaces="clr-namespace:Paradox_Editor.Interfaces"
     x:Class="Paradox_Editor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
-        mc:Ignorable="d"
-        Title="Z-22 Paradox Map Editor" Height="700" Width="1200"
-        UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+    
+    mc:Ignorable="d"
+    Title="Z-22 Paradox Map Editor" Height="700" Width="1200"
+    UseLayoutRounding="True" WindowStartupLocation="CenterScreen" Loaded="MainWindow_Load"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Background>
         <ImageBrush>
@@ -89,6 +91,14 @@
                     </TreeView>
                 </Grid>
             </TabItem>
+
+            <TabItem Header="Pop Adjuster">
+                <Grid Background="#FFE5E5E5">
+                    <interfaces:PopAdjuster/>
+                </Grid>
+            </TabItem>
+
+
         </TabControl>
 
 

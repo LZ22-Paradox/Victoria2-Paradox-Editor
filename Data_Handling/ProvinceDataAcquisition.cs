@@ -62,7 +62,7 @@ namespace Paradox_Editor.Data_Handling
         public void ReplaceProvince(ProvinceFile province) => Provinces[(uint)province.ProvinceID] = province;
 
         /// <summary>
-        /// Populates an initial list of provinces.
+        /// Populates an initial list of history provinces.
         /// </summary>
         public void GetHistoryFiles()
         {

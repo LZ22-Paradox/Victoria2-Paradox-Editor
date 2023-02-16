@@ -8,8 +8,8 @@ namespace Paradox_Editor.Extensions.Types
 {
     public class Country
     {
-        public string Name { get; set; }
-        public uint Color { get; set; }
+        private string Name { get; set; }
+		private uint Color { get; set; }
 
     }
 }

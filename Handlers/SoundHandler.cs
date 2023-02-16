@@ -16,13 +16,9 @@ namespace Paradox_Editor.Handlers
         public static void SoundAssetChange(string Game)
         {
             if (Game == "VIC2")
-            {
                 SoundAssetsPath = @"\Assets\VIC2\Sounds\";
-            }
             else if (Game == "EU4")
-            {
                 SoundAssetsPath = @"\Assets\EU4\Sounds\";
-            }
             else
             {
             }
