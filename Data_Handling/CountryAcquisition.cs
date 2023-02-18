@@ -13,34 +13,68 @@ using System.Windows.Media;
 using System.Text.RegularExpressions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Extensions;
+using System.Windows;
 
 namespace Paradox_Editor.Data_Handling
 {
-    //For use in important CSV file reading.
+    /*
+     * TODO:
+     * - ADD READING FORCOUNTRY HISTORY DATA
+     * - SEE CULTURE PARSER FOR INSPIRATIONS
+     * - DONT FORGET CHECKING FOR FALLBACKS
+     */
     public class CountryAcquisition
     {
-        private Dictionary<string,string> TempCountriesCommonFiles = new(); //IN DEVELOPMENT
-
-        private string[] CountriesCommonFiles;
         private string CountriesCommonTextFile;
+        private Dictionary<string,string> CountriesCommonFiles = new();
+        private Dictionary<string, string> CountriesHistoryFiles = new(); //IN DEVELOPMENT
         private Dictionary<string, Country> Countries = new(); 
         public CountryAcquisition(string directory)
         {
-            foreach (var file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories)) { 
-                var splitFile = file.Split('\\');
-                TempCountriesCommonFiles.Add(splitFile[splitFile.Length - 1].Replace(".txt", ""), file);
+            //Common Text File
+            CountriesCommonTextFile = Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
+
+            #region Common Files
+            foreach (string file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories)) { 
+                string[] splitFile = file.Split('\\');
+                CountriesCommonFiles.Add(splitFile[splitFile.Length - 1].Replace(".txt", ""), file);
             }
+            #endregion
 
-
-            CountriesCommonFiles = Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories);
-			CountriesCommonTextFile = Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
+            #region History Files
+            foreach (string file in Directory.GetFiles(Path.Combine(directory, "history", "countries"), "*.txt", SearchOption.AllDirectories))
+            {
+                string[] splitFile = file.Split('\\');
+                string tag = splitFile[splitFile.Length - 1].Substring(0,3);
+                if (!CountriesHistoryFiles.ContainsKey(tag))
+                    CountriesHistoryFiles.Add(tag, file);
+                else
+                {
+                    string[] testLine = File.ReadAllLines(file);
+                    MessageBox.Show("Duplicate Tag in History Files: " + tag);
+                    if (testLine.Length == 0)
+                        continue;
+                    else
+                    {
+                        CountriesHistoryFiles.TryGetValue(tag, out var alreadyInsertedCountry);
+                        string[] newTestLine = File.ReadAllLines(alreadyInsertedCountry);
+                        if (newTestLine.Length != 0)
+                            continue;
+                        else
+                        {
+                            CountriesHistoryFiles.Remove(tag);
+                            CountriesHistoryFiles.Add(tag, file);
+                        }
+                    }
+                }
+            }
+            #endregion
 
             LoadCountries();
 		}
 
         public Dictionary<string, Country> GetCountries() => Countries;
         public string GetCountryTextFile() => CountriesCommonTextFile;
-        public string[] GetCountriesCommonFiles() => CountriesCommonFiles; //May need changing to access specific country data, later
         public void LoadCountries()
         {
             foreach (var line in File.ReadAllLines(CountriesCommonTextFile))
@@ -60,7 +94,7 @@ namespace Paradox_Editor.Data_Handling
                 string tag = words[0].Trim();
                 string name = words[1].Trim();
                 if (!Countries.ContainsKey(tag)) {
-                    if (TempCountriesCommonFiles.TryGetValue(name, out string commonFilePath))
+                    if (CountriesCommonFiles.TryGetValue(name, out string commonFilePath))
                     {
                         Country country = new Country(tag, name, commonFilePath);
                         Countries.Add(tag, country);
@@ -74,6 +108,7 @@ namespace Paradox_Editor.Data_Handling
         public bool VerifyCountryFlags()
         {
             //Check the game files for all of the flags needed. Differentiate between vic2 and eu4
+            MessageBox.Show("Missing Country Flags!");
             return true; //temp
         }
 

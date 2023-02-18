@@ -57,13 +57,7 @@ namespace Paradox_Editor
             if (selectedModFolder == null)
                 return;
 
-            Thread thread = new Thread(() => ModData.AcquisitionIOData(selectedModFolder));
-            thread.Start();
-            thread.Join();
-            thread = new Thread(() => ModData.AcquisitionCountryData(selectedModFolder));
-            thread.Start();
-            thread.Join();
-            thread = new Thread(() => ModData.AcquisitionProvinceData(selectedModFolder));
+            Thread thread = new Thread(() => ModData.AcquisitionData(selectedModFolder));
             thread.Start();
             thread.Join();
 

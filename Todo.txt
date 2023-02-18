@@ -27,6 +27,7 @@ Add type: continent, which is read from the game.
     * Filter for all the continents
 Implement Multi-Selectable Provinces
 When clicking countries; differentiate the countries; not between the colours alone. (Issue is that selecting a colour selects all identicals)
+    * Check the provinces for ownership?
 Seperate cultures into its own data acquisition to accompany the parser?
 Get available Pop Types
 Get technologies & inventions list

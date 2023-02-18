@@ -128,7 +128,6 @@ namespace Paradox_Editor.Data_Handling
             csv.Dispose();
         }
 
-
         /// <summary>
         /// Populates dictionary of province colour keys with province ID's.
         /// </summary>

@@ -18,11 +18,15 @@ namespace Paradox_Editor
 		//Cultures & Pops Data
 		public static CulturesFile CULTURES_DATA;
 
-
-        public static void AcquisitionIOData(string modFolder) => IO_DATA = new IODataAcquisition(modFolder);
-        public static void AcquisitionProvinceData(string modFolder) => PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
+        public static void AcquisitionData(string modFolder)
+        {
+            IO_DATA = new IODataAcquisition(modFolder);
+            PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
+		    COUNTRY_DATA = new CountryAcquisition(modFolder);
+        }
         public static void SetCulturesData(string culturesTextFilePath) => CULTURES_DATA = CulturesFile.Parse(culturesTextFilePath);
-		public static void AcquisitionCountryData(string directory) => COUNTRY_DATA = new CountryAcquisition(directory); //Not implemented
+
+
 
 
         private static void test()
