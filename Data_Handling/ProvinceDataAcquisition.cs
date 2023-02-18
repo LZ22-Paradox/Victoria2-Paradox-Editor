@@ -43,16 +43,14 @@ namespace Paradox_Editor.Data_Handling
         /// <param name="directory"></param>
         public ProvinceDataAcquisition(string directory)
         {
-            GetHistoryFiles();
+            GetProvinceHistoryFiles();
             PopulateAppendProvinceCSVData();
             PopulateProvinceColorsToIDs();
-            PopulateTagsToCountryNames();
-            PopulateCountryNamesToColours();
         }
 
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
-        public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
+        //public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
         public Dictionary<string, Color> GetCountryNamesToColours() => CountryNamesToColors;
         public ProvinceFile GetProvince(uint provinceID)
         {
@@ -64,7 +62,7 @@ namespace Paradox_Editor.Data_Handling
         /// <summary>
         /// Populates an initial list of history provinces.
         /// </summary>
-        public void GetHistoryFiles()
+        public void GetProvinceHistoryFiles()
         {
             foreach (string fileEntry in ModData.IO_DATA.GetModDirectories().HistoryProvincePaths)
             {
@@ -143,79 +141,6 @@ namespace Paradox_Editor.Data_Handling
             }
         }
 
-        /// <summary>
-        /// Gets given game TAG's and country names, based on the common/...name.txt files.
-        /// </summary>
-        public void PopulateTagsToCountryNames() 
-        {
-            foreach (var line in File.ReadAllLines(ModData.COUNTRY_DATA.GetCountryTextFile()))
-            {
-                var input = line.Trim();
-                var index = input.IndexOf("#");
-                if (index >= 0)
-                    input = input.Substring(0, index);
-                index = input.IndexOf("dynamic_tags");
-                if (index >= 0)
-                    input = input.Substring(0, index);
-                if (string.IsNullOrEmpty(input))
-                    continue;
-
-                var removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
-                var words = removal.Split('='); //Has the actual country names
-                var trimmedTagToCountry = new string[] { words[0].Trim(), words[1].Trim() };
-                //Debug.WriteLine(trimmedTagToCountry);
-                if (!TagsToCountryNames.ContainsKey(trimmedTagToCountry[0]))
-                    TagsToCountryNames.Add(trimmedTagToCountry[0], trimmedTagToCountry[1]);
-                else
-                    Debug.WriteLine("Repeated TAG in common/countries/: " + trimmedTagToCountry[0]);
-            }
-        }
-
-        /// <summary>
-        /// Populates the dictionary of country name keys with their respective country-colours.
-        /// </summary>
-        public void PopulateCountryNamesToColours()
-        {
-            foreach (var countryFile in ModData.COUNTRY_DATA.GetCountriesCommonFiles())
-            {
-                string[] seperatedColors = new string[3];
-                string name = Path.GetFileName(countryFile).Replace(".txt", "");
-                string firstLine = File.ReadLines(countryFile).First();
-                if (firstLine.StartsWith("color"))
-                {
-                    var splitData = firstLine.Split("=", StringSplitOptions.TrimEntries);
-                    var fixedColorData = splitData[1].Replace("{", "").Replace("}", "").Trim();
-                    var splitColors = fixedColorData.Split(" ");
-                    seperatedColors = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                }
-                else
-                {
-                    foreach (var line in File.ReadAllLines(countryFile))
-                    {
-                        if (line.Contains("color =", StringComparison.Ordinal)) //color = { #  #  # }
-                        {
-                            var splitData = line.Split("=", StringSplitOptions.TrimEntries);
-                            var fixedColorData = splitData[1].Replace("{", "").Replace("}", "").Trim();
-                            var splitColors = fixedColorData.Split(" ");
-                            seperatedColors = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-
-
-                        }
-
-                    }
-                }
-                if (!CountryNamesToColors.ContainsKey(name))
-                {
-                    if (!String.IsNullOrEmpty(seperatedColors[0]))
-                    CountryNamesToColors.Add(name,
-                        Color.FromRgb(
-                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[0], "[A-Za-z ]", "")),
-                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[1], "[A-Za-z ]", "")),
-                            (byte)Convert.ToInt32(Regex.Replace(seperatedColors[2], "[A-Za-z ]", ""))
-                        ));
-                }
-            }
-        }
     }
 
 }

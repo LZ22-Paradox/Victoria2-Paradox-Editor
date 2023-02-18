@@ -94,7 +94,7 @@
 
             <TabItem Header="Pop Adjuster">
                 <Grid Background="#FFE5E5E5">
-                    <interfaces:PopAdjuster/>
+                    <interfaces:PopAdjuster HorizontalAlignment="Left"/>
                 </Grid>
             </TabItem>
 

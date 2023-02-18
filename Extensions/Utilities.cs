@@ -59,7 +59,7 @@ namespace Paradox_Editor.Extensions
         }
     }
 
-    public struct HistoryFile
+    public struct HistoryFile //May need removal
     {
         public List<string> Owner { get; set; }
         public List<string> Controller { get; set; }
@@ -88,9 +88,7 @@ namespace Paradox_Editor.Extensions
     public struct DirectoryStructure
     {
         public string[] PrimaryDirectories { get; set; }
-        public string[] Countries { get; set; }
         public string[] HistoryProvincePaths { get; set; }
-        public string CountriesTxt { get; set; }
         public string CulturesTxt { get; set; }
 
         public string DefinitionCSVPath { get; set; }

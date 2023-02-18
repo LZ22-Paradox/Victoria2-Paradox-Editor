@@ -112,8 +112,8 @@ namespace Paradox_Editor
             ProvinceFile tempFile = ModData.PROVINCE_DATA.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
             {
-                ModData.PROVINCE_DATA.GetTagsToCountryNames().TryGetValue(OWNERBOX.Text, out var countryTAG);
-                if (countryTAG != null)
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(OWNERBOX.Text, out var country);
+                if (country != null)
                 {
                     file.WriteLine("owner = " + OWNERBOX.Text);
                     tempFile.Owner = OWNERBOX.Text;
@@ -130,8 +130,8 @@ namespace Paradox_Editor
             }
             if (!CONTROLLERBOX.Text.Equals(""))
             {
-                ModData.PROVINCE_DATA.GetTagsToCountryNames().TryGetValue(CONTROLLERBOX.Text, out var countryTAG);
-                if (countryTAG != null)
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(CONTROLLERBOX.Text, out var country);
+                if (country != null)
                 {
                     file.WriteLine("controller = " + CONTROLLERBOX.Text);
                     tempFile.Controller = CONTROLLERBOX.Text;

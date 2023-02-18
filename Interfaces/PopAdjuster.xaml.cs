@@ -24,5 +24,25 @@ namespace Paradox_Editor.Interfaces
         {
             InitializeComponent();
         }
+
+        private void deletePopsCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void typesButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void goButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void clearList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

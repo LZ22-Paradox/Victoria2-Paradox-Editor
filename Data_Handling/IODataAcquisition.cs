@@ -21,7 +21,7 @@ namespace Paradox_Editor.Data_Handling
     //For use in important CSV file reading.
     public class IODataAcquisition
     {
-        private string DotModFile;
+        private string DotModFile; //Unused
 		private string ModName;
 		private string GameFolder { get; set; }
 		private string ModFolder { get; set; }
@@ -32,7 +32,7 @@ namespace Paradox_Editor.Data_Handling
         {
             ModFolder = directory;
             ModDirectories = CollectModData(directory);
-            if (!directory.Equals(MainWindow.CurrentGameMode))  ///May need fixing
+            if (!directory.Equals(MainWindow.CurrentGameMode)) //May Need Fixing
             {
                 DirectoryInfo modFolder = Directory.GetParent(directory);
                 GameFolder = modFolder.Parent.ToString();

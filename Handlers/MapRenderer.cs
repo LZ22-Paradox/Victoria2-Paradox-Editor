@@ -11,13 +11,13 @@ namespace Paradox_Editor.Handlers
 {
     public class MapRenderer
     {
-        private ProvinceDataAcquisition ModData;
+        private ProvinceDataAcquisition ProvinceData;
         //private ProvinceDataAcquisition ProvinceData;
         //private CountryDataAcquisition CountryData;
 
         public MapRenderer(ProvinceDataAcquisition modData)
         {
-            ModData = modData;
+            ProvinceData = modData;
         }
         public MapRenderer() { }
 
@@ -41,20 +41,19 @@ namespace Paradox_Editor.Handlers
             {
                 var rawPixel = pixels[index];
 
-                ModData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
-                var province = ModData.GetProvince((uint)provinceID);
+                ProvinceData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
+                var province = ProvinceData.GetProvince((uint)provinceID);
 
                 bool foundOwner = false;
 
                 if (!string.IsNullOrEmpty(province?.Owner))
                 {
-                    foundOwner = ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
-                    ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out var countryColor);
-                    pixels[index] = GetRawColor(countryColor);
+                    foundOwner = ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out var country);
+                    pixels[index] = GetRawColor(country.GetColor());
                 }
                 else
                 {
-                    if (ModData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true) //Checking if province is History
+                    if (ProvinceData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true) //Checking if province is History
                         pixels[index] = GetRawColor(Colors.Black); //Uncolonized
                     else
                         pixels[index] = GetRawColor(Colors.White); //Ocean
@@ -122,15 +121,15 @@ namespace Paradox_Editor.Handlers
             var overWrittenPixels = (uint*)overWrittenMap.BackBuffer;
             var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
 
-            ModData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
-            var province = ModData.GetProvince((uint)provinceID);
+            ProvinceData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
+            var province = ProvinceData.GetProvince((uint)provinceID);
 
             Color countryColor;
 
             if (province.Owner != null)
             {
-                ModData.GetTagsToCountryNames().TryGetValue(province.Owner, out var countryTAG);
-                ModData.GetCountryNamesToColours().TryGetValue(countryTAG, out countryColor);
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out var country);
+                countryColor = country.GetColor();
             }
             else
                 countryColor = Colors.Black;

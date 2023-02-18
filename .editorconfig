@@ -11,3 +11,12 @@ dotnet_diagnostic.IDE0022.severity = none
 
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = silent
+
+# IDE0003: Remove qualification
+dotnet_diagnostic.IDE0003.severity = none
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = none
+
+# CS0169: The field 'Country.Religion' is never used
+dotnet_diagnostic.CS0169.severity = none

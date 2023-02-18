@@ -1,4 +1,17 @@
-﻿[] Environment = WPF with .NET 5.0 core
+﻿My Github Email: 11780262+LukeZurg22@users.noreply.github.com
+[] Environment = WPF with .NET 5.0 core
+
+FALLBACK IMPLEMENTATIONS:
+- government
+- pop types
+- technologies
+- cultures (if there is no override)
+- countries
+- reforms
+- ideologies (for upper house)
+- provinces
+o Perhaps the .mod will help specify overrides?
+
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
@@ -11,8 +24,14 @@
 
 keys and strings must be put into ""s.
 Add type: continent, which is read from the game.
+    * Filter for all the continents
 Implement Multi-Selectable Provinces
 When clicking countries; differentiate the countries; not between the colours alone. (Issue is that selecting a colour selects all identicals)
+Seperate cultures into its own data acquisition to accompany the parser?
+Get available Pop Types
+Get technologies & inventions list
+Get all available game governments
+Goods Editing?
 
 comments must be removed. # indicates comment until newline.
 
