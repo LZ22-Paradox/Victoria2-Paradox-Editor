@@ -54,12 +54,12 @@ namespace Paradox_Editor
             //Load Province Map
             InvertCanvas(mapCanvas);
             var imgs = new ImageSourceConverter(); //Create instance of the image converter
-            if (File.Exists(Path.Combine(ModData.IO_DATA.GetModFolder(), "map", "provinces.bmp")))
+            if (File.Exists(Path.Combine(ModData.MOD_DATA.GetModFolder(), "map", "provinces.bmp")))
             {
-                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.IO_DATA.GetModFolder(), "map", "provinces.bmp")));
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.MOD_DATA.GetModFolder(), "map", "provinces.bmp")));
             } else
             {
-                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.IO_DATA.GetGameDirectory(), "map", "provinces.bmp")));
+                mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "map", "provinces.bmp")));
             }
 
             //Load Political Map

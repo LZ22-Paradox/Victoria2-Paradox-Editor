@@ -17,7 +17,7 @@
                 <TextBox Name="religionBox" Grid.Row="1" Grid.Column="1" Height="25" VerticalAlignment="Top"/>
                 <TextBlock Text="Types:" VerticalAlignment="Top" FontWeight="Bold" Grid.Row="2" Margin="10,0,0,0"/>
                 <Button Name="typesButton" Content="All Pop Types!" Click="typesButton_Click" Grid.Row="2" Grid.Column="1" Height="25" VerticalAlignment="Top" Background="LightGray"/>
-                <TextBox Name="typesBoxLarge" Text="aristocrats; artisans; bureaucrats; capitalists; clergymen; clerks; craftsmen; farmers; labourers; officers; slaves; soldiers" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="70" FontSize="10" VerticalAlignment="Top" Background="White" TextWrapping="Wrap"/>
+                <TextBox Name="typesBoxLarge" Text="aristocrats; artisans; bureaucrats; capitalists; clergymen; clerks; craftsmen; farmers; labourers; officers; slaves; soldiers; serfs" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Height="70" FontSize="10" VerticalAlignment="Top" Background="White" TextWrapping="Wrap"/>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="90"/>

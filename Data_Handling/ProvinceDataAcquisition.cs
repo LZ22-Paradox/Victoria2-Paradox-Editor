@@ -33,8 +33,6 @@ namespace Paradox_Editor.Data_Handling
     {
         private Dictionary<uint, ProvinceFile> Provinces = new();
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
-        private Dictionary<string, string> TagsToCountryNames = new();
-        private Dictionary<string, Color> CountryNamesToColors = new();
         //protected CulturesFile CultureData;
 
         /// <summary>
@@ -50,8 +48,6 @@ namespace Paradox_Editor.Data_Handling
 
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
         public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
-        //public Dictionary<string, string> GetTagsToCountryNames() => TagsToCountryNames;
-        public Dictionary<string, Color> GetCountryNamesToColours() => CountryNamesToColors;
         public ProvinceFile GetProvince(uint provinceID)
         {
             _ = Provinces.TryGetValue(provinceID, out ProvinceFile province);
@@ -64,7 +60,7 @@ namespace Paradox_Editor.Data_Handling
         /// </summary>
         public void GetProvinceHistoryFiles()
         {
-            foreach (string fileEntry in ModData.IO_DATA.GetModDirectories().HistoryProvincePaths)
+            foreach (string fileEntry in ModData.MOD_DATA.GetModDirectories().HistoryProvincePaths)
             {
                 var fileName = Path.GetFileName(fileEntry).Replace(".txt", "");
                 string[] splitName = null;
@@ -110,7 +106,7 @@ namespace Paradox_Editor.Data_Handling
                 HasHeaderRecord = false,
                 MissingFieldFound = null
             };
-            using var reader = new StreamReader(ModData.IO_DATA.GetModDirectories().DefinitionCSVPath);
+            using var reader = new StreamReader(ModData.MOD_DATA.GetModDirectories().DefinitionCSVPath);
             using var csv = new CsvReader(reader, cfg);
             csv.Context.RegisterClassMap<MainCsvIndexSyntax>();
             var records = csv.GetRecords<ProvinceCSVDefinition>();

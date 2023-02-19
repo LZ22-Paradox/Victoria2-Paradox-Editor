@@ -32,7 +32,7 @@ namespace Paradox_Editor.Interfaces
 
         private void typesButton_Click(object sender, RoutedEventArgs e)
         {
-
+            MessageBox.Show("Feature Not Implemented; Can't Read For POP Types");
         }
 
         private void goButton_Click(object sender, RoutedEventArgs e)
@@ -41,6 +41,16 @@ namespace Paradox_Editor.Interfaces
         }
 
         private void clearList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cultureBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void religionBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

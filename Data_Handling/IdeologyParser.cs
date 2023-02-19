@@ -5,18 +5,27 @@ using System.Linq;
 using System.Text;
 using Paradox_Editor.Extensions;
 
-namespace Paradox_Editor.Cultures;
+namespace Paradox_Editor.Ideologys;
 
-public sealed class CulturesFile
+public sealed class IdeologiesFile
 {
-    public Dictionary<string, CultureGroup> Groups { get; } = new();
+    /*
+     * ADD REFORM TYPES
+     * - Modifiers
+     *      o Contain Factors
+     *      o Ruling Party Ideology
+     *      o Militancy
+     *      
+     *          * May Need To Look At Translating Vic2's Modifiers
+     * - Base (Some Integer Value)
+     */
 
-    public static CulturesFile Parse(string directory)
+    public Dictionary<string, IdeologyGroup> Groups { get; } = new();
+
+    public static IdeologiesFile Parse(string path)
     {
-        string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten
-
-        CulturesFile file = new();
-        using StreamReader reader = new(File.OpenRead(culturesCommonFilePath));
+        IdeologiesFile file = new();
+        using StreamReader reader = new(File.OpenRead(path));
         while (true)
         {
             int c = reader.Peek();
@@ -26,22 +35,20 @@ public sealed class CulturesFile
             }
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
-            file.Groups[name] = CultureGroup.Parse(reader);
+            file.Groups[name] = IdeologyGroup.Parse(reader);
         }
         return file;
     }
 }
 
-public sealed class CultureGroup
+public sealed class IdeologyGroup
 {
-    public string Leader { get; set; }
-    public string Unit { get; set; }
-    public Dictionary<string, Culture> Cultures { get; } = new();
-    public string Union { get; set; }
+    //public string Unit { get; set; }
+    public Dictionary<string, Ideology> Ideologies { get; } = new();
 
-    public static CultureGroup Parse(StreamReader reader)
+    public static IdeologyGroup Parse(StreamReader reader)
     {
-        CultureGroup group = new();
+        IdeologyGroup group = new();
         reader.SkipUntil('{');
         reader.SkipWhitespace();
         while (reader.Peek() is not -1 and not '}')
@@ -49,23 +56,13 @@ public sealed class CultureGroup
             string item = reader.ReadUntilWhitespace();
             switch (item)
             {
-                case "leader":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    group.Leader = reader.ReadUntilWhitespace();
-                    break;
-                case "unit":
+                /*case "unit":
                     reader.SkipUntil('=');
                     reader.SkipWhitespace();
                     group.Unit = reader.ReadUntilWhitespace();
-                    break;
-                case "union":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    group.Union = reader.ReadUntilWhitespace();
-                    break;
+                    break;*/
                 default:
-                    group.Cultures[item] = Culture.Parse(reader);
+                    group.Ideologies[item] = Ideology.Parse(reader);
                     break;
             }
             reader.SkipWhitespace();
@@ -75,15 +72,19 @@ public sealed class CultureGroup
     }
 }
 
-public sealed class Culture
+public sealed class Ideology
 {
     public Color Color { get; set; }
+    public string CanReduceMilitary { get; set; }
+    public string Date { get; set; }
+    public string Uncivilized { get; set; }
+
     public List<string> FirstNames { get; } = new();
     public List<string> LastNames { get; } = new();
 
-    public static Culture Parse(StreamReader reader)
+    public static Ideology Parse(StreamReader reader)
     {
-        Culture culture = new();
+        Ideology culture = new();
         reader.SkipUntil('{');
         reader.SkipWhitespace();
         while (reader.Peek() is not -1 and not '}')

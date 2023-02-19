@@ -21,6 +21,7 @@ o Perhaps the .mod will help specify overrides?
             State buildings selected by dropdown
             Rename MainWindow's ModData to ProvinceData
             Napoleon's Legacy Compatability
+            Add Party-Loyalty to province history reading
 
 keys and strings must be put into ""s.
 Add type: continent, which is read from the game.

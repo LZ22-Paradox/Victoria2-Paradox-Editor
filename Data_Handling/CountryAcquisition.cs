@@ -22,6 +22,7 @@ namespace Paradox_Editor.Data_Handling
      * - ADD READING FORCOUNTRY HISTORY DATA
      * - SEE CULTURE PARSER FOR INSPIRATIONS
      * - DONT FORGET CHECKING FOR FALLBACKS
+     * - READ IDEOLOGIES FOR IDEOLOGICAL FLAG COMPARISONS
      */
     public class CountryAcquisition
     {
@@ -94,10 +95,12 @@ namespace Paradox_Editor.Data_Handling
                 string tag = words[0].Trim();
                 string name = words[1].Trim();
                 if (!Countries.ContainsKey(tag)) {
-                    if (CountriesCommonFiles.TryGetValue(name, out string commonFilePath))
+                    if (CountriesCommonFiles.TryGetValue(name, out string commonFilePath) && CountriesHistoryFiles.TryGetValue(tag, out string historyFilePath))
                     {
-                        Country country = new Country(tag, name, commonFilePath);
+                        Country country = new Country(tag, name, commonFilePath, historyFilePath);
                         Countries.Add(tag, country);
+                    } else {
+                        //Possible check for missing common or history file
                     }
                 }
             }

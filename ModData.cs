@@ -11,27 +11,18 @@ namespace Paradox_Editor
 {
     public static class ModData
     {
-        public static IODataAcquisition IO_DATA;
+        public static ModInfoAcquisition MOD_DATA;
         public static ProvinceDataAcquisition PROVINCE_DATA;
 		public static CountryAcquisition COUNTRY_DATA;
-
-		//Cultures & Pops Data
 		public static CulturesFile CULTURES_DATA;
 
         public static void AcquisitionData(string modFolder)
         {
-            IO_DATA = new IODataAcquisition(modFolder);
+            MOD_DATA = new ModInfoAcquisition(modFolder);
             PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
 		    COUNTRY_DATA = new CountryAcquisition(modFolder);
+            CULTURES_DATA = CulturesFile.Parse(modFolder);
         }
-        public static void SetCulturesData(string culturesTextFilePath) => CULTURES_DATA = CulturesFile.Parse(culturesTextFilePath);
 
-
-
-
-        private static void test()
-        {
-            
-        }
 	}
 }

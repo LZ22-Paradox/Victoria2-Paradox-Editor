@@ -59,21 +59,6 @@ namespace Paradox_Editor.Extensions
         }
     }
 
-    public struct HistoryFile //May need removal
-    {
-        public List<string> Owner { get; set; }
-        public List<string> Controller { get; set; }
-        public List<string> Core { get; set; }
-        public List<string> TradeGoods { get; set; }
-        public List<string> LifeRating { get; set; }
-        public List<string> Terrain { get; set; }
-        public List<string> Colonial { get; set; }
-        public List<StateBuilding> State_Building { get; set; }
-        public List<string> Naval_Base { get; set; }
-        public List<string> Fort { get; set; }
-        public List<string> Railroad { get; set; }
-    }
-
     public struct ProvinceCSVDefinition
     {
         public string province { get; set; }
@@ -89,13 +74,7 @@ namespace Paradox_Editor.Extensions
     {
         public string[] PrimaryDirectories { get; set; }
         public string[] HistoryProvincePaths { get; set; }
-        public string CulturesTxt { get; set; }
-
         public string DefinitionCSVPath { get; set; }
-    }
-
-    public class EventModifier {
-    
     }
 
     public class Pop

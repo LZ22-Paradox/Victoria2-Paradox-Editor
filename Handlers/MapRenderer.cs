@@ -49,6 +49,7 @@ namespace Paradox_Editor.Handlers
                 if (!string.IsNullOrEmpty(province?.Owner))
                 {
                     foundOwner = ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out var country);
+                    //Some tags are problematic; see Heirs to Aquitania. May be related to the lack of a Fallback.
                     pixels[index] = GetRawColor(country.GetColor());
                 }
                 else

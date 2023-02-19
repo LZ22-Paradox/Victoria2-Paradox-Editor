@@ -19,7 +19,7 @@ using Paradox_Editor.Cultures;
 namespace Paradox_Editor.Data_Handling
 {
     //For use in important CSV file reading.
-    public class IODataAcquisition
+    public class ModInfoAcquisition
     {
         private string DotModFile; //Unused
 		private string ModName;
@@ -27,8 +27,8 @@ namespace Paradox_Editor.Data_Handling
 		private string ModFolder { get; set; }
 		private DirectoryStructure ModDirectories = new();
 
-        public IODataAcquisition() { }
-        public IODataAcquisition(string directory)
+        public ModInfoAcquisition() { }
+        public ModInfoAcquisition(string directory)
         {
             ModFolder = directory;
             ModDirectories = CollectModData(directory);
@@ -67,8 +67,6 @@ namespace Paradox_Editor.Data_Handling
             {
                 //Handling for if directory equals game mode IE Victoria or EU4 main folder
             }
-
-
         }
 
         public string GetModFolder() => ModFolder;
@@ -83,19 +81,16 @@ namespace Paradox_Editor.Data_Handling
             Debug.WriteLine("Collect Data Called! (Should be only once.)");
             string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
             string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
-            string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten
             string CSVFilePath;
             if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
                 CSVFilePath = Path.Combine(directory, "map", "definition.csv");
             else
                 CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
 
-			ModData.SetCulturesData(culturesCommonFilePath);
-            
+          
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,
-                CulturesTxt = culturesCommonFilePath,
                 DefinitionCSVPath = CSVFilePath,
                 HistoryProvincePaths = historyProvincePaths
             };
