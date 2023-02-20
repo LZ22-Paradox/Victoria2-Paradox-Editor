@@ -1,7 +1,5 @@
-﻿using Paradox_Editor.D_Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace Paradox_Editor.Extensions.Types
@@ -39,7 +37,7 @@ namespace Paradox_Editor.Extensions.Types
         {
             if (!string.IsNullOrWhiteSpace(record.province)) //Faulty. Some provinces bug. (Tested Vanilla Vic2)
             {
-                if (uint.TryParse(record.red.Replace(".",""), out var red) &&
+                if (uint.TryParse(record.red.Replace(".", ""), out var red) &&
                     uint.TryParse(record.green.Replace(".", ""), out var green) &&
                     uint.TryParse(record.blue.Replace(".", ""), out var blue))
                 {
@@ -47,7 +45,7 @@ namespace Paradox_Editor.Extensions.Types
                     this.green = green.ToString();
                     this.blue = blue.ToString();
                     color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
-                    ProvinceName = record.name; //Does not work with Zouar (CSV has misplaced '.')
+                    ProvinceName = record.name;
                     // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
                 }
             }
@@ -73,9 +71,11 @@ namespace Paradox_Editor.Extensions.Types
                         line = line.Substring(0, index);
 
                     var seperatedLines = line.Replace(" ", "").Split('=');
-                    if (seperatedLines.Length < 2) {
+                    if (seperatedLines.Length < 2)
+                    {
                         return;
-                    } else
+                    }
+                    else
                     {
                         key = seperatedLines[0];
                         value = seperatedLines[1];

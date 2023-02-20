@@ -1,9 +1,7 @@
+using Paradox_Editor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using Paradox_Editor.Extensions;
 
 namespace Paradox_Editor.Ideologys;
 

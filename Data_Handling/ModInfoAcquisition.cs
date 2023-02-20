@@ -1,20 +1,7 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using Paradox_Editor.D_Types;
-using System;
-using System.Collections.Generic;
+﻿using Paradox_Editor.Extensions;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Text.RegularExpressions;
-using Paradox_Editor.Extensions.Types;
-using Paradox_Editor.Extensions;
-using System.Windows;
-using Paradox_Editor.Cultures;
 
 namespace Paradox_Editor.Data_Handling
 {
@@ -22,10 +9,10 @@ namespace Paradox_Editor.Data_Handling
     public class ModInfoAcquisition
     {
         private string DotModFile; //Unused
-		private string ModName;
-		private string GameFolder { get; set; }
-		private string ModFolder { get; set; }
-		private DirectoryStructure ModDirectories = new();
+        private string ModName;
+        private string GameFolder { get; set; }
+        private string ModFolder { get; set; }
+        private DirectoryStructure ModDirectories = new();
 
         public ModInfoAcquisition() { }
         public ModInfoAcquisition(string directory)
@@ -52,7 +39,7 @@ namespace Paradox_Editor.Data_Handling
                             case string when line.Contains("nuts"): //Nuts?
                                 break;
                             case string when line.Contains("nuts"): //Nuts?
-								break;
+                                break;
                             default:
                                 break;
                         }
@@ -71,12 +58,12 @@ namespace Paradox_Editor.Data_Handling
 
         public string GetModFolder() => ModFolder;
         public string GetGameDirectory() => GameFolder;
-		public DirectoryStructure GetModDirectories() => ModDirectories;
-		/// <summary>
-		/// Gets Victoria 2's directory paths.
-		/// </summary>
-		/// <param name="directory"></param>
-		public DirectoryStructure CollectModData(string directory)
+        public DirectoryStructure GetModDirectories() => ModDirectories;
+        /// <summary>
+        /// Gets Victoria 2's directory paths.
+        /// </summary>
+        /// <param name="directory"></param>
+        public DirectoryStructure CollectModData(string directory)
         {
             Debug.WriteLine("Collect Data Called! (Should be only once.)");
             string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
@@ -87,7 +74,7 @@ namespace Paradox_Editor.Data_Handling
             else
                 CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
 
-          
+
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,

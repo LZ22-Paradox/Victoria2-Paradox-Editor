@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Paradox_Editor.Extensions.Types
 {
@@ -20,7 +16,7 @@ namespace Paradox_Editor.Extensions.Types
         List<Pop> Pop = new();
         public void TestPop()
         {
-            Pop.Add(new Pop{Profession = "aristocrats", Culture = "scandanavian", Religion = "protestant", Size = 1400000});
+            Pop.Add(new Pop { Profession = "aristocrats", Culture = "scandanavian", Religion = "protestant", Size = 1400000 });
 
             Debug.WriteLine(Pop[0].Culture);
 

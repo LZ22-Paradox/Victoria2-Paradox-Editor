@@ -1,17 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using Paradox_Editor.Cultures;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Color = System.Windows.Media.Color;
 
 namespace Paradox_Editor.Extensions.Types
@@ -37,7 +29,7 @@ namespace Paradox_Editor.Extensions.Types
         string Graphical_Gulture; ///Get Graphical Cultures??
         #endregion
 
-        # region History Data
+        #region History Data
         int Capital;
         string Primary_Culture;
         List<string> Cultures = new();
@@ -91,7 +83,8 @@ namespace Paradox_Editor.Extensions.Types
                 const string reduceMultiSpace = @"[ ]{2,}";
                 newLine = Regex.Replace(newLine.Replace("\t", "").Replace(" ", ""), reduceMultiSpace, " ");
 
-                if (!string.IsNullOrWhiteSpace(newLine)) {
+                if (!string.IsNullOrWhiteSpace(newLine))
+                {
                     string[] splitLine = newLine.Split("=", StringSplitOptions.TrimEntries);
                     string value = splitLine[1];
                     switch (line)
@@ -299,10 +292,13 @@ namespace Paradox_Editor.Extensions.Types
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[0], "[A-Za-z ]", "")),
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[1], "[A-Za-z ]", "")),
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[2], "[A-Za-z ]", "")));
-                    } else //If the country's colour is invalid.
+                    }
+                    else //If the country's colour is invalid.
                         Country_Color = Colors.Black;
 
-                } else if (line.Contains("graphical_culture", StringComparison.Ordinal)) {
+                }
+                else if (line.Contains("graphical_culture", StringComparison.Ordinal))
+                {
                     Graphical_Gulture = splitLine[1];
                 }
             }

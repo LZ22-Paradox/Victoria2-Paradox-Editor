@@ -1,10 +1,6 @@
 ﻿using Paradox_Editor.D_Types;
 using Paradox_Editor.D_Types.Assets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;

@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using Paradox_Editor.Data_Handling;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Threading.Tasks;
-using System;
-using Paradox_Editor.D_Types;
-using Paradox_Editor.Data_Handling;
 
 namespace Paradox_Editor.Handlers
 {
@@ -41,8 +37,10 @@ namespace Paradox_Editor.Handlers
             {
                 var rawPixel = pixels[index];
 
+                //Below being simplified
                 ProvinceData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
                 var province = ProvinceData.GetProvince((uint)provinceID);
+                //ModData.PROVINCE_DATA.GetProvinces().TryGetValue();
 
                 bool foundOwner = false;
 

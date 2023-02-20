@@ -1,18 +1,15 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using Paradox_Editor.D_Types;
+using Paradox_Editor.Extensions;
+using Paradox_Editor.Extensions.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Text.RegularExpressions;
-using Paradox_Editor.Extensions.Types;
-using Paradox_Editor.Extensions;
+using System.Threading.Tasks;
 
 namespace Paradox_Editor.Data_Handling
 {
@@ -76,8 +73,9 @@ namespace Paradox_Editor.Data_Handling
 
                     if (splitName.Length == 1) //Fix for in case name is only a number
                     {
-                        tempProvinceFile.ProvinceFileName = splitName[0].Trim(); 
-                    } else
+                        tempProvinceFile.ProvinceFileName = splitName[0].Trim();
+                    }
+                    else
                     {
                         tempProvinceFile.ProvinceFileName = splitName[1].Trim();
                     }
@@ -120,7 +118,7 @@ namespace Paradox_Editor.Data_Handling
                             Provinces[Convert.ToUInt32(record.province)].AppendFromCSV(record);
                     }
                 });
-            
+
             csv.Dispose();
         }
 

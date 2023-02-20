@@ -1,16 +1,13 @@
+using Paradox_Editor.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using Paradox_Editor.Extensions;
 
 namespace Paradox_Editor.Cultures;
 
 public sealed class CulturesFile
 {
     public Dictionary<string, CultureGroup> Groups { get; } = new();
-
     public static CulturesFile Parse(string directory)
     {
         string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten

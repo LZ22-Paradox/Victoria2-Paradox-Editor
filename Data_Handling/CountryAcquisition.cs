@@ -1,18 +1,6 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using Paradox_Editor.D_Types;
-using System;
+﻿using Paradox_Editor.Extensions.Types;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Text.RegularExpressions;
-using Paradox_Editor.Extensions.Types;
-using Paradox_Editor.Extensions;
 using System.Windows;
 
 namespace Paradox_Editor.Data_Handling
@@ -27,16 +15,17 @@ namespace Paradox_Editor.Data_Handling
     public class CountryAcquisition
     {
         private string CountriesCommonTextFile;
-        private Dictionary<string,string> CountriesCommonFiles = new();
+        private Dictionary<string, string> CountriesCommonFiles = new();
         private Dictionary<string, string> CountriesHistoryFiles = new(); //IN DEVELOPMENT
-        private Dictionary<string, Country> Countries = new(); 
+        private Dictionary<string, Country> Countries = new();
         public CountryAcquisition(string directory)
         {
             //Common Text File
             CountriesCommonTextFile = Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
 
             #region Common Files
-            foreach (string file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories)) { 
+            foreach (string file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories))
+            {
                 string[] splitFile = file.Split('\\');
                 CountriesCommonFiles.Add(splitFile[splitFile.Length - 1].Replace(".txt", ""), file);
             }
@@ -46,7 +35,7 @@ namespace Paradox_Editor.Data_Handling
             foreach (string file in Directory.GetFiles(Path.Combine(directory, "history", "countries"), "*.txt", SearchOption.AllDirectories))
             {
                 string[] splitFile = file.Split('\\');
-                string tag = splitFile[splitFile.Length - 1].Substring(0,3);
+                string tag = splitFile[splitFile.Length - 1].Substring(0, 3);
                 if (!CountriesHistoryFiles.ContainsKey(tag))
                     CountriesHistoryFiles.Add(tag, file);
                 else
@@ -72,7 +61,7 @@ namespace Paradox_Editor.Data_Handling
             #endregion
 
             LoadCountries();
-		}
+        }
 
         public Dictionary<string, Country> GetCountries() => Countries;
         public string GetCountryTextFile() => CountriesCommonTextFile;
@@ -94,12 +83,15 @@ namespace Paradox_Editor.Data_Handling
                 var words = removal.Split('='); //Has the actual country names
                 string tag = words[0].Trim();
                 string name = words[1].Trim();
-                if (!Countries.ContainsKey(tag)) {
+                if (!Countries.ContainsKey(tag))
+                {
                     if (CountriesCommonFiles.TryGetValue(name, out string commonFilePath) && CountriesHistoryFiles.TryGetValue(tag, out string historyFilePath))
                     {
                         Country country = new Country(tag, name, commonFilePath, historyFilePath);
                         Countries.Add(tag, country);
-                    } else {
+                    }
+                    else
+                    {
                         //Possible check for missing common or history file
                     }
                 }
@@ -115,6 +107,6 @@ namespace Paradox_Editor.Data_Handling
             return true; //temp
         }
 
-	}
+    }
 
 }

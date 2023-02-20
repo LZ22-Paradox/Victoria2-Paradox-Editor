@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
-
-namespace Paradox_Editor.Extensions
+﻿namespace Paradox_Editor.Extensions
 {
     public class Core
     {
@@ -25,7 +16,8 @@ namespace Paradox_Editor.Extensions
         }
     }
 
-    public class Building {
+    public class Building
+    {
 
     }
 

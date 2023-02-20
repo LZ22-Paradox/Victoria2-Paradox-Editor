@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Windows;
-using Paradox_Editor.D_Types;
-using Paradox_Editor.Data_Handling;
-using Paradox_Editor.Extensions;
+﻿using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS

@@ -22,6 +22,9 @@ o Perhaps the .mod will help specify overrides?
             Rename MainWindow's ModData to ProvinceData
             Napoleon's Legacy Compatability
             Add Party-Loyalty to province history reading
+            Read dates within country history files
+            Consider Switching province data reading to read CSV file & populate a dictionary of provinces organized by colour.
+                o Province data handling may need an overhaul
 
 keys and strings must be put into ""s.
 Add type: continent, which is read from the game.
@@ -131,10 +134,6 @@ And so on.
 
 #. Add setting for country painting
 
-2. Fix Two Problem Provinces [Vanilla Environment] {Space between ID and name | See DataAcquision for if implemented}
-Problem File(s) | Collection Extractor | 1337  Prome.txt
-Problem File(s) | Collection Extractor | 3246  JanMayen.txt
-
 #. Optimize for performance
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
         o Get provinceColor of province being changed -> change politicalColor to that of the new one, replacing the old color.
@@ -191,10 +190,7 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 
 #. Impliment AUTOMATIC switching between audio soundsets in-program
     - Find differences between VIC2 & EU4 file systems, read for that difference and set the mode accordingly.
-
-#. Add state_building = { } to TextFileExtract. (552 - Cottbus.txt, etc etc.) These are pre-made factories.
-    - These apply to province history files
-
+    
 #. Impliment complex terrain map mode
 
 #. Save game editing
@@ -207,41 +203,9 @@ Problem File(s) | Collection Extractor | 3246  JanMayen.txt
 U Convert Custom Countries into Modded ones (Sounds like it works best in another program? Maybe?).
 U Make a super program. An application combining my Flag Converter, Map Editor & Country Converter.
 
-
 OWN = COUNTRY DIRECTLY *OWNS* IT(province)
 CONTROL = COUNTRY HAS STRIPES OVER IT(province)
 CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 
-        /// <summary>
-        /// 
-        /// - modname/commmon/countries.txt
-        ///PSK		="countries/Pskov.txt"
-        ///MAN		="countries/Mann.txt" *Utilize the filepath it ALREADY GIVES in the textfile
-        ///JAN		="countries/Jan Mayen.txt"
-        ///
-        /// - modname/common/countries/Pskov.
-        ///color = { 240  230  140 } *This is the country colour of Pskov indicated in the file
-        ///
-
-        /// - modname\history\provinces\africa\1688 - Ajdir.txt
-        /// owner = SPA
-        /// controller = SPA
-        /// add_core = SPA
-        /// add_core = MGH
-        /// trade_goods = fish
-        /// life_rating = 35
-        /// colonial = 1
-        /// 
-        /// Country Colors file is for the soldier's uniforms.
-        /// color1 - Part of uniform
-        /// color2 - Part of uniform
-        /// color3 - Part of uniform
-        /// </summary>
-
-
-
-G. Modding idea: Has anyone converted the hoi4 provincemap to Vic2? Let alone any other provincemap.
-
-   //ZBAGI | SPR2(Unavailable for 2 weeks) | tannergooding (PERFORMANCE)\\
    //Salix#2517 - Someone from the Rust server
-   //Windows10CE#8553
+   //Windows10CE#8553 - Also someone from the Rust server

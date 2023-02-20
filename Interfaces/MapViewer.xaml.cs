@@ -1,5 +1,4 @@
 ﻿using ColorPickerControls;
-using Paradox_Editor.Data_Handling;
 using Paradox_Editor.Handlers;
 using System;
 using System.Collections.Generic;
@@ -57,7 +56,8 @@ namespace Paradox_Editor
             if (File.Exists(Path.Combine(ModData.MOD_DATA.GetModFolder(), "map", "provinces.bmp")))
             {
                 mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.MOD_DATA.GetModFolder(), "map", "provinces.bmp")));
-            } else
+            }
+            else
             {
                 mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "map", "provinces.bmp")));
             }
@@ -135,14 +135,14 @@ namespace Paradox_Editor
                     {
                         Populate(mapProvinces, mapPolitical);
                         MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-						Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
+                        Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
                     }
                     else
                     {
                         MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
                         SelectColor(provinceMapSource, mapProvinces.SelectedColor);
                     }
-                    
+
                     break;
                 case 2: //Terrain Map
                     break;
@@ -167,8 +167,8 @@ namespace Paradox_Editor
             flashingSelection.Source = singleProvince;
         }
 
-		#region Map Navigation Controls
-		public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
+        #region Map Navigation Controls
+        public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             foreach (var image in MapModes.Values)
             {
@@ -287,9 +287,9 @@ namespace Paradox_Editor
                 }
             }
         }
-		#endregion
+        #endregion
 
-		public void InvertCanvas(Canvas canvas)
+        public void InvertCanvas(Canvas canvas)
         {
             var flipTrans = new ScaleTransform(); //creates instance for scale
             canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image

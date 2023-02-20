@@ -1,5 +1,4 @@
-﻿using Paradox_Editor.Data_Handling;
-using Paradox_Editor.Extensions;
+﻿using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
 using System;
@@ -19,7 +18,7 @@ namespace Paradox_Editor
     [ToolboxItem(true)]
     public partial class ProvinceInterface : UserControl
     {
-        
+
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private ProvinceFile _currentProvince = new();
         private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
@@ -172,7 +171,8 @@ namespace Paradox_Editor
                         tempFile.Cores.Add(item);
                     }
                 }
-            } else
+            }
+            else
             {
                 tempFile.Cores.Clear();
             }
@@ -183,7 +183,7 @@ namespace Paradox_Editor
             }
             if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
             {
-                file.WriteLine("naval_base = " + NAVALBASEBOX.Text  + "\t");
+                file.WriteLine("naval_base = " + NAVALBASEBOX.Text + "\t");
                 tempFile.Naval_Base = Convert.ToInt16(NAVALBASEBOX.Text);
             }
             if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("\t"))
