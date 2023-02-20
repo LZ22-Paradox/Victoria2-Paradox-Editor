@@ -11,11 +11,16 @@ FALLBACK IMPLEMENTATIONS:
 - ideologies (for upper house)
 - provinces
 o Perhaps the .mod will help specify overrides?
+- continents
 
+-=TO ADD=-
+Read available game continents.
+-   Culture parser will inspire
+Read Regions/States
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
-    ~!FIX : Load all default game countries first before loading modded ones.
+    ~!FIX : Load all default game countries first before loading modded ones; Fallbacks.
             Hitting CTRL-S should un-focus whatever you have in the Province Interface
             Read .mod descriptor to find vanilla override
             State buildings selected by dropdown

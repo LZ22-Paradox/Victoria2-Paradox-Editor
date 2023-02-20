@@ -98,6 +98,11 @@
                 </Grid>
             </TabItem>
 
+            <TabItem Header="Country Editor">
+                <Grid Background="#FFE5E5E5">
+                    <!--Nothing Implmented-->
+                </Grid>
+            </TabItem>
 
         </TabControl>
 
@@ -139,9 +144,6 @@
                 </ListBoxItem.Background>
             </ListBoxItem>
         </ComboBox>
-
-
-        
 
         <ComboBox x:Name="ControlMode" HorizontalAlignment="Left" Grid.Column="1" ToolTip="Settings for program control scheme." Margin="178,12,0,0" VerticalAlignment="Top" Width="150" SelectedIndex="0" SelectionChanged="ChangeControlScheme" Grid.RowSpan="2" Height="22">
             <ListBoxItem x:Name="Mode_Classic" Content="Classic"/>

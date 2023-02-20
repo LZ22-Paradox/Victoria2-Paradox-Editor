@@ -59,6 +59,7 @@ namespace Paradox_Editor.Data_Handling
         public string GetModFolder() => ModFolder;
         public string GetGameDirectory() => GameFolder;
         public DirectoryStructure GetModDirectories() => ModDirectories;
+
         /// <summary>
         /// Gets Victoria 2's directory paths.
         /// </summary>
