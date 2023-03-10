@@ -106,9 +106,20 @@
 
         </TabControl>
 
+        <Expander x:Name="logExpander" Grid.Column="1" Panel.ZIndex="1" HorizontalAlignment="Right" Height="Auto" Header="Expander"
+                  Margin="0,10,15,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="300">
+            <Grid Height="Auto" IsHitTestVisible="False">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF00FF34"/>
+                        <GradientStop Color="#7F0B0B6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <TextBlock Name="logDisplay" Foreground="White"/>
+            </Grid>
+        </Expander>
 
-
-        <Button x:Name="button" Content="SELECT MOD FOLDER" HorizontalAlignment="Center" VerticalAlignment="Top"
+        <Button x:Name="selectModFolderButton" Content="SELECT MOD FOLDER" HorizontalAlignment="Center" VerticalAlignment="Top"
         Width="150" Height="25" Click="SelectMasterFolder_Click" Margin="0,12,0,0" Grid.Column="1" Panel.ZIndex="1" Grid.RowSpan="2"/>
 
         <DataGrid x:Name="fileListView" Margin="20,15,5,10" AlternatingRowBackground="#FFE2E2E2"
@@ -150,6 +161,7 @@
             <ListBoxItem x:Name="Mode_Modern" Content="Modern"/>
             <ListBoxItem x:Name="Mode_PaintDotNet" Content="Paint.NET"/>
         </ComboBox>
+
 
 
     </Grid>

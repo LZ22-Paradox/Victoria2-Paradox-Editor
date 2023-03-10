@@ -36,7 +36,7 @@ namespace Paradox_Editor
         {
             InitializeComponent();
             this.DataContext = this;
-            Set_Save_Icon_To_Saved();
+            SetSaveIconToSaved();
         }
 
         public void UpdateUI()
@@ -97,7 +97,7 @@ namespace Paradox_Editor
                 MapViewer.SetMap(0, new MapRenderer(ModData.PROVINCE_DATA)
                     .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
-                Set_Save_Icon_To_Saved();
+                SetSaveIconToSaved();
             }
             else
             {
@@ -155,7 +155,7 @@ namespace Paradox_Editor
                 file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
                 tempFile.LifeRating = Convert.ToInt16(LIFERATINGBOX.Text);
             }
-            if (!COLONIALBOX.Text.Equals("") && !COLONIALBOX.Text.Equals("0"))
+            if (!COLONIALBOX.Text.Equals(""))
             {
                 file.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
                 tempFile.Colonial = Convert.ToInt16(COLONIALBOX.Text);
@@ -233,7 +233,7 @@ namespace Paradox_Editor
         /// <summary>
         /// Changes the Save Icon to Confirmed Gif
         /// </summary>
-        public void Set_Save_Icon_To_Saved()
+        public void SetSaveIconToSaved()
         {
             var newGif = new BitmapImage(new Uri(@"/Assets/save_confirm_button.gif", UriKind.Relative));
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
@@ -315,7 +315,7 @@ namespace Paradox_Editor
                 Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
                 this.Visibility = Visibility.Hidden;
             }
-            Set_Save_Icon_To_Saved();
+            SetSaveIconToSaved();
         }
 
         private void Interface_Loaded(object sender, RoutedEventArgs e)

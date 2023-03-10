@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using System.Windows.Forms;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -37,6 +38,7 @@ namespace Paradox_Editor
                         timer.Interval = TimeSpan.FromSeconds(0.01);
                         timer.Tick += new EventHandler(Navigator.MoveTimerTick);
                         timer.Start();*/
+
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -44,6 +46,7 @@ namespace Paradox_Editor
             VisualHandler.ConductAssetChange("VIC2");
             mapModeButtons.UpdateMapModeVisibility(1, VisualHandler.MapModeIconSet);
         }
+
 
         public void SelectMasterFolder_Click(object sender, EventArgs e)
         {
@@ -104,5 +107,6 @@ namespace Paradox_Editor
         {
 
         }
+
     }
 }

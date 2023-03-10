@@ -72,6 +72,7 @@ namespace Paradox_Editor.Extensions.Types
         }
         public Country() { }
 
+        ///Old Handler, attempting to get rid of
         private void AssignHistoryFileData(string historyFilePath)
         {
             foreach (string line in File.ReadAllLines(historyFilePath))

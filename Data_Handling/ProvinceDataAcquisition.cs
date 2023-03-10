@@ -30,6 +30,7 @@ namespace Paradox_Editor.Data_Handling
     {
         private Dictionary<uint, ProvinceFile> Provinces = new();
         private Dictionary<uint, int> ColorsToProvinceIDs = new();
+
         //protected CulturesFile CultureData;
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Paradox_Editor.Data_Handling
         /// <param name="directory"></param>
         public ProvinceDataAcquisition(string directory)
         {
-            GetProvinceHistoryFiles();
+            PopulateProvinceHistoryFiles(directory);
             PopulateAppendProvinceCSVData();
             PopulateProvinceColorsToIDs();
         }
@@ -55,9 +56,12 @@ namespace Paradox_Editor.Data_Handling
         /// <summary>
         /// Populates an initial list of history provinces.
         /// </summary>
-        public void GetProvinceHistoryFiles()
+        public void PopulateProvinceHistoryFiles(string directory)
         {
-            foreach (string fileEntry in ModData.MOD_DATA.GetModDirectories().HistoryProvincePaths)
+            string[] historyProvincePaths = 
+                Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
+
+            foreach (string fileEntry in historyProvincePaths)
             {
                 var fileName = Path.GetFileName(fileEntry).Replace(".txt", "");
                 string[] splitName = null;

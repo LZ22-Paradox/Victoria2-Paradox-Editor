@@ -10,12 +10,20 @@ namespace Paradox_Editor
         public static CountryAcquisition COUNTRY_DATA;
         public static CulturesFile CULTURES_DATA;
 
+
+
+        public static ContinentFile test_Continent_Data;
+
+
+
         public static void AcquisitionData(string modFolder)
         {
             MOD_DATA = new ModInfoAcquisition(modFolder);
             PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
             COUNTRY_DATA = new CountryAcquisition(modFolder);
             CULTURES_DATA = CulturesFile.Parse(modFolder);
+
+            test_Continent_Data = ContinentFile.Parse(modFolder);
         }
 
     }

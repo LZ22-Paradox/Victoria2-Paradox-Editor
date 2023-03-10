@@ -10,11 +10,10 @@ namespace Paradox_Editor.Data_Handling
     {
         private string DotModFile; //Unused
         private string ModName;
-        private string GameFolder { get; set; }
+        private string GameDirectory { get; set; }
         private string ModFolder { get; set; }
         private DirectoryStructure ModDirectories = new();
 
-        public ModInfoAcquisition() { }
         public ModInfoAcquisition(string directory)
         {
             ModFolder = directory;
@@ -22,14 +21,14 @@ namespace Paradox_Editor.Data_Handling
             if (!directory.Equals(MainWindow.CurrentGameMode)) //May Need Fixing
             {
                 DirectoryInfo modFolder = Directory.GetParent(directory);
-                GameFolder = modFolder.Parent.ToString();
+                GameDirectory = modFolder.Parent.ToString();
                 var modName = Path.GetFileName(ModFolder);
                 var dotMod = (modFolder + "\\" + modName + ".mod");
                 if (File.Exists(dotMod))
                 {
                     var dotModLines = File.ReadAllLines(dotMod);
                     var reg = new Regex(@"(?<=([\'\""])).*?(?=\1)");
-                    foreach (var line in dotModLines)
+                    foreach (var line in dotModLines) //Unfinished
                     {
                         switch (line)
                         {
@@ -57,7 +56,7 @@ namespace Paradox_Editor.Data_Handling
         }
 
         public string GetModFolder() => ModFolder;
-        public string GetGameDirectory() => GameFolder;
+        public string GetGameDirectory() => GameDirectory;
         public DirectoryStructure GetModDirectories() => ModDirectories;
 
         /// <summary>
@@ -68,19 +67,17 @@ namespace Paradox_Editor.Data_Handling
         {
             Debug.WriteLine("Collect Data Called! (Should be only once.)");
             string[] masterFolder = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
-            string[] historyProvincePaths = Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
             string CSVFilePath;
             if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
                 CSVFilePath = Path.Combine(directory, "map", "definition.csv");
             else
-                CSVFilePath = Path.Combine(GameFolder, "map", "definition.csv");
+                CSVFilePath = Path.Combine(GameDirectory, "map", "definition.csv");
 
 
             return new DirectoryStructure()
             {
                 PrimaryDirectories = masterFolder,
-                DefinitionCSVPath = CSVFilePath,
-                HistoryProvincePaths = historyProvincePaths
+                DefinitionCSVPath = CSVFilePath
             };
         }
 
