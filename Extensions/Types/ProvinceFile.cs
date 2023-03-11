@@ -32,7 +32,6 @@ namespace Paradox_Editor.Extensions.Types
         public int Railroad { get; set; }
 
         //Population info
-
         public void AppendFromCSV(ProvinceCSVDefinition record)
         {
             if (!string.IsNullOrWhiteSpace(record.province)) //Faulty. Some provinces bug. (Tested Vanilla Vic2)

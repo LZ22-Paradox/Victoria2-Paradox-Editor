@@ -19,6 +19,8 @@ Read available game continents.
 Read Regions/States
 Read POP Data
 
+IdeologyParser & CountryAcquisition not finished
+
 [Definition.csv] - province;red;green;blue;provincename;x
 
     ~!FIX : Load all default game countries first before loading modded ones; Fallbacks.

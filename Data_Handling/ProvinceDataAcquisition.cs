@@ -39,9 +39,15 @@ namespace Paradox_Editor.Data_Handling
         /// <param name="directory"></param>
         public ProvinceDataAcquisition(string directory)
         {
-            PopulateProvinceHistoryFiles(directory);
-            PopulateAppendProvinceCSVData();
-            PopulateProvinceColorsToIDs();
+			var task = Task.Run(() => PopulateProvinceHistoryFiles(directory));
+            task.Wait();
+            task = Task.Run(() => PopulateAppendProvinceCSVData());
+			task.Wait();
+			task = Task.Run(() => PopulateProvinceColorsToIDs());
+			task.Wait();
+			//PopulateProvinceHistoryFiles(directory);
+			//PopulateAppendProvinceCSVData();
+			//PopulateProvinceColorsToIDs();
         }
 
         public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;

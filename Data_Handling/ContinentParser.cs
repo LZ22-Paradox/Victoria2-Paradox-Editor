@@ -8,14 +8,13 @@ using System.Text.RegularExpressions;
 
 namespace Paradox_Editor.Cultures;
 
-public sealed class ContinentFile
+public sealed class ContinentParser
 {
-    public Dictionary<string, Continent> Continents { get; } = new();
-    public static ContinentFile Parse(string directory)
+    public static Dictionary<string, Continent> Parse(string directory)
     {
-        string continentFilePath = Path.Combine(directory, "map", "continent.txt"); //Find if overwritten
+        Dictionary<string, Continent> continents = new();
+		string continentFilePath = Path.Combine(directory, "map", "continent.txt"); //Find if overwritten
 
-        ContinentFile file = new();
         using StreamReader reader = new(File.OpenRead(continentFilePath));
         while (true)
         {
@@ -26,9 +25,12 @@ public sealed class ContinentFile
             }
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
-            file.Continents[name] = Continent.Parse(reader);
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                continents[name] = Continent.Parse(reader);
+            }
         }
-        return file;
+        return continents;
     }
 }
 

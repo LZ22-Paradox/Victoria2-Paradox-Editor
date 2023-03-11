@@ -12,6 +12,13 @@ namespace Paradox_Editor.Interfaces
         {
             InitializeComponent();
         }
+        public void Update()
+        {
+            foreach (var continent in ModData.MAP_DATA.GetContinents())
+            {
+                continentsComboBox.Items.Add(continent.Key);
+            }
+        }
 
         private void deletePopsCheckbox_Checked(object sender, RoutedEventArgs e)
         {

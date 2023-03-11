@@ -65,6 +65,7 @@ namespace Paradox_Editor
             fileListView.ItemsSource = ProvinceData;
 
             mapViewer.LoadMaps();
+            popAdjuster.Update();
         }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
