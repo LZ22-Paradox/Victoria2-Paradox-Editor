@@ -3,27 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Paradox_Editor.Ideologys;
+namespace Paradox_Editor.Parsers;
 
-public sealed class IdeologiesFile
+public sealed class CultureParser
 {
-    /*
-     * ADD REFORM TYPES
-     * - Modifiers
-     *      o Contain Factors
-     *      o Ruling Party Ideology
-     *      o Militancy
-     *      
-     *          * May Need To Look At Translating Vic2's Modifiers
-     * - Base (Some Integer Value)
-     */
-
-    public Dictionary<string, IdeologyGroup> Groups { get; } = new();
-
-    public static IdeologiesFile Parse(string path)
+    public static Dictionary<string, CultureGroup> Parse(string directory)
     {
-        IdeologiesFile file = new();
-        using StreamReader reader = new(File.OpenRead(path));
+        Dictionary<string, CultureGroup> groups = new();
+        string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten
+
+        CultureParser file = new();
+        using StreamReader reader = new(File.OpenRead(culturesCommonFilePath));
         while (true)
         {
             int c = reader.Peek();
@@ -33,20 +23,23 @@ public sealed class IdeologiesFile
             }
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
-            file.Groups[name] = IdeologyGroup.Parse(reader);
+            groups[name] = CultureGroup.Parse(reader);
         }
-        return file;
+        return groups;
     }
 }
 
-public sealed class IdeologyGroup
+public sealed class CultureGroup
 {
-    //public string Unit { get; set; }
-    public Dictionary<string, Ideology> Ideologies { get; } = new();
+    public string Leader { get; set; }
+    public string Unit { get; set; }
+    public string IsOverseas { get; set; }
+    public Dictionary<string, Culture> Cultures { get; } = new();
+    public string Union { get; set; }
 
-    public static IdeologyGroup Parse(StreamReader reader)
+    public static CultureGroup Parse(StreamReader reader)
     {
-        IdeologyGroup group = new();
+        CultureGroup group = new();
         reader.SkipUntil('{');
         reader.SkipWhitespace();
         while (reader.Peek() is not -1 and not '}')
@@ -54,13 +47,28 @@ public sealed class IdeologyGroup
             string item = reader.ReadUntilWhitespace();
             switch (item)
             {
-                /*case "unit":
+                case "leader":
+                    reader.SkipUntil('=');
+                    reader.SkipWhitespace();
+                    group.Leader = reader.ReadUntilWhitespace();
+                    break;
+				case "is_overseas":
+					reader.SkipUntil('=');
+					reader.SkipWhitespace();
+					group.IsOverseas = reader.ReadUntilWhitespace();
+					break;
+				case "unit":
                     reader.SkipUntil('=');
                     reader.SkipWhitespace();
                     group.Unit = reader.ReadUntilWhitespace();
-                    break;*/
+                    break;
+                case "union":
+                    reader.SkipUntil('=');
+                    reader.SkipWhitespace();
+                    group.Union = reader.ReadUntilWhitespace();
+                    break;
                 default:
-                    group.Ideologies[item] = Ideology.Parse(reader);
+                    group.Cultures[item] = Culture.Parse(reader);
                     break;
             }
             reader.SkipWhitespace();
@@ -70,19 +78,15 @@ public sealed class IdeologyGroup
     }
 }
 
-public sealed class Ideology
+public sealed class Culture
 {
     public Color Color { get; set; }
-    public string CanReduceMilitary { get; set; }
-    public string Date { get; set; }
-    public string Uncivilized { get; set; }
-
     public List<string> FirstNames { get; } = new();
     public List<string> LastNames { get; } = new();
 
-    public static Ideology Parse(StreamReader reader)
+    public static Culture Parse(StreamReader reader)
     {
-        Ideology culture = new();
+        Culture culture = new();
         reader.SkipUntil('{');
         reader.SkipWhitespace();
         while (reader.Peek() is not -1 and not '}')

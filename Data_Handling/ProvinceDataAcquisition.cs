@@ -13,31 +13,19 @@ using System.Threading.Tasks;
 
 namespace Paradox_Editor.Data_Handling
 {
-    //For use in important CSV file reading.
-    public sealed class MainCsvIndexSyntax : ClassMap<ProvinceFile>
-    {
-        public MainCsvIndexSyntax()
-        {
-            Map(m => m.ProvinceID).Index(0);
-            Map(m => m.red).Index(1);
-            Map(m => m.green).Index(2);
-            Map(m => m.blue).Index(3);
-            Map(m => m.ProvinceName).Index(4);
-        }
-    }
 
-    public class ProvinceDataAcquisition
+	public class ProvinceDataAcquisition
     {
         private Dictionary<uint, ProvinceFile> Provinces = new();
-        private Dictionary<uint, int> ColorsToProvinceIDs = new();
+		private Dictionary<uint, int> ColorsToProvinceIDs = new();
+		//private Dictionary<uint, PopulationFile> Populations = new();
+		
 
-        //protected CulturesFile CultureData;
-
-        /// <summary>
-        /// Derives directory data extraction from the DataAcquisition parent class.
-        /// </summary>
-        /// <param name="directory"></param>
-        public ProvinceDataAcquisition(string directory)
+		/// <summary>
+		/// Derives directory data extraction from the DataAcquisition parent class.
+		/// </summary>
+		/// <param name="directory"></param>
+		public ProvinceDataAcquisition(string directory)
         {
 			var task = Task.Run(() => PopulateProvinceHistoryFiles(directory));
             task.Wait();
@@ -50,19 +38,20 @@ namespace Paradox_Editor.Data_Handling
 			//PopulateProvinceColorsToIDs();
         }
 
-        public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
-        public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
-        public ProvinceFile GetProvince(uint provinceID)
-        {
-            _ = Provinces.TryGetValue(provinceID, out ProvinceFile province);
-            return province;
-        }
-        public void ReplaceProvince(ProvinceFile province) => Provinces[(uint)province.ProvinceID] = province;
 
-        /// <summary>
-        /// Populates an initial list of history provinces.
-        /// </summary>
-        public void PopulateProvinceHistoryFiles(string directory)
+		public Dictionary<uint, ProvinceFile> GetProvinces() => Provinces;
+		public Dictionary<uint, int> GetColorsToProvinceIDs() => ColorsToProvinceIDs;
+		public ProvinceFile GetProvince(uint provinceID)
+		{
+			_ = Provinces.TryGetValue(provinceID, out ProvinceFile province);
+			return province;
+		}
+		public void ReplaceProvince(ProvinceFile province) => Provinces[(uint)province.ProvinceID] = province;
+
+		/// <summary>
+		/// Populates an initial list of history provinces.
+		/// </summary>
+		public void PopulateProvinceHistoryFiles(string directory)
         {
             string[] historyProvincePaths = 
                 Directory.GetFiles(Path.Combine(directory, "history", "provinces"), "*.txt", SearchOption.AllDirectories);
@@ -92,8 +81,7 @@ namespace Paradox_Editor.Data_Handling
 
                     if (!Provinces.ContainsKey((uint)IDValue))
                     {
-                        Provinces.Add((uint)IDValue, tempProvinceFile);
-                        Provinces[(uint)IDValue].PopulateHistoryData();
+                        Provinces.Add((uint)IDValue, tempProvinceFile.PopulateHistoryData());
                     }
                 }
                 else
@@ -102,6 +90,22 @@ namespace Paradox_Editor.Data_Handling
             }
 
         }
+		
+        #region CSV Data Handling
+		/// <summary>
+		/// For use in important CSV file reading.
+		/// </summary>
+		public sealed class MainCsvIndexSyntax : ClassMap<ProvinceFile>
+		{
+			public MainCsvIndexSyntax()
+			{
+				Map(m => m.ProvinceID).Index(0);
+				Map(m => m.red).Index(1);
+				Map(m => m.green).Index(2);
+				Map(m => m.blue).Index(3);
+				Map(m => m.ProvinceName).Index(4);
+			}
+		}
 
         /// <summary>
         /// Populates existing provinces with CSV colour and filename data.
@@ -131,6 +135,7 @@ namespace Paradox_Editor.Data_Handling
 
             csv.Dispose();
         }
+		#endregion
 
         /// <summary>
         /// Populates dictionary of province colour keys with province ID's.

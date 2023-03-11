@@ -176,7 +176,7 @@ namespace Paradox_Editor
             {
                 tempFile.Cores.Clear();
             }
-            if (!TERRAINBOX.Text.Equals(""))
+            if (!TERRAINBOX.Text.Equals("")) //Simplify this area
             {
                 file.WriteLine("terrain = " + TERRAINBOX.Text);
                 tempFile.Terrain = TERRAINBOX.Text;
@@ -239,7 +239,7 @@ namespace Paradox_Editor
             ImageBehavior.SetAnimatedSource(Save_Button, newGif);
         }
 
-        #region Custom Core and State-Building Handling
+        #region Core and State-Building Button Events
         public void ResetCores(object sender, RoutedEventArgs e)
         {
             Cores.Clear();
@@ -272,7 +272,6 @@ namespace Paradox_Editor
             Interface_Changed(sender, e);
         }
         #endregion
-
 
         static uint GetRawColor(Color color) => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
         /// <summary>

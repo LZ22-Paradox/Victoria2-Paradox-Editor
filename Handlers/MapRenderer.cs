@@ -8,8 +8,6 @@ namespace Paradox_Editor.Handlers
     public class MapRenderer
     {
         private ProvinceDataAcquisition ProvinceData;
-        //private ProvinceDataAcquisition ProvinceData;
-        //private CountryDataAcquisition CountryData;
 
         public MapRenderer(ProvinceDataAcquisition modData)
         {

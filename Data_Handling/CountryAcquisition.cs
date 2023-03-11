@@ -65,6 +65,10 @@ namespace Paradox_Editor.Data_Handling
 
         public Dictionary<string, Country> GetCountries() => Countries;
         public string GetCountryTextFile() => CountriesCommonTextFile;
+
+        /// <summary>
+        /// Reads through the country data from the countries.txt file in the Common Folder.
+        /// </summary>
         public void LoadCountries()
         {
             foreach (var line in File.ReadAllLines(CountriesCommonTextFile))
@@ -92,12 +96,10 @@ namespace Paradox_Editor.Data_Handling
                     }
                     else
                     {
-                        //Possible check for missing common or history file
+                        //Possible check / display message for missing common or history file
                     }
                 }
             }
-
-
         }
 
         public bool VerifyCountryFlags()

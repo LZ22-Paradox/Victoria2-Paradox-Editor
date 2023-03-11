@@ -50,7 +50,7 @@ namespace Paradox_Editor.Extensions.Types
             }
         }
 
-        public void PopulateHistoryData()
+        public ProvinceFile PopulateHistoryData()
         {
             bool isReadingBuildings = false;
             StateBuilding tempStateBuilding = new StateBuilding();
@@ -72,7 +72,7 @@ namespace Paradox_Editor.Extensions.Types
                     var seperatedLines = line.Replace(" ", "").Split('=');
                     if (seperatedLines.Length < 2)
                     {
-                        return;
+                        break;
                     }
                     else
                     {
@@ -149,6 +149,7 @@ namespace Paradox_Editor.Extensions.Types
                 }
             }
             Cores = tempCoresList;
+            return this;
         }
 
     }

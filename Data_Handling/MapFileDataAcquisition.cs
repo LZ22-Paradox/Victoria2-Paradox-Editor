@@ -1,4 +1,4 @@
-﻿using Paradox_Editor.Cultures;
+﻿using Paradox_Editor.Parsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Paradox_Editor.Data_Handling
 {
-	public class MapFileDataAcquisition
+    public class MapFileDataAcquisition
 	{
 		private Dictionary<string, Continent> continents;
 

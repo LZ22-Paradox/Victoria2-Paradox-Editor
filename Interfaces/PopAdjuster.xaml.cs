@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using Paradox_Editor.Parsers;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Paradox_Editor.Interfaces
@@ -14,10 +18,18 @@ namespace Paradox_Editor.Interfaces
         }
         public void Update()
         {
-            foreach (var continent in ModData.MAP_DATA.GetContinents())
+            cultureBox.Items.Clear();
+            continentsComboBox.Items.Clear();
+            continentsComboBox.Items.Add("all continents");
+			foreach (var continent in ModData.MAP_DATA.GetContinents())
             {
                 continentsComboBox.Items.Add(continent.Key);
             }
+            foreach (var culture in ModData.CULTURES_DATA.GetCultures())
+            {
+				cultureBox.Items.Add(culture);
+                cultureSpecifier.Items.Add(culture);
+			}
         }
 
         private void deletePopsCheckbox_Checked(object sender, RoutedEventArgs e)
@@ -25,6 +37,25 @@ namespace Paradox_Editor.Interfaces
 
         }
 
+		private void addToListButton_Click(object sender, RoutedEventArgs e)
+		{
+            if (continentsComboBox.SelectedIndex != -1)
+            {
+                if (continentsComboBox.SelectedIndex == 0)
+                {
+                    //If ALL Continents are selected
+                } else
+                {
+                    ModData.MAP_DATA.GetContinents().TryGetValue(continentsComboBox.Text, out Continent continent);
+                    foreach (var province in continent.Provinces) //Temporary; for testing
+                    {
+                        //Already have a list of province ID's. Now just need to access the POP files.
+                    }
+                    
+                    //If only one continent is selected
+                }
+            }
+		}
         private void typesButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Feature Not Implemented; Can't Read For POP Types");
@@ -49,5 +80,11 @@ namespace Paradox_Editor.Interfaces
         {
 
         }
-    }
+
+		private void cultureBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
+        }
+
+	}
 }

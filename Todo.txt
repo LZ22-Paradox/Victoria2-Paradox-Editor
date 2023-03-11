@@ -1,7 +1,9 @@
 ﻿My Github Email: 11780262+LukeZurg22@users.noreply.github.com
 [] Environment = WPF with .NET 5.0 core
+_________________________________________________________________
 
-FALLBACK IMPLEMENTATIONS:
+
+_________________________FALLBACK DATA IMPLEMENTATIONS________________________
 - government
 - pop types
 - technologies
@@ -12,14 +14,41 @@ FALLBACK IMPLEMENTATIONS:
 - provinces
 o Perhaps the .mod will help specify overrides?
 - continents
+______________________________________________________________________________
 
+
+____________________________TO ADD / IMPLEMENT________________________________
 -=TO ADD=-
-Read available game continents.
--   Culture parser will inspire
 Read Regions/States
-Read POP Data
+
+Read POP Data <=- When reading POP data, search all files for prov id's + other data, then store all ID's in a
+                    dictionary which contain the file's address 
+Pie Chart of combined pop's of selected provinces in PopAdjuster
+Implement Multi-Selectable Provinces
+Get available Pop Types
+Get technologies & inventions list
+Get all available game governments
+Goods Editing? <- See if Possible?
+Fix Saving Control Keybind When New Cores Are Added In History Province GUI
+Add "#" handling in province's PopulateHistoryData()
+Reimplement Stored Opener <- See if Necessary?
+Read CSV for all province data, then override it. NOT history data first! <- See if Necessary?
+Add tracker for provinces most recently edited
+Check if valid tag is entered in cores
+Free up the CTRL key and instead use Right-Click for alternate map access
+
+-=============New Editors=============-
+# : ADD PROVINCE POSITIONS EDITOR
+# : ADD WARS, ALLIANCE, PUPPETS EDITOR
+# : ADD EVENT & DECISIONS EDITING
+# : MAKE MOD SELECTABLE BY .MOD FILE
+#. Add setting for country painting <- Requires Overhaul To Paint Map
+-=====================================-
+______________________________________________________________________________
 
 IdeologyParser & CountryAcquisition not finished
+
+Automatically get localizations for cultures.
 
 [Definition.csv] - province;red;green;blue;provincename;x
 
@@ -35,16 +64,9 @@ IdeologyParser & CountryAcquisition not finished
                 o Province data handling may need an overhaul
 
 keys and strings must be put into ""s.
-Add type: continent, which is read from the game.
-    * Filter for all the continents
-Implement Multi-Selectable Provinces
 When clicking countries; differentiate the countries; not between the colours alone. (Issue is that selecting a colour selects all identicals)
     * Check the provinces for ownership?
 Seperate cultures into its own data acquisition to accompany the parser?
-Get available Pop Types
-Get technologies & inventions list
-Get all available game governments
-Goods Editing?
 
 comments must be removed. # indicates comment until newline.
 
@@ -107,21 +129,6 @@ And so on.
             </Grid>
         </Expander>
 
-    # : ADD PROVINCE POSITIONS EDITOR
-    # : ADD WARS, ALLIANCE, PUPPETS EDITOR
-    # : ADD EVENT & DECISIONS EDITING
-    # : MAKE MOD SELECTABLE BY .MOD FILE
-
-    * Add "#" handling in province's PopulateHistoryData()
-    * Reimplement Stored Opener
-    * Get name of mod folder. Check if Victoria 2 (based on game selected), and load the mod if not.
-    * Read CSV for all province data, then override it. NOT history data first!
-    * If file isn't found, find Vic2's default instead.
-    * Add tracker for provinces most recently edited
-    * Check if valid tag is entered in cores
-
-    (!) Read cultures.txt first before handling anything editing pops.
-        o This is needed for population name and cultures.
     * Pops file "C:\Program Files (x86)\Steam\steamapps\common\Victoria 2\mod\TestEnvironment(DoD)\history\pops"
         o Pops files are labelled by country, but each file contains data based on provinces.
     BAD MOD INCOMPATABILITIES:
@@ -140,7 +147,6 @@ And so on.
     - Have borders for all provinces
     - Add sound-effects to FileInterface buttons
 
-#. Add setting for country painting
 
 #. Optimize for performance
     - A "local render" may help with not having to re-render the entire map when a single province is edited.
@@ -215,5 +221,13 @@ OWN = COUNTRY DIRECTLY *OWNS* IT(province)
 CONTROL = COUNTRY HAS STRIPES OVER IT(province)
 CORES = COUNTRY HAS SOME SPICY CLAIMS TO IT(province)
 
+#SUPPORT FOR DATES IN PROVINCE HISTORY FILE
+1861.1.1 = {
+    owner = FRA
+    controller = FRA
+    colonial = 2
+}
+
    //Salix#2517 - Someone from the Rust server
    //Windows10CE#8553 - Also someone from the Rust server
+
