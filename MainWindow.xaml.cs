@@ -24,7 +24,6 @@ namespace Paradox_Editor
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName)
         { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
-        //Crashes after loading second mod
         private ObservableCollection<ProvinceFile> _provincedata = new();
         public ObservableCollection<ProvinceFile> ProvinceData
         { get => _provincedata; set { _provincedata = value; NotifyPropertyChange(nameof(ProvinceData)); } }
@@ -34,11 +33,6 @@ namespace Paradox_Editor
         {
             InitializeComponent();
             this.DataContext = this;
-            /*            var timer = new DispatcherTimer();
-                        timer.Interval = TimeSpan.FromSeconds(0.01);
-                        timer.Tick += new EventHandler(Navigator.MoveTimerTick);
-                        timer.Start();*/
-
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -66,7 +60,8 @@ namespace Paradox_Editor
 
             mapViewer.LoadMaps();
             popAdjuster.Update();
-        }
+            provinceInterface.Update();
+		}
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
         {

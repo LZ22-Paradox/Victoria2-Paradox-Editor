@@ -36,6 +36,8 @@ Read CSV for all province data, then override it. NOT history data first! <- See
 Add tracker for provinces most recently edited
 Check if valid tag is entered in cores
 Free up the CTRL key and instead use Right-Click for alternate map access
+Search for all of game's goods, then implement reading of building data.
+    * This is for the Province History editor; buildings will be a dropdown menu.
 
 -=============New Editors=============-
 # : ADD PROVINCE POSITIONS EDITOR

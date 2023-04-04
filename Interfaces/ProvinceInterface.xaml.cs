@@ -1,17 +1,24 @@
-﻿using Paradox_Editor.Extensions;
+﻿using Nancy.Extensions;
+using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
+using Paradox_Editor.Parsers;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using WpfAnimatedGif;
+using Color = System.Windows.Media.Color;
 
 namespace Paradox_Editor
 {
@@ -22,13 +29,11 @@ namespace Paradox_Editor
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private ProvinceFile _currentProvince = new();
         private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
-
         public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChange(string propertyName)
         { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
-        //Crashes after loading second mod
         private ObservableCollection<Core> _cores = new();
         public ObservableCollection<Core> Cores
         { get => _cores; set { _cores = value; NotifyPropertyChange(nameof(Cores)); } }
@@ -93,7 +98,7 @@ namespace Paradox_Editor
 
                 PopulateSaveFile(file);
 
-                //vCurrently only refreshes political map
+                //Currently only refreshes political map
                 MapViewer.SetMap(0, new MapRenderer(ModData.PROVINCE_DATA)
                     .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
 
@@ -145,11 +150,15 @@ namespace Paradox_Editor
             {
                 tempFile.Controller = null;
             }
-            if (!TRADEGOODBOX.Text.Equals(""))
+
+            var tradeGoodDropdown = (TRADEGOODBOX.Items.GetItemAt(TRADEGOODBOX.SelectedIndex) as ComboBox);
+			if (tradeGoodDropdown.SelectedIndex != 0)
             {
-                file.WriteLine("trade_goods = " + TRADEGOODBOX.Text);
-                tempFile.TradeGoods = TRADEGOODBOX.Text;
+                string tradeGoodBoxText = tradeGoodDropdown.Text.ToString();
+                file.WriteLine("trade_goods = " + tradeGoodBoxText);
+                tempFile.TradeGoods = tradeGoodBoxText;
             }
+
             if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
             {
                 file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
@@ -212,6 +221,10 @@ namespace Paradox_Editor
                     tempFile.State_Buildings.Add(building);
                 }
             }
+            else
+            {
+				tempFile.State_Buildings.Clear();
+			}
 
             file.Close();
 
@@ -290,8 +303,32 @@ namespace Paradox_Editor
                 OWNERBOX.Text = Convert.ToString(province.Owner);
                 CONTROLLERBOX.Text = Convert.ToString(province.Controller);
                 COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
-                TRADEGOODBOX.Text = Convert.ToString(province.TradeGoods);
-                LIFERATINGBOX.Text = Convert.ToString(province.LifeRating);
+
+                string loggedTradeGood = Convert.ToString(province.TradeGoods);
+                bool breakLoop = false;
+				for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
+				{
+					for (int k = 1; k < TRADEGOODBOX.Items.Count; k++)
+                    {
+						(TRADEGOODBOX.Items.GetItemAt(k) as ComboBox).SelectedIndex = 0;
+					}
+					var goodGroup = TRADEGOODBOX.Items.GetItemAt(i) as ComboBox;
+                    for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
+                    {
+                        if (goodGroup.Items[j].Equals(loggedTradeGood))
+                        {
+							TRADEGOODBOX.SelectedIndex = i;
+							(TRADEGOODBOX.Items.GetItemAt(i) as ComboBox).SelectedIndex = j;
+							breakLoop = true;
+                            break;
+                        }
+                    }
+                    if (breakLoop)
+                        break;
+
+				}
+
+				LIFERATINGBOX.Text = Convert.ToString(province.LifeRating);
                 COLONIALBOX.Text = Convert.ToString(province.Colonial);
                 NAVALBASEBOX.Text = Convert.ToString(province.Naval_Base);
                 TERRAINBOX.Text = Convert.ToString(province.Terrain);
@@ -306,7 +343,7 @@ namespace Paradox_Editor
                 ResetBuildings(sender, e);
                 foreach (var stateBuilding in province.State_Buildings)
                     StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
-
+                
                 this.Visibility = Visibility.Visible;
             }
             else
@@ -329,8 +366,31 @@ namespace Paradox_Editor
                     Save();
         }
 
-        //D_
+		internal void Update()
+		{
+            for (int i = 1; i < TRADEGOODBOX.Items.Count; i++)
+			    TRADEGOODBOX.Items.RemoveAt(i);
 
-    }
+			foreach (var group_of_goods in ModData.MAP_DATA.GetGoods())
+            {
+				ComboBox group_as_combobox = new ComboBox();
+                group_as_combobox.Name = group_of_goods.Key;
+                
+                ComboBoxItem good_item = new ComboBoxItem() //Blank Option
+                { Content = group_of_goods.Key, Focusable= false, IsHitTestVisible = false, IsSelected = true,
+                    HorizontalContentAlignment = HorizontalAlignment.Center, FontWeight= FontWeights.Bold, };
+
+                group_as_combobox.Items.Add(good_item);
+
+                foreach (var good in group_of_goods.Value.Goods.Keys)
+                {
+                    group_as_combobox.Items.Add(good);
+                }
+                
+				TRADEGOODBOX.Items.Add(group_as_combobox);
+            }
+		}
+
+	}
 }
 

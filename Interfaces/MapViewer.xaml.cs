@@ -59,6 +59,7 @@ namespace Paradox_Editor
             }
             else
             {
+                //Line below is a quick n dirty fallback for map image. Reimplement later.
                 mapProvinces.SetValue(Image.SourceProperty, imgs.ConvertFromString(Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "map", "provinces.bmp")));
             }
 
