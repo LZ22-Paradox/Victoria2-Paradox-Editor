@@ -10,10 +10,17 @@ namespace Paradox_Editor.Parsers;
 
 public sealed class ContinentParser
 {
+    public static bool isIncludedInMod = true;
     public static Dictionary<string, Continent> Parse(string directory)
     {
         Dictionary<string, Continent> continents = new();
         string continentFilePath = Path.Combine(directory, "map", "continent.txt"); //Find if overwritten
+
+        if (!Utilities.CheckIfInMod(continentFilePath))
+        {
+            isIncludedInMod = false;
+            continentFilePath = Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "map", "continent.txt"); //Find if overwritten
+        }
 
         using StreamReader reader = new(File.OpenRead(continentFilePath));
         while (true)

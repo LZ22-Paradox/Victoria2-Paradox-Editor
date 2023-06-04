@@ -90,10 +90,10 @@ namespace Paradox_Editor.Extensions.Types
                             tempStateBuilding = new();
                             break;
                         case string when line.StartsWith("owner"):
-                            Owner = value;
+                            Owner = value.RemoveWhitespace();
                             break;
                         case string when line.StartsWith("controller"):
-                            Controller = value;
+                            Controller = value.RemoveWhitespace();
                             break;
                         case string when line.StartsWith("trade_goods"):
                             TradeGoods = value;

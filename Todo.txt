@@ -28,11 +28,8 @@ Implement Multi-Selectable Provinces
 Get available Pop Types
 Get technologies & inventions list
 Get all available game governments
-Goods Editing? <- See if Possible?
 Fix Saving Control Keybind When New Cores Are Added In History Province GUI
 Add "#" handling in province's PopulateHistoryData()
-Reimplement Stored Opener <- See if Necessary?
-Read CSV for all province data, then override it. NOT history data first! <- See if Necessary?
 Add tracker for provinces most recently edited
 Check if valid tag is entered in cores
 Free up the CTRL key and instead use Right-Click for alternate map access
@@ -44,7 +41,7 @@ Search for all of game's goods, then implement reading of building data.
 # : ADD WARS, ALLIANCE, PUPPETS EDITOR
 # : ADD EVENT & DECISIONS EDITING
 # : MAKE MOD SELECTABLE BY .MOD FILE
-#. Add setting for country painting <- Requires Overhaul To Paint Map
+# : Add setting for country painting <- Requires Overhaul To Paint Map
 -=====================================-
 ______________________________________________________________________________
 

@@ -1,21 +1,8 @@
-﻿namespace Paradox_Editor.Extensions
+﻿using System.IO;
+using System.Linq;
+
+namespace Paradox_Editor.Extensions
 {
-    public class Core
-    {
-        private string tag { get; set; }
-
-        public Core(string TAG)
-        {
-            this.TAG = TAG;
-        }
-
-        public string TAG
-        {
-            get => tag;
-            set => tag = value;
-        }
-    }
-
     public class Building
     {
 
@@ -76,9 +63,20 @@
         public string size { get; set; }
     }
 
-    public class Goods //May be useless; see about goods editing
+    public static class Utilities
     {
+        public static string RemoveWhitespace(this string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !System.Char.IsWhiteSpace(c))
+                .ToArray());
+        }
 
+        public static bool CheckIfInMod(string directory)
+        {
+            if (File.Exists(directory))
+                return true;
+            return false;
+        }
     }
-
 }

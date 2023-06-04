@@ -5,17 +5,24 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Forms.Integration;
 
 namespace Paradox_Editor.Parsers;
 
 public sealed class GoodsParser
 {
+	public static bool isIncludedInMod = true;
     public static Dictionary<string, GoodGroup> Parse(string directory)
     {
         Dictionary<string, GoodGroup> goods = new();
-        string continentFilePath = Path.Combine(directory, "common", "goods.txt"); //Find if overwritten
+        string goodsFilePath = Path.Combine(directory, "common", "goods.txt"); //Find if overwritten
+		
+		if (!Utilities.CheckIfInMod(goodsFilePath)) {
+			isIncludedInMod = false;
+            goodsFilePath = Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "common", "goods.txt"); //Find if overwritten
+        }
 
-        using StreamReader reader = new(File.OpenRead(continentFilePath));
+        using StreamReader reader = new(File.OpenRead(goodsFilePath));
         while (true)
         {
             int c = reader.Peek();

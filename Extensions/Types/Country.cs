@@ -19,6 +19,7 @@ namespace Paradox_Editor.Extensions.Types
         #region Meta Data
         string TAG;
         public string GetTAG() => TAG;
+        bool isInMod = false;
         #endregion
 
         # region Common Data
@@ -71,73 +72,6 @@ namespace Paradox_Editor.Extensions.Types
             TestHistoryFileData(historyFilePath); //Formerly AssignHistoryFileData
         }
         public Country() { }
-
-        ///Old Handler, attempting to get rid of
-        private void AssignHistoryFileData(string historyFilePath)
-        {
-            foreach (string line in File.ReadAllLines(historyFilePath))
-            {
-                string newLine = line;
-                int index = newLine.IndexOf("#");
-                if (index >= 0)
-                    newLine = newLine.Substring(0, index);
-                const string reduceMultiSpace = @"[ ]{2,}";
-                newLine = Regex.Replace(newLine.Replace("\t", "").Replace(" ", ""), reduceMultiSpace, " ");
-
-                if (!string.IsNullOrWhiteSpace(newLine))
-                {
-                    string[] splitLine = newLine.Split("=", StringSplitOptions.TrimEntries);
-                    string value = splitLine[1];
-                    switch (line)
-                    {
-                        case string _ when newLine.Contains("capital=", StringComparison.Ordinal):
-                            Capital = int.Parse(value);
-                            break;
-                        case string _ when newLine.Contains("primary_culture=", StringComparison.Ordinal):
-                            Primary_Culture = value;
-                            break;
-                        case string _ when newLine.Contains("culture=", StringComparison.Ordinal):
-                            Cultures.Add(value);
-                            break;
-                        case string _ when newLine.Contains("religion=", StringComparison.Ordinal):
-                            Religion = value;
-                            break;
-                        case string _ when newLine.Contains("government=", StringComparison.Ordinal):
-                            Government = value;
-                            break;
-                        case string _ when newLine.Contains("plurality=", StringComparison.Ordinal):
-                            Plurality = double.Parse(value);
-                            break;
-                        case string _ when newLine.Contains("nationalvalue=", StringComparison.Ordinal):
-                            National_Value = value;
-                            break;
-                        case string _ when newLine.Contains("literacy=", StringComparison.Ordinal):
-                            Literacy = decimal.Parse(value);
-                            break;
-                        case string _ when newLine.Contains("non_state_culture_literacy=", StringComparison.Ordinal):
-                            Non_State_Culture_Literacy = value;
-                            break;
-                        case string _ when newLine.Contains("civilized=", StringComparison.Ordinal):
-                            Civilized = value;
-                            break;
-                        case string _ when newLine.Contains("is_releasable_vassal=", StringComparison.Ordinal):
-                            IsReleasableVassal = value;
-                            break;
-                        case string _ when newLine.Contains("prestige=", StringComparison.Ordinal):
-                            Prestige = int.Parse(value);
-                            break;
-                        case string _ when newLine.Contains("set_country_flag=", StringComparison.Ordinal):
-                            SetCountryFlags.Add(value);
-                            break;
-                        case string _ when newLine.Contains("upper_house=", StringComparison.Ordinal): //working on this
-                            SetCountryFlags.Add(value);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
 
         private void TestHistoryFileData(string historyFilePath)
         {
