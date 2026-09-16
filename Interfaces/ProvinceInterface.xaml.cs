@@ -1,22 +1,15 @@
-﻿using Nancy.Extensions;
-using Paradox_Editor.Extensions;
+﻿using Paradox_Editor.Extensions;
 using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
-using Paradox_Editor.Parsers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography;
 using System.Windows;
-using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Xml.Linq;
 using WpfAnimatedGif;
 using Color = System.Windows.Media.Color;
 
@@ -94,7 +87,7 @@ namespace Paradox_Editor
                 if (File.Exists(CurrentProvince.HistoryFilePath))
                     File.Delete(CurrentProvince.HistoryFilePath);
 
-                var file = File.CreateText(CurrentProvince.HistoryFilePath);
+                StreamWriter file = File.CreateText(CurrentProvince.HistoryFilePath);
 
                 PopulateSaveFile(file);
 
@@ -111,12 +104,12 @@ namespace Paradox_Editor
             }
         }
 
-        void PopulateSaveFile(StreamWriter file)
+        private void PopulateSaveFile(StreamWriter file)
         {
             ProvinceFile tempFile = ModData.PROVINCE_DATA.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
             if (!OWNERBOX.Text.Equals(""))
             {
-                ModData.COUNTRY_DATA.GetCountries().TryGetValue(OWNERBOX.Text, out var country);
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(OWNERBOX.Text, out Country country);
                 if (country != null)
                 {
                     file.WriteLine("owner = " + OWNERBOX.Text);
@@ -134,7 +127,7 @@ namespace Paradox_Editor
             }
             if (!CONTROLLERBOX.Text.Equals(""))
             {
-                ModData.COUNTRY_DATA.GetCountries().TryGetValue(CONTROLLERBOX.Text, out var country);
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(CONTROLLERBOX.Text, out Country country);
                 if (country != null)
                 {
                     file.WriteLine("controller = " + CONTROLLERBOX.Text);
@@ -286,7 +279,7 @@ namespace Paradox_Editor
         }
         #endregion
 
-        static uint GetRawColor(Color color) => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
+        private static uint GetRawColor(Color color) => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
         /// <summary>
         /// Extrapolates province data from a given colour and fills the province interface with the said-data.
         /// </summary>
@@ -338,10 +331,10 @@ namespace Paradox_Editor
                 object sender = this; RoutedEventArgs e = new();
 
                 ResetCores(sender, e);
-                foreach (var core in province.Cores) //Populates Core List
+                foreach (Core core in province.Cores) //Populates Core List
                     Cores.Add(core);
                 ResetBuildings(sender, e);
-                foreach (var stateBuilding in province.State_Buildings)
+                foreach (StateBuilding stateBuilding in province.State_Buildings)
                     StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
                 
                 this.Visibility = Visibility.Visible;

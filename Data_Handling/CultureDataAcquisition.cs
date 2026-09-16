@@ -1,27 +1,19 @@
 ﻿using Paradox_Editor.Parsers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Paradox_Editor.Data_Handling
 {
     public class CultureDataAcquisition
 	{
-		private List<string> cultures = new();
-
-		private Dictionary<string, CultureGroup> cultureGroups = new();
+		private readonly List<string> cultures = new();
 
 		public CultureDataAcquisition(string directory)
 		{
-			cultureGroups = CultureParser.Parse(directory);
+			var cultureGroups = CultureParser.Parse(directory);
 			foreach (var cultureGroup in cultureGroups)
+			foreach (var culture in cultureGroup.Value.Cultures.Keys)
 			{
-				foreach (var culture in cultureGroup.Value.Cultures.Keys)
-				{
-					cultures.Add(culture);
-				}
+				cultures.Add(culture);
 			}
 			cultures.Sort();
 		}

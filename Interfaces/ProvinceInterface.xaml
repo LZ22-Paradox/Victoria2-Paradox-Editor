@@ -298,7 +298,7 @@
         </ScrollViewer>
 
         <Image x:Name="background" Source="/Assets/VIC2/Images/provinceInterface.png"
-               Grid.RowSpan="6" Grid.Row="0" Grid.ColumnSpan="3" Stretch="Fill" Panel.ZIndex="-1"/>
+               Grid.RowSpan="6" Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0" Stretch="Fill" Panel.ZIndex="-1"/>
     </Grid>
 
 </UserControl>

@@ -16,8 +16,8 @@ namespace Paradox_Editor.Data_Handling
 
 	public class ProvinceDataAcquisition
     {
-        private Dictionary<uint, ProvinceFile> Provinces = new();
-		private Dictionary<uint, int> ColorsToProvinceIDs = new();
+        private readonly Dictionary<uint, ProvinceFile> Provinces = new();
+		private readonly Dictionary<uint, int> ColorsToProvinceIDs = new();
 		//private Dictionary<uint, PopulationFile> Populations = new();
 		
 
@@ -27,7 +27,7 @@ namespace Paradox_Editor.Data_Handling
 		/// <param name="directory"></param>
 		public ProvinceDataAcquisition(string directory)
         {
-			var task = Task.Run(() => PopulateProvinceHistoryFiles(directory));
+			Task task = Task.Run(() => PopulateProvinceHistoryFiles(directory));
             task.Wait();
             task = Task.Run(() => PopulateAppendProvinceCSVData());
 			task.Wait();

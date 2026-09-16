@@ -153,6 +153,6 @@ public record struct Color(byte r, byte b, byte g)
             nums[i] = byte.Parse(reader.ReadUntil(' ', '}'));
         }
         reader.SkipUntil('}');
-        return new(nums[0], nums[1], nums[2]);
+        return new Color(nums[0], nums[1], nums[2]);
     }
 }

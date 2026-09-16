@@ -1,4 +1,5 @@
-﻿using Paradox_Editor.Extensions.Types;
+﻿using System;
+using Paradox_Editor.Extensions.Types;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -14,50 +15,56 @@ namespace Paradox_Editor.Data_Handling
      */
     public class CountryAcquisition
     {
-        private string CountriesCommonTextFile;
-        private Dictionary<string, string> CountriesCommonFiles = new();
-        private Dictionary<string, string> CountriesHistoryFiles = new(); //IN DEVELOPMENT
-        private Dictionary<string, Country> Countries = new();
+        private readonly string CountriesCommonTextFile;
+        private readonly Dictionary<string, string> CountriesCommonFiles = new();
+        private readonly Dictionary<string, string> CountriesHistoryFiles = new(); //IN DEVELOPMENT
+        private readonly Dictionary<string, Country> Countries = new();
+
         public CountryAcquisition(string directory)
         {
             //Common Text File
-            CountriesCommonTextFile = Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
+            CountriesCommonTextFile =
+                Path.Combine(directory, "common", "countries.txt"); //Find countries from vanilla that are overwritten
 
             #region Common Files
-            foreach (string file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt", SearchOption.AllDirectories))
+
+            foreach (string file in Directory.GetFiles(Path.Combine(directory, "common", "countries"), "*.txt",
+                         SearchOption.AllDirectories))
             {
                 string[] splitFile = file.Split('\\');
-                CountriesCommonFiles.Add(splitFile[splitFile.Length - 1].Replace(".txt", ""), file);
+                CountriesCommonFiles.Add(splitFile[^1].Replace(".txt", ""), file);
             }
+
             #endregion
 
             #region History Files
-            foreach (string file in Directory.GetFiles(Path.Combine(directory, "history", "countries"), "*.txt", SearchOption.AllDirectories))
+
+            var countryFiles = Directory.GetFiles(Path.Combine(directory, "history", "countries"), 
+                "*.txt",SearchOption.AllDirectories);
+            foreach (string file in countryFiles)
             {
                 string[] splitFile = file.Split('\\');
-                string tag = splitFile[splitFile.Length - 1].Substring(0, 3);
-                if (!CountriesHistoryFiles.ContainsKey(tag))
-                    CountriesHistoryFiles.Add(tag, file);
-                else
+                string tag = splitFile[^1][..3];
+                if (CountriesHistoryFiles.TryAdd(tag, file))
+                    continue;
+                
+                string[] testLine = File.ReadAllLines(file);
+                MessageBox.Show("Duplicate Tag in History Files: " + tag);
+                if (testLine.Length == 0)
+                    continue;
+                    
+                CountriesHistoryFiles.TryGetValue(tag, out var alreadyInsertedCountry);
+                if (alreadyInsertedCountry != null)
                 {
-                    string[] testLine = File.ReadAllLines(file);
-                    MessageBox.Show("Duplicate Tag in History Files: " + tag);
-                    if (testLine.Length == 0)
+                    string[] newTestLine = File.ReadAllLines(alreadyInsertedCountry);
+                    if (newTestLine.Length != 0)
                         continue;
-                    else
-                    {
-                        CountriesHistoryFiles.TryGetValue(tag, out var alreadyInsertedCountry);
-                        string[] newTestLine = File.ReadAllLines(alreadyInsertedCountry);
-                        if (newTestLine.Length != 0)
-                            continue;
-                        else
-                        {
-                            CountriesHistoryFiles.Remove(tag);
-                            CountriesHistoryFiles.Add(tag, file);
-                        }
-                    }
                 }
+
+                CountriesHistoryFiles.Remove(tag);
+                CountriesHistoryFiles.Add(tag, file);
             }
+
             #endregion
 
             LoadCountries();
@@ -74,12 +81,12 @@ namespace Paradox_Editor.Data_Handling
             foreach (var line in File.ReadAllLines(CountriesCommonTextFile))
             {
                 var input = line.Trim();
-                var index = input.IndexOf("#");
+                var index = input.IndexOf("#", StringComparison.Ordinal);
                 if (index >= 0)
-                    input = input.Substring(0, index);
-                index = input.IndexOf("dynamic_tags");
+                    input = input[..index];
+                index = input.IndexOf("dynamic_tags", StringComparison.Ordinal);
                 if (index >= 0)
-                    input = input.Substring(0, index);
+                    input = input[..index];
                 if (string.IsNullOrEmpty(input))
                     continue;
 
@@ -87,18 +94,17 @@ namespace Paradox_Editor.Data_Handling
                 var words = removal.Split('='); //Has the actual country names
                 string tag = words[0].Trim();
                 string name = words[1].Trim();
-                if (!Countries.ContainsKey(tag))
-                {
-                    if (CountriesCommonFiles.TryGetValue(name, out string commonFilePath) && CountriesHistoryFiles.TryGetValue(tag, out string historyFilePath))
-                    {
-                        Country country = new Country(tag, name, commonFilePath, historyFilePath);
-                        Countries.Add(tag, country);
-                    }
-                    else
-                    {
-                        //Possible check / display message for missing common or history file
-                    }
-                }
+
+                if (Countries.ContainsKey(tag))
+                    continue; // Possible implementation for fallbacks HERE
+
+                if (!CountriesCommonFiles.TryGetValue(name, out string commonFilePath) ||
+                    !CountriesHistoryFiles.TryGetValue(tag, out string historyFilePath))
+                    continue;
+
+                var country = new Country(tag, name, commonFilePath, historyFilePath);
+                Countries.Add(tag, country);
+                //Possible check / display message for missing common or history file
             }
         }
 
@@ -108,7 +114,5 @@ namespace Paradox_Editor.Data_Handling
             MessageBox.Show("Missing Country Flags!");
             return true; //temp
         }
-
     }
-
 }

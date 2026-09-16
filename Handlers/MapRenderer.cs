@@ -1,24 +1,29 @@
-﻿using Paradox_Editor.Data_Handling;
+﻿using System;
+using Paradox_Editor.Data_Handling;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Paradox_Editor.Extensions.Types;
 
 namespace Paradox_Editor.Handlers
 {
     public class MapRenderer
     {
-        private ProvinceDataAcquisition ProvinceData;
+        private readonly ProvinceDataAcquisition ProvinceData;
 
         public MapRenderer(ProvinceDataAcquisition modData)
         {
             ProvinceData = modData;
         }
-        public MapRenderer() { }
 
-        public uint GetRawColor(Color color) => 0xFFu << 24
-            | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
+        public MapRenderer()
+        {
+        }
+
+        public static uint GetRawColor(Color color) => 0xFFu << 24 | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
 
         #region Drawing Navigatable Maps
+
         /// <summary>
         /// Draws the political map.
         /// </summary>
@@ -33,29 +38,29 @@ namespace Paradox_Editor.Handlers
 
             Parallel.For(0, pixelCount, (index) =>
             {
+                if (pixels == null)
+                    return; // No null pointer exceptions, today!
+
                 var rawPixel = pixels[index];
 
                 //Below being simplified
                 ProvinceData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
-                var province = ProvinceData.GetProvince((uint)provinceID);
-                //ModData.PROVINCE_DATA.GetProvinces().TryGetValue();
-
-                bool foundOwner = false;
+                ProvinceFile province = ProvinceData.GetProvince((uint)provinceID);
 
                 if (!string.IsNullOrEmpty(province?.Owner))
                 {
-                    foundOwner = ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out var country);
-                    //Some tags are problematic; see Heirs to Aquitania. May be related to the lack of a Fallback.
-                    pixels[index] = GetRawColor(country.GetColor());
+                    ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out Country country);
+                    // Some tags are problematic; see Heirs to Aquitania. May be related to the lack of a Fallback.
+                    if (country != null) pixels[index] = GetRawColor(country.GetColor());
                 }
                 else
                 {
-                    if (ProvinceData.GetProvinces().TryGetValue((uint)provinceID, out var provinceFile) == true) //Checking if province is History
-                        pixels[index] = GetRawColor(Colors.Black); //Uncolonized
+                    // Checking if province is History
+                    if (ProvinceData.GetProvinces().TryGetValue((uint)provinceID, out ProvinceFile _))
+                        pixels[index] = GetRawColor(Colors.Black); // Uncolonized
                     else
-                        pixels[index] = GetRawColor(Colors.White); //Ocean
+                        pixels[index] = GetRawColor(Colors.White); // Ocean
                 }
-
             });
             image.Unlock();
             return image;
@@ -63,18 +68,20 @@ namespace Paradox_Editor.Handlers
 
         public void DrawStateMap()
         {
-            //States, aka "regions" are found in ...mod/map/region.txt whilst continent provinces are located in continent.txt
+            // States, aka "regions" are found in ...mod/map/region.txt whilst continent provinces are located in continent.txt
+            throw new NotImplementedException();
         }
 
         public void DrawCultureMap()
         {
-
+            throw new NotImplementedException();
         }
 
         public void DrawPopulationMap()
         {
-
+            throw new NotImplementedException();
         }
+
         #endregion
 
         /// <summary>
@@ -83,7 +90,7 @@ namespace Paradox_Editor.Handlers
         /// <param name="image"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public unsafe WriteableBitmap DrawSelectedProvince(WriteableBitmap image, uint color)
+        public static unsafe WriteableBitmap DrawSelectedProvince(WriteableBitmap image, uint color)
         {
             image.Lock();
             var pixels = (uint*)image.BackBuffer;
@@ -91,12 +98,13 @@ namespace Paradox_Editor.Handlers
 
             Parallel.For(0, pixelCount, (index) =>
             {
+                if (pixels == null)
+                    return;
+
                 var rawPixel = pixels[index];
 
-                if (rawPixel == color)
-                    pixels[index] = GetRawColor(Colors.WhiteSmoke);
-                else
-                    pixels[index] = 0;
+                if (rawPixel == color) pixels[index] = GetRawColor(Colors.WhiteSmoke);
+                else pixels[index] = 0;
             });
 
             image.Unlock();
@@ -110,7 +118,8 @@ namespace Paradox_Editor.Handlers
         /// <param name="overWrittenMap"></param>
         /// <param name="provinceColor"></param>
         /// <returns></returns>
-        public unsafe WriteableBitmap RefreshProvincePolitical(WriteableBitmap provinceMap, WriteableBitmap overWrittenMap, uint provinceColor)
+        public unsafe WriteableBitmap RefreshProvincePolitical(WriteableBitmap provinceMap,
+            WriteableBitmap overWrittenMap, uint provinceColor)
         {
             provinceMap.Lock();
             overWrittenMap.Lock();
@@ -119,28 +128,30 @@ namespace Paradox_Editor.Handlers
             var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
 
             ProvinceData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
-            var province = ProvinceData.GetProvince((uint)provinceID);
+            ProvinceFile province = ProvinceData.GetProvince((uint)provinceID);
 
-            Color countryColor;
+            Color countryColor = Colors.Black;
 
             if (province.Owner != null)
             {
-                ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out var country);
-                countryColor = country.GetColor();
+                ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out Country country);
+                if (country != null)
+                    countryColor = country.GetColor();
             }
-            else
-                countryColor = Colors.Black;
 
             var newColor = GetRawColor(countryColor);
 
             Parallel.For(0, pixelCount, (index) =>
             {
-                var rawPixel = givenPixels[index];
+                if (givenPixels == null)
+                    return;
 
-                if (rawPixel == provinceColor)
-                {
+                var rawPixel = givenPixels[index];
+                if (rawPixel != provinceColor)
+                    return;
+
+                if (overWrittenPixels != null)
                     overWrittenPixels[index] = newColor;
-                }
             });
 
             provinceMap.Unlock();
@@ -148,6 +159,5 @@ namespace Paradox_Editor.Handlers
 
             return overWrittenMap;
         }
-
     }
 }

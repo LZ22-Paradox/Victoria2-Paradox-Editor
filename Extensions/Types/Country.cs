@@ -8,56 +8,53 @@ using Color = System.Windows.Media.Color;
 
 namespace Paradox_Editor.Extensions.Types
 {
-    /*
-     * TODO:
-     * - ADD READING FORCOUNTRY HISTORY DATA
-     * - SEE CULTURE PARSER FOR INSPIRATIONS
-     */
+    // TODO: ADD READING FOR COUNTRY HISTORY DATA
+    // TODO: SEE CULTURE PARSER FOR INSPIRATIONS
 
-    public class Country
+    public partial class Country
     {
-        #region Meta Data
-        string TAG;
-        public string GetTAG() => TAG;
-        bool isInMod = false;
-        #endregion
+        // META DATA
+        public readonly string TAG;
+        private bool isInMod = false;
 
-        # region Common Data
-        string Name;
-        public string GetName() => Name;
-        Color Country_Color;
-        public Color GetColor() => Country_Color;
-        string Graphical_Gulture; ///Get Graphical Cultures??
-        #endregion
+        // COMMON DATA
+        public readonly string Name;
+        private Color CountryColor;
+        public Color GetColor() => CountryColor;
+        private string GraphicalCulture;
 
-        #region History Data
-        int Capital;
-        string Primary_Culture;
-        List<string> Cultures = new();
-        string Religion;
-        string Government; //Make a governments type
-        double Plurality = 0.0;
-        string National_Value; //Make national-value type
-        decimal Literacy = 0.00m; //Decimal so that values > 0.1 are available
-        string Non_State_Culture_Literacy; //Entirely optional; not common in most countries
-        string Civilized;
-        string IsReleasableVassal;
-        int Prestige;
-        string TAG_oob; //For the TAG_oob.txt; not all countries have them
-        List<string> SetCountryFlags = new();
-        #endregion
+        // TODO: Get Graphical Cultures??
+
+        // HISTORY DATA
+        private int Capital; // Province ID.
+        private string PrimaryCulture;
+        private readonly List<string> Cultures = new();
+        private string Religion;
+        private string Government; //Make a governments type
+        private double Plurality = 0.0;
+        private string National_Value; //Make national-value type
+        private decimal Literacy = 0.00m; //Decimal so that values > 0.1 are available
+        private string Non_State_Culture_Literacy; //Entirely optional; not common in most countries
+        private string Civilized;
+        private string IsReleasableVassal;
+        private int Prestige;
+        private string TAG_oob; //For the TAG_oob.txt; not all countries have them
+        private readonly List<string> SetCountryFlags = new();
 
         ///Not Implemented
         //Reforms (get reforms)
 
         //Ruling Party & Upper House
-        string Ruling_Party;
-        string Last_Election; ///Not Implemented
+        private string Ruling_Party;
+
+        private string Last_Election;
+
+        ///Not Implemented
         public Dictionary<string, Ideology> Upper_House { get; set; } = new();
 
         //Starting Consciousness
-        int Consciousness = 0;
-        int NonState_Consciousness = 0;
+        private int Consciousness = 0;
+        private int NonState_Consciousness = 0;
 
         //Technologies ///Need technologies type
 
@@ -69,11 +66,10 @@ namespace Paradox_Editor.Extensions.Types
             TAG = tag;
             Name = name;
             AssignCommonFileData(commonFilePath);
-            TestHistoryFileData(historyFilePath); //Formerly AssignHistoryFileData
+            ParseHistoryData(historyFilePath); //Formerly AssignHistoryFileData
         }
-        public Country() { }
 
-        private void TestHistoryFileData(string historyFilePath)
+        private void ParseHistoryData(string historyFilePath)
         {
             using StreamReader reader = new(File.OpenRead(historyFilePath));
             while (true)
@@ -83,8 +79,9 @@ namespace Paradox_Editor.Extensions.Types
                 {
                     break;
                 }
+
                 reader.SkipWhitespace();
-                string name = reader.ReadUntil(' ');
+                string unused = reader.ReadUntil(' ');
                 Parse(reader);
             }
         }
@@ -105,7 +102,7 @@ namespace Paradox_Editor.Extensions.Types
                     case "primary_culture":
                         reader.SkipUntil('=');
                         reader.SkipWhitespace();
-                        Primary_Culture = reader.ReadUntilWhitespace();
+                        PrimaryCulture = reader.ReadUntilWhitespace();
                         break;
                     case "culture":
                         reader.SkipUntil('=');
@@ -163,82 +160,56 @@ namespace Paradox_Editor.Extensions.Types
                         SetCountryFlags.Add(reader.ReadUntilWhitespace());
                         break;
                     case "upper_house":
-                        List<Ideology> tempIdeologies = new();
-                        tempIdeologies = Ideology.Parse(reader);
+                        var tempIdeologies = Ideology.Parse(reader);
                         foreach (Ideology ideology in tempIdeologies)
                             Upper_House[ideology.Name] = ideology;
                         break;
                     default: //Add implementation for dates
                         break;
                 }
+
                 reader.SkipWhitespace();
             }
+
             reader.Read();
         }
-
-        public sealed class Ideology
-        {
-            public string Name { get; set; }
-            public string Percentage { get; set; }
-            public static List<Ideology> Parse(StreamReader reader)
-            {
-                List<Ideology> ideologyList = new();
-                reader.SkipUntil('{');
-                reader.SkipWhitespace();
-                while (reader.Peek() is not -1 and not '}')
-                {
-                    Ideology ideology = new();
-                    string line = reader.ReadLine();
-                    Regex rgx2 = new Regex("\t|\\s+");
-                    string[] cleanedLine = rgx2.Replace(line, "").Split('=');
-                    ideology.Name = cleanedLine[0];
-                    ideology.Percentage = cleanedLine[1];
-                    ideologyList.Add(ideology);
-                    reader.SkipWhitespace();
-                }
-                reader.Read();
-                return ideologyList;
-            }
-        }
-
-
-
 
         private void AssignCommonFileData(string commonFilePath)
         {
             foreach (string line in File.ReadAllLines(commonFilePath))
             {
                 string[] splitLine = line.Split("=", StringSplitOptions.TrimEntries);
-                if (line.Contains("color =", StringComparison.Ordinal) || line.Contains("color=", StringComparison.Ordinal)) //color = { #  #  # }
+                if (line.Contains("color =", StringComparison.Ordinal) ||
+                    line.Contains("color=", StringComparison.Ordinal)) //color = { #  #  # }
                 {
                     #region Color Handling
+
                     string fixedColorData = splitLine[1].Replace("{", "").Replace("}", "").Trim();
-                    List<string> splitColours = fixedColorData.Split(" ").ToList();
-                    List<string> newSplitColors = new List<string>();
+                    var splitColours = fixedColorData.Split(" ").ToList();
+                    var newSplitColors = new List<string>();
 
                     foreach (string color in splitColours)
                         if (!string.IsNullOrEmpty(color))
                             newSplitColors.Add(color);
+
                     #endregion
 
-                    if (!string.IsNullOrEmpty(splitColours[0]))
-                    { //ColorAsStrings = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-                        this.Country_Color = Color.FromRgb(
+                    //If the country's colour is invalid.
+                    if (string.IsNullOrEmpty(splitColours[0])) CountryColor = Colors.Black;
+                    else
+                    {
+                        //ColorAsStrings = splitColors.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                        CountryColor = Color.FromRgb(
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[0], "[A-Za-z ]", "")),
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[1], "[A-Za-z ]", "")),
                             (byte)Convert.ToInt32(Regex.Replace(newSplitColors[2], "[A-Za-z ]", "")));
                     }
-                    else //If the country's colour is invalid.
-                        Country_Color = Colors.Black;
-
                 }
                 else if (line.Contains("graphical_culture", StringComparison.Ordinal))
                 {
-                    Graphical_Gulture = splitLine[1];
+                    GraphicalCulture = splitLine[1];
                 }
             }
         }
-
-
     }
 }

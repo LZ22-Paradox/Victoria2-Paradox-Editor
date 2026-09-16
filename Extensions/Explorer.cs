@@ -13,7 +13,7 @@ namespace Paradox_Editor.Extensions
             {
                 return null;
             }
-            MessageBox.Show("You selected Filepath: " + dialog.SelectedPath);
+            MessageBox.Show(@"You selected Filepath: " + dialog.SelectedPath);
             Console.WriteLine(dialog.SelectedPath);
             var selectDirectory = dialog.SelectedPath;
 
@@ -27,7 +27,7 @@ namespace Paradox_Editor.Extensions
             if (dialog.ShowDialog() != DialogResult.OK)
                 return null;
 
-            MessageBox.Show("You selected Filepath: " + dialog.FileName);
+            MessageBox.Show(@"You selected Filepath: " + dialog.FileName);
             return dialog.FileName;
         }
 

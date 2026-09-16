@@ -1,24 +1,22 @@
 ﻿using Paradox_Editor.Parsers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 
 namespace Paradox_Editor.Data_Handling
 {
     public class MapFileDataAcquisition
 	{
-		private Dictionary<string, Continent> continents;
-		private Dictionary<string, GoodGroup> goods;
+		private readonly Dictionary<string, Continent> _continents;
+		private readonly Dictionary<string, GoodGroup> _goods;
 
 		public MapFileDataAcquisition(string directory)
 		{
-			continents = ContinentParser.Parse(directory);
-			goods = GoodsParser.Parse(directory);
+			_continents = ContinentParser.Parse(directory);
+			_goods = GoodsParser.Parse(directory);
 		}
 
-		public Dictionary<string, Continent> GetContinents() => continents;
-		public Dictionary<string, GoodGroup> GetGoods() => goods;
+		public ImmutableDictionary<string, Continent> GetContinents() => _continents.ToImmutableDictionary();
+		public ImmutableDictionary<string, GoodGroup> GetGoods() => _goods.ToImmutableDictionary();
 	}
 }

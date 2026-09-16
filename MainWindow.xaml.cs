@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
-using System.Windows.Forms;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -14,25 +13,41 @@ using System.Windows.Forms;
 
 namespace Paradox_Editor
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : INotifyPropertyChanged
     {
-        public ProvinceFile SelectedItem { get; set; } //Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        /// Acquires the data under ProvinceFile; ID, provinceName, Filepath
+        public ProvinceFile SelectedItem { get; set; }
+
         public int CurrentControlMode { get; set; }
         public static string CurrentGameMode { get; set; }
 
         #region Calls / constructors methods allowing Province Data to bind to the History-File-List DataGrid.
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void NotifyPropertyChange(string propertyName)
-        { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private ObservableCollection<ProvinceFile> _provincedata = new();
+
         public ObservableCollection<ProvinceFile> ProvinceData
-        { get => _provincedata; set { _provincedata = value; NotifyPropertyChange(nameof(ProvinceData)); } }
+        {
+            get => _provincedata;
+            set
+            {
+                _provincedata = value;
+                NotifyPropertyChange(nameof(ProvinceData));
+            }
+        }
+
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
         }
 
         private void MainWindow_Load(object _1, EventArgs _2)
@@ -61,7 +76,7 @@ namespace Paradox_Editor
             mapViewer.LoadMaps();
             popAdjuster.Update();
             provinceInterface.Update();
-		}
+        }
 
         public void OpenFileFromList(object sender, RoutedEventArgs e)
         {
@@ -75,11 +90,11 @@ namespace Paradox_Editor
             var game = GameSelectDropdown.SelectedItem.ToString();
             switch (game)
             {
-                case string when game.Contains("Victoria II"):
+                case not null when game.Contains("Victoria II"):
                     SoundHandler.SoundAssetChange("VIC2");
                     VisualHandler.ConductAssetChange("VIC2");
                     break;
-                case string when game.Contains("Europa Universalis IV"):
+                case not null when game.Contains("Europa Universalis IV"):
                     SoundHandler.SoundAssetChange("EU4");
                     VisualHandler.ConductAssetChange("EU4");
                     break;
@@ -95,14 +110,10 @@ namespace Paradox_Editor
         }
 
         private void ChangeControlScheme(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            CurrentControlMode = ControlMode.SelectedIndex;
-        }
+            => CurrentControlMode = ControlMode.SelectedIndex;
 
         private void provinceInterface_Loaded(object sender, RoutedEventArgs e)
         {
-
         }
-
     }
 }

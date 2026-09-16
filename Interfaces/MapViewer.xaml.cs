@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 namespace Paradox_Editor
 {
     [ToolboxItem(true)]
-    public partial class MapViewer : UserControl
+    public partial class MapViewer
     {
         private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
         private Point start;
@@ -39,7 +39,7 @@ namespace Paradox_Editor
 
         public static WriteableBitmap GetMap(int index)
         {
-            var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MapModes[index].Source);
+            WriteableBitmap mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)MapModes[index].Source);
             return mapSource;
         }
 
@@ -64,7 +64,7 @@ namespace Paradox_Editor
             }
 
             //Load Political Map
-            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+            WriteableBitmap provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
             mapPolitical.Source = new MapRenderer(ModData.PROVINCE_DATA).DrawPoliticalMap(provinceMapSource);
 
             //Load D_ Map
@@ -114,8 +114,8 @@ namespace Paradox_Editor
             _ = MapModes.TryGetValue(MainWindow.mapModeButtons.GetMapMode(), out Image mapMode);
             //var mapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapMode.Source); //Map source maybe used for later
 
-            var politicalMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapPolitical.Source);
-            var provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+            WriteableBitmap politicalMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapPolitical.Source);
+            WriteableBitmap provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
 
             switch (MainWindow.mapModeButtons.GetMapMode())
             {
@@ -153,9 +153,9 @@ namespace Paradox_Editor
             SoundHandler.PlayClick();
         }
 
-        void Populate(ImageColorPicker image, ImageColorPicker colorImageSource)
+        private void Populate(ImageColorPicker image, ImageColorPicker colorImageSource)
         {
-            var pickedColor = image.PickColor(colorImageSource); //Split following code into perhaps its own method
+            Color pickedColor = image.PickColor(colorImageSource); //Split following code into perhaps its own method
             MainWindow.provinceInterface.PopulateInterface(pickedColor);
             SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorImageSource.Source), pickedColor);
         }
@@ -163,18 +163,18 @@ namespace Paradox_Editor
         public void SelectColor(WriteableBitmap source, Color selectedColor)
         {
             var tempMapRenderer = new MapRenderer();
-            var singleProvince = tempMapRenderer.DrawSelectedProvince(source,
-                tempMapRenderer.GetRawColor(selectedColor));
+            WriteableBitmap singleProvince = MapRenderer.DrawSelectedProvince(source,
+                MapRenderer.GetRawColor(selectedColor));
             flashingSelection.Source = singleProvince;
         }
 
         #region Map Navigation Controls
         public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            foreach (var image in MapModes.Values)
+            foreach (Image image in MapModes.Values)
             {
-                var p = e.MouseDevice.GetPosition(image);
-                var matrix = image.RenderTransform.Value;
+                Point p = e.MouseDevice.GetPosition(image);
+                Matrix matrix = image.RenderTransform.Value;
 
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 {
@@ -238,10 +238,10 @@ namespace Paradox_Editor
         {
             if (!mapCanvas.IsMouseCaptured) return;
 
-            var end = e.MouseDevice.GetPosition(mapCanvas);
-            foreach (var image in MapModes.Values)
+            Point end = e.MouseDevice.GetPosition(mapCanvas);
+            foreach (Image image in MapModes.Values)
             {
-                var m = image.RenderTransform.Value;
+                Matrix m = image.RenderTransform.Value;
                 m.OffsetX -= (start.X - end.X);
                 m.OffsetY -= (start.Y - end.Y);
                 image.RenderTransform = new MatrixTransform(m);
@@ -262,7 +262,7 @@ namespace Paradox_Editor
 
             if (scrollViewer.IsFocused && MainWindow.ControlMode.SelectedItem.Equals(MainWindow.Mode_Modern))
             {
-                foreach (var (image, matrix) in from image in MapModes.Values let matrix = image.RenderTransform.Value select (image, matrix))
+                foreach ((Image image, Matrix matrix) in from image in MapModes.Values let matrix = image.RenderTransform.Value select (image, matrix))
                 {
                     if (Keyboard.IsKeyDown(Key.W) || Keyboard.IsKeyDown(Key.Up)) //UP
                     {

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Paradox_Editor.Data_Handling
 {
@@ -12,7 +13,7 @@ namespace Paradox_Editor.Data_Handling
         private string ModName;
         private string GameDirectory { get; set; }
         private string ModFolder { get; set; }
-        private DirectoryStructure ModDirectories = new();
+        private readonly DirectoryStructure ModDirectories = new();
 
         public ModInfoAcquisition(string directory)
         {
@@ -21,24 +22,25 @@ namespace Paradox_Editor.Data_Handling
             if (!directory.Equals(MainWindow.CurrentGameMode)) //May Need Fixing
             {
                 DirectoryInfo modFolder = Directory.GetParent(directory);
-                GameDirectory = modFolder.Parent.ToString();
-                var modName = Path.GetFileName(ModFolder);
-                var dotMod = (modFolder + "\\" + modName + ".mod");
+                GameDirectory = modFolder?.Parent?.ToString();
+                ModName = Path.GetFileName(ModFolder);
+                var dotMod = (modFolder + "\\" + ModName + ".mod");
                 if (File.Exists(dotMod))
                 {
                     var dotModLines = File.ReadAllLines(dotMod);
                     var reg = new Regex(@"(?<=([\'\""])).*?(?=\1)");
                     foreach (var line in dotModLines) //Unfinished
                     {
+                        if (string.IsNullOrEmpty(line))
+                            continue;
+                        
                         switch (line)
                         {
-                            case string when line.Contains("name ="):
+                            case not null when line.Contains("name ="):
                                 ModName = reg.Match(line).ToString();
                                 break;
-                            case string when line.Contains("nuts"): //Nuts?
-                                break;
-                            case string when line.Contains("nuts"): //Nuts?
-                                break;
+                            case not null when line.Contains("nuts"): // TEMP: Nuts?
+                            case not null when line.Contains("nuts"): // TEMP: Nuts?
                             default:
                                 break;
                         }
@@ -46,12 +48,12 @@ namespace Paradox_Editor.Data_Handling
                 }
                 else
                 {
-                    //MessageBox.Show("Missing mod file : " + DotModFile);
+                    MessageBox.Show(@"Missing mod file : " + DotModFile);
                 }
             }
             else
             {
-                //Handling for if directory equals game mode IE Victoria or EU4 main folder
+                // TODO: Handling for if directory equals game mode IE Victoria or EU4 main folder
             }
         }
 
@@ -71,8 +73,7 @@ namespace Paradox_Editor.Data_Handling
             if (File.Exists(Path.Combine(directory, "map", "definition.csv")))
                 CSVFilePath = Path.Combine(directory, "map", "definition.csv");
             else
-                CSVFilePath = Path.Combine(GameDirectory, "map", "definition.csv");
-
+                CSVFilePath = Path.Combine(GameDirectory, "map", "definition.csv"); //GameDirectory can somehow end up null here. Implement better check / fallback.
 
             return new DirectoryStructure()
             {

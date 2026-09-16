@@ -1,6 +1,4 @@
 ﻿using Paradox_Editor.Data_Handling;
-using Paradox_Editor.Parsers;
-using System.Security.Authentication;
 
 namespace Paradox_Editor
 {

@@ -54,7 +54,7 @@ namespace ColorPickerControls
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns><c>true</c> if suggested value isn't null; otherwise <c>false</c>.</returns>
-        static bool ValidateSelector(object value)
+        private static bool ValidateSelector(object value)
         {
             return value == null ? false : true;
         }
@@ -122,12 +122,13 @@ namespace ColorPickerControls
         }
 
         #region Position
-        Point position = new Point();
+
+        private Point position = new Point();
         /// <summary>
         /// Gets or sets the Selector Position.
         /// </summary>
         /// <value>The position.</value>
-        Point Position
+        private Point Position
         {
             get { return position; }
             set
@@ -149,7 +150,7 @@ namespace ColorPickerControls
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns></returns>
-        Point RestrictedPosition(Point point)
+        private Point RestrictedPosition(Point point)
         {
             double x = point.X, y = point.Y;
 
@@ -171,7 +172,7 @@ namespace ColorPickerControls
         /// into the element bounds.
         /// </summary>
         /// <param name="pt">The point.</param>
-        void SetPositionIfInBounds(Point pt)
+        private void SetPositionIfInBounds(Point pt)
         {
             if (pt.X >= 0 && pt.X <= ActualWidth && pt.Y >= 0 && pt.Y <= ActualHeight)
             {
@@ -181,12 +182,13 @@ namespace ColorPickerControls
         #endregion Position
 
         #region TargetBitmap
-        RenderTargetBitmap cachedTargetBitmap;
+
+        private RenderTargetBitmap cachedTargetBitmap;
         /// <summary>
         /// Gets the target bitmap for the DrawingImage image Source.
         /// </summary>
         /// <value>The target bitmap.</value>
-        RenderTargetBitmap TargetBitmap
+        private RenderTargetBitmap TargetBitmap
         {
             get
             {
@@ -261,7 +263,7 @@ namespace ColorPickerControls
         /// <see cref="T:System.Windows.Media.Imaging.BitmapSource"/>, but also from the
         /// <see cref="T:System.Windows.Media.DrawingImage"/>.</para>
         /// </remarks>
-        Color PickColor(double x, double y)
+        private Color PickColor(double x, double y)
         {
             if (Source == null)
                 throw new InvalidOperationException("Image Source not set");
