@@ -41,9 +41,9 @@ public class StateBuilding : Building
 public struct ProvinceCSVDefinition
 {
     public string province { get; set; }
-    public string red { get; set; }
-    public string green { get; set; }
-    public string blue { get; set; }
+    public string Red { get; set; }
+    public string Green { get; set; }
+    public string Blue { get; set; }
     public string name { get; set; }
     public string color { get; set; }
 

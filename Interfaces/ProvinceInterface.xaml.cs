@@ -39,12 +39,12 @@ public partial class ProvinceInterface : UserControl
 
     public void UpdateUI()
     {
-        background.Source = VisualHandler.InterfaceAssetSet.Interface_Background;
-        AddCore_Image.Source = VisualHandler.InterfaceAssetSet.Add_Icon;
-        ResetCore_Image.Source = VisualHandler.InterfaceAssetSet.Reset_Icon;
-        AddBuilding_Icon.Source = VisualHandler.InterfaceAssetSet.Add_Icon;
-        ResetBuildings_Icon.Source = VisualHandler.InterfaceAssetSet.Reset_Icon;
-        ExitButton_Image.Source = VisualHandler.InterfaceAssetSet.Exit_Icon;
+        background.Source = VisualHandler.InterfaceAssetSet.InterfaceBackground;
+        AddCore_Image.Source = VisualHandler.InterfaceAssetSet.AddIcon;
+        ResetCore_Image.Source = VisualHandler.InterfaceAssetSet.ResetIcon;
+        AddBuilding_Icon.Source = VisualHandler.InterfaceAssetSet.AddIcon;
+        ResetBuildings_Icon.Source = VisualHandler.InterfaceAssetSet.ResetIcon;
+        ExitButton_Image.Source = VisualHandler.InterfaceAssetSet.ExitIcon;
 
         PROVIDBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
         NAMEBOX.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
@@ -82,7 +82,7 @@ public partial class ProvinceInterface : UserControl
 
     private void Save()
     {
-        if (CurrentProvince.color != 0)
+        if (CurrentProvince.Color != 0)
         {
             if (File.Exists(CurrentProvince.HistoryFilePath))
                 File.Delete(CurrentProvince.HistoryFilePath);
@@ -93,7 +93,7 @@ public partial class ProvinceInterface : UserControl
 
             //Currently only refreshes political map
             MapViewer.SetMap(0, new MapRenderer(ModData.PROVINCE_DATA)
-                .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.color));
+                .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.Color));
 
             SetSaveIconToSaved();
         }

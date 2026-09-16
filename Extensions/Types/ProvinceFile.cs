@@ -6,19 +6,16 @@ namespace Paradox_Editor.Extensions.Types;
 
 public class ProvinceFile
 {
-    //File IO Data
+    // FILE I/O
     public int ProvinceID { get; set; } //✓
     public string ProvinceName { get; set; }
     public string HistoryFilePath { get; set; } //✓
     public string ProvinceFileName { get; set; } //✓
 
-    //IO Needed for CSV Processing (Especially do not touch)
-    public string red { get; set; }
-    public string green { get; set; }
-    public string blue { get; set; }
-    public uint color { get; set; }
+    // IO Needed for CSV Processing (Especially do not touch)
+    public uint Color { get; set; }
 
-    //History Data
+    // HISTORY DATA
     public string Owner { get; set; }
     public string Controller { get; set; }
     public List<Core> Cores = new();
@@ -26,7 +23,7 @@ public class ProvinceFile
     public int LifeRating { get; set; }
     public string Terrain { get; set; }
     public int Colonial { get; set; }
-    public List<StateBuilding> State_Buildings = new();
+    public readonly List<StateBuilding> State_Buildings = new();
     public int Naval_Base { get; set; }
     public int Fort { get; set; }
     public int Railroad { get; set; }
@@ -34,122 +31,122 @@ public class ProvinceFile
     //Population info
     public void AppendFromCSV(ProvinceCSVDefinition record)
     {
-        if (!string.IsNullOrWhiteSpace(record.province)) //Faulty. Some provinces bug. (Tested Vanilla Vic2)
-        {
-            if (uint.TryParse(record.red.Replace(".", ""), out var red) &&
-                uint.TryParse(record.green.Replace(".", ""), out var green) &&
-                uint.TryParse(record.blue.Replace(".", ""), out var blue))
-            {
-                this.red = red.ToString();
-                this.green = green.ToString();
-                this.blue = blue.ToString();
-                color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
-                ProvinceName = record.name;
-                // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
-            }
-        }
+        if (string.IsNullOrWhiteSpace(record.province) ||
+            !uint.TryParse(record.Red.Replace(".", ""), out var red) ||
+            !uint.TryParse(record.Green.Replace(".", ""), out var green) ||
+            !uint.TryParse(record.Blue.Replace(".", ""), out var blue))
+            return;
+
+        // Faulty. Some provinces bug. (Tested Vanilla Vic2)
+        Color = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
+        ProvinceName = record.name;
+        // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
     }
 
     public ProvinceFile PopulateHistoryData()
     {
-        bool isReadingBuildings = false;
-        StateBuilding tempStateBuilding = new StateBuilding();
         List<Core> tempCoresList = new();
         using StreamReader sr = new(HistoryFilePath);
-        string line;
-        while ((line = sr.ReadLine()) != null)
+        while (sr.ReadLine() is { } line)
         {
             string value;
-            string key;
             if (line.Replace("\t", "").Contains("}") || string.IsNullOrWhiteSpace(line))
                 value = null;
             else
             {
-                int index = line.IndexOf("#");
+                int index = line.IndexOf("#", StringComparison.Ordinal);
                 if (index >= 0)
-                    line = line.Substring(0, index);
+                    line = line[..index];
 
                 var seperatedLines = line.Replace(" ", "").Split('=');
                 if (seperatedLines.Length < 2)
-                {
                     break;
-                }
-                else
-                {
-                    key = seperatedLines[0];
-                    value = seperatedLines[1];
-                }
+
+                value = seperatedLines[1];
             }
 
+            // Sofar there are two trees:
+            // - History
+            // ...
+            //   - Building
+            //     ...
+            // ...
             if (isReadingBuildings == false)
-            {
-                switch (line)
-                {
-                    case string when line.StartsWith("state_building"): //Problem: It is ignoring state-buildings!
-                        isReadingBuildings = true;
-                        tempStateBuilding = new();
-                        break;
-                    case string when line.StartsWith("owner"):
-                        Owner = value.RemoveWhitespace();
-                        break;
-                    case string when line.StartsWith("controller"):
-                        Controller = value.RemoveWhitespace();
-                        break;
-                    case string when line.StartsWith("trade_goods"):
-                        TradeGoods = value;
-                        break;
-                    case string when line.StartsWith("life_rating"):
-                        LifeRating = (short)Convert.ToDouble(value);
-                        break;
-                    case string when line.StartsWith("colonial"):
-                        if (int.TryParse(value, out int result))
-                            Colonial = Convert.ToInt16(result);
-                        else if (value.Equals("yes"))
-                            Colonial = Convert.ToInt16(1);
-                        else
-                            Colonial = Convert.ToInt16(0);
-                        break;
-                    case string when line.StartsWith("terrain"):
-                        Terrain = value;
-                        break;
-                    case string when line.StartsWith("add_core"):
-                        tempCoresList.Add(new Core(value));
-                        break;
-                    case string when line.StartsWith("naval_base"):
-                        Naval_Base = Convert.ToInt16(value);
-                        break;
-                    case string when line.StartsWith("fort"):
-                        Fort = Convert.ToInt16(value);
-                        break;
-                    case string when line.StartsWith("railroad"):
-                        Railroad = Convert.ToInt16(value);
-                        break;
-                    default:
-                        break;
-                }
-            }
+                ReadHistoryLines(line, value, tempCoresList);
             else
-            {
-                switch (line)
-                {
-                    case string when line.Contains("level"):
-                        tempStateBuilding.Level = value;
-                        break;
-                    case string when line.Contains("building"):
-                        tempStateBuilding.Building = value;
-                        break;
-                    case string when line.Contains("upgrade"):
-                        tempStateBuilding.Upgrade = value;
-                        break;
-                    default:
-                        State_Buildings.Add(tempStateBuilding);
-                        isReadingBuildings = false;
-                        break;
-                }
-            }
+                ReadBuildingLines(line, value);
         }
+
         Cores = tempCoresList;
         return this;
     }
 
+    private bool isReadingBuildings = false;
+    private StateBuilding tempStateBuilding;
+
+    private void ReadHistoryLines(string line, string value, List<Core> tempCoresList)
+    {
+        switch (line)
+        {
+            // WARN: It is ignoring state-buildings!
+            case not null when line.StartsWith("state_building"):
+                isReadingBuildings = true;
+                tempStateBuilding = new StateBuilding();
+                break;
+            case not null when line.StartsWith("owner"):
+                Owner = value.RemoveWhitespace();
+                break;
+            case not null when line.StartsWith("controller"):
+                Controller = value.RemoveWhitespace();
+                break;
+            case not null when line.StartsWith("trade_goods"):
+                TradeGoods = value;
+                break;
+            case not null when line.StartsWith("life_rating"):
+                LifeRating = (short)Convert.ToDouble(value);
+                break;
+            case not null when line.StartsWith("colonial"):
+                if (int.TryParse(value, out int result))
+                    Colonial = Convert.ToInt16(result);
+                else if (value != null && value.Equals("yes"))
+                    Colonial = Convert.ToInt16(1);
+                else
+                    Colonial = Convert.ToInt16(0);
+                break;
+            case not null when line.StartsWith("terrain"):
+                Terrain = value;
+                break;
+            case not null when line.StartsWith("add_core"):
+                tempCoresList.Add(new Core(value));
+                break;
+            case not null when line.StartsWith("naval_base"):
+                Naval_Base = Convert.ToInt16(value);
+                break;
+            case not null when line.StartsWith("fort"):
+                Fort = Convert.ToInt16(value);
+                break;
+            case not null when line.StartsWith("railroad"):
+                Railroad = Convert.ToInt16(value);
+                break;
+        }
+    }
+
+    private void ReadBuildingLines(string line, string value)
+    {
+        switch (line)
+        {
+            case not null when line.Contains("level"):
+                tempStateBuilding.Level = value;
+                break;
+            case not null when line.Contains("building"):
+                tempStateBuilding.Building = value;
+                break;
+            case not null when line.Contains("upgrade"):
+                tempStateBuilding.Upgrade = value;
+                break;
+            default: // Stop reading buildings.
+                State_Buildings.Add(tempStateBuilding);
+                break;
+        }
+    }
 }

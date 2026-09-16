@@ -16,13 +16,12 @@ public static class VisualHandler
 
     //public MainWindow MainWindow { get; set; } = (MainWindow)System.Windows.Application.Current.MainWindow;
 
-
-    public static void ConductAssetChange(string Gamemode)
+    public static void ConductAssetChange(string gameMode)
     {
-        Brush textColor = Brushes.Black;
-        Brush boxColor = Brushes.White;
+        Brush textColor;
+        Brush boxColor;
 
-        switch (Gamemode)
+        switch (gameMode)
         {
             case "VIC2":
                 IconAssetsPath = @"/Assets/VIC2/Icons/";
@@ -46,31 +45,29 @@ public static class VisualHandler
 
         //<---------------------------------------------->
 
-        MapModeIconSet = new()
+        MapModeIconSet = new MapMode_IconSet
         {
-            PoliticalOff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_PoliticalOff.png", UriKind.Relative)),
-            PoliticalOn = new BitmapImage(new Uri(IconAssetsPath + "mapmode_PoliticalOn.png", UriKind.Relative)),
-            ProvinceOff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_ProvincesOff.png", UriKind.Relative)),
-            ProvinceOn = new BitmapImage(new Uri(IconAssetsPath + "mapmode_ProvincesOn.png", UriKind.Relative)),
-            TerrainOff = new BitmapImage(new Uri(IconAssetsPath + "mapmode_TerrainOff.png", UriKind.Relative)),
-            TerrainOn = new BitmapImage(new Uri(IconAssetsPath + "mapmode_TerrainOn.png", UriKind.Relative))
+            PoliticalOff = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_PoliticalOff.png", UriKind.Relative)),
+            PoliticalOn = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_PoliticalOn.png", UriKind.Relative)),
+            ProvinceOff = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_ProvincesOff.png", UriKind.Relative)),
+            ProvinceOn = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_ProvincesOn.png", UriKind.Relative)),
+            TerrainOff = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_TerrainOff.png", UriKind.Relative)),
+            TerrainOn = new BitmapImage(new Uri($"{IconAssetsPath}mapmode_TerrainOn.png", UriKind.Relative))
         };
 
-        InterfaceAssetSet = new()
+        InterfaceAssetSet = new Interface_AssetSet
         {
-            Add_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_add.png", UriKind.Relative)),
-            Remove_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_remove.png", UriKind.Relative)),
-            Reset_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_reset.png", UriKind.Relative)),
-            Exit_Icon = new BitmapImage(new Uri(IconAssetsPath + "button_exit.png", UriKind.Relative)),
-
-            Interface_Background = new BitmapImage(new Uri(ImageAssetsPath + "provinceInterface.png", UriKind.Relative)),
-
+            AddIcon = new BitmapImage(new Uri($"{IconAssetsPath}button_add.png", UriKind.Relative)),
+            RemoveIcon = new BitmapImage(new Uri($"{IconAssetsPath}button_remove.png", UriKind.Relative)),
+            ResetIcon = new BitmapImage(new Uri($"{IconAssetsPath}button_reset.png", UriKind.Relative)),
+            ExitIcon = new BitmapImage(new Uri($"{IconAssetsPath}button_exit.png", UriKind.Relative)),
+            InterfaceBackground = new BitmapImage(new Uri($"{ImageAssetsPath}provinceInterface.png", UriKind.Relative)),
             TextColor = textColor,
             BoxColor = boxColor
         };
 
-        SolidColorBrush backgroundColor = (SolidColorBrush)InterfaceAssetSet.BoxColor;
-        SolidColorBrush foregroundColor = (SolidColorBrush)InterfaceAssetSet.TextColor;
+        var backgroundColor = (SolidColorBrush)InterfaceAssetSet.BoxColor;
+        var foregroundColor = (SolidColorBrush)InterfaceAssetSet.TextColor;
         Application.Current.Resources["theBackgroundBrush"] = new SolidColorBrush(backgroundColor.Color);
         Application.Current.Resources["theForegroundBrush"] = new SolidColorBrush(foregroundColor.Color);
 

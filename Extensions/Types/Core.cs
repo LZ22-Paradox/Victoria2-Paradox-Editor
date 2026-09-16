@@ -2,7 +2,7 @@
 
 public class Core
 {
-    private string tag { get; set; }
+    private string _tag { get; set; }
 
     public Core(string TAG)
     {
@@ -11,7 +11,7 @@ public class Core
 
     public string TAG
     {
-        get => tag;
-        set => tag = value;
+        get => _tag;
+        set => _tag = value;
     }
 }

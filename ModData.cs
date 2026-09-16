@@ -13,6 +13,7 @@ public static class ModData
 
     public static void AcquisitionData(string modFolder)
     {
+        // WARN: DOES NOT HANDLE MAPS W. CUSTOM PROVINCES. FIX THAT.
         MOD_DATA = new ModInfoAcquisition(modFolder);
         PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
         COUNTRY_DATA = new CountryAcquisition(modFolder);

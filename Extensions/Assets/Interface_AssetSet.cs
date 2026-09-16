@@ -5,11 +5,11 @@ namespace Paradox_Editor.Extensions.Assets;
 
 public class Interface_AssetSet
 {
-    public BitmapImage Add_Icon { get; set; }
-    public BitmapImage Remove_Icon { get; set; }
-    public BitmapImage Reset_Icon { get; set; }
-    public BitmapImage Exit_Icon { get; set; }
-    public BitmapImage Interface_Background { get; set; }
+    public BitmapImage AddIcon { get; set; }
+    public BitmapImage RemoveIcon { get; set; }
+    public BitmapImage ResetIcon { get; set; }
+    public BitmapImage ExitIcon { get; set; }
+    public BitmapImage InterfaceBackground { get; set; }
     public Brush TextColor { get; set; }
     public Brush BoxColor { get; set; }
 
