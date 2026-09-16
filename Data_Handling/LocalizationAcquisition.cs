@@ -1,10 +1,9 @@
-﻿namespace Paradox_Editor.Data_Handling
+﻿namespace Paradox_Editor.Data_Handling;
+
+public class LocalizationAcquisition
 {
-    public class LocalizationAcquisition
-    {
-		public LocalizationAcquisition(string directory)
-		{
+	public LocalizationAcquisition(string directory)
+	{
 			
-		}
 	}
 }
