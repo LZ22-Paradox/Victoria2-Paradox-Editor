@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using Paradox_Editor.Extensions;
 using Color = System.Windows.Media.Color;
 
-namespace Paradox_Editor.Extensions.Types;
+namespace Paradox_Editor.Types;
 // TODO: ADD READING FOR COUNTRY HISTORY DATA
 // TODO: SEE CULTURE PARSER FOR INSPIRATIONS
 

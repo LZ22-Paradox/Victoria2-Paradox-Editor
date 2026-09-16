@@ -167,7 +167,6 @@ And so on.
 
 #. Game-tester button to open the respective game with the mod
     /// "v2game.exe" -mod=mod/GSGVickyMod.mod
-    /// "eu4.exe"    -mod=mod/Mod1Name.mod -mod=mod/Mod2Name.mod
 
 #. Add support for EU4
     - Make map mode Icons dynamic depending on the game selected

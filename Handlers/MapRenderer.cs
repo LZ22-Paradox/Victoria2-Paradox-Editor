@@ -1,25 +1,15 @@
 ﻿using System;
-using Paradox_Editor.Data_Handling;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Paradox_Editor.Extensions.Types;
+using Paradox_Editor.Types;
+
+// ReSharper disable MemberCanBeMadeStatic.Global
 
 namespace Paradox_Editor.Handlers;
 
 public class MapRenderer
 {
-    private readonly ProvinceDataAcquisition ProvinceData;
-
-    public MapRenderer(ProvinceDataAcquisition modData)
-    {
-        ProvinceData = modData;
-    }
-
-    public MapRenderer()
-    {
-    }
-
     public static uint GetRawColor(Color color) => 0xFFu << 24 | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
 
     #region Drawing Navigatable Maps
@@ -33,9 +23,9 @@ public class MapRenderer
     {
         image.Lock();
         var pixels = (uint*)image.BackBuffer;
-
         var pixelCount = image.PixelWidth * image.PixelHeight;
 
+        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
         Parallel.For(0, pixelCount, (index) =>
         {
             if (pixels == null)
@@ -44,19 +34,20 @@ public class MapRenderer
             var rawPixel = pixels[index];
 
             //Below being simplified
-            ProvinceData.GetColorsToProvinceIDs().TryGetValue(rawPixel, out var provinceID);
-            ProvinceFile province = ProvinceData.GetProvince((uint)provinceID);
-
-            if (!string.IsNullOrEmpty(province?.Owner))
+            database.ColorsToProvinceIDs.TryGetValue(rawPixel, out var provinceID);
+            database.TryGetOwner(provinceID, out var owner);
+            if (!string.IsNullOrEmpty(owner))
             {
-                ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out Country country);
-                // Some tags are problematic; see Heirs to Aquitania. May be related to the lack of a Fallback.
-                if (country != null) pixels[index] = GetRawColor(country.GetColor());
+                ModData.Instance.COUNTRY_DATA.GetCountries().TryGetValue(owner, out Country? country);
+                // Some tags are problematic; see Heirs to Aquitania.
+                // TEMP: May be related to the lack of a Fallback for country definitions that rely on vanilla.
+                if (country != null)
+                    pixels[index] = GetRawColor(country.GetColor());
             }
             else
             {
-                // Checking if province is History
-                if (ProvinceData.GetProvinces().TryGetValue((uint)provinceID, out ProvinceFile _))
+                // Checking if province exists. Ocean provinces are not added to the province list.
+                if (database.IsValidLandProvince(provinceID))
                     pixels[index] = GetRawColor(Colors.Black); // Uncolonized
                 else
                     pixels[index] = GetRawColor(Colors.White); // Ocean
@@ -127,14 +118,14 @@ public class MapRenderer
         var overWrittenPixels = (uint*)overWrittenMap.BackBuffer;
         var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
 
-        ProvinceData.GetColorsToProvinceIDs().TryGetValue(provinceColor, out var provinceID);
-        ProvinceFile province = ProvinceData.GetProvince((uint)provinceID);
+        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
+        var provinceID = database.GetIDFromColor(provinceColor);
 
         Color countryColor = Colors.Black;
 
-        if (province.Owner != null)
+        if (database.TryGetOwner(provinceID, out var owner))
         {
-            ModData.COUNTRY_DATA.GetCountries().TryGetValue(province.Owner, out Country country);
+            ModData.Instance.COUNTRY_DATA.GetCountries().TryGetValue(owner, out Country? country);
             if (country != null)
                 countryColor = country.GetColor();
         }

@@ -7,12 +7,13 @@
 	<UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>zorg.ico</ApplicationIcon>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <StartupObject>Paradox_Editor.App</StartupObject>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <NeutralLanguage>en</NeutralLanguage>
     <FileVersion>1.0</FileVersion>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -185,6 +186,12 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Types\Country.Ideology.cs">
+      <DependentUpon>Country.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Types\Good.cs">
+      <DependentUpon>GoodGroup.cs</DependentUpon>
     </Compile>
   </ItemGroup>
 

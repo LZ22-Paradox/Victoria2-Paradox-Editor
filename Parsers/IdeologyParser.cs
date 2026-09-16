@@ -1,10 +1,10 @@
-using Paradox_Editor.Extensions;
 using System.Collections.Generic;
 using System.IO;
+using Paradox_Editor.Extensions;
 
 namespace Paradox_Editor.Parsers;
 
-public sealed class IdeologiesFile
+public sealed class IdeologiesFile // TODO: This all needs work.
 {
     /*
      * ADD REFORM TYPES
@@ -12,7 +12,7 @@ public sealed class IdeologiesFile
      *      o Contain Factors
      *      o Ruling Party Ideology
      *      o Militancy
-     *      
+     *
      *          * May Need To Look At Translating Vic2's Modifiers
      * - Base (Some Integer Value)
      */
@@ -30,10 +30,12 @@ public sealed class IdeologiesFile
             {
                 break;
             }
+
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
             file.Groups[name] = IdeologyGroup.Parse(reader);
         }
+
         return file;
     }
 }
@@ -59,11 +61,13 @@ public sealed class IdeologyGroup
                     group.Unit = reader.ReadUntilWhitespace();
                     break;*/
                 default:
-                    group.Ideologies[item] = Ideology.Parse(reader);
+                    group.Ideologies[item] = Ideology.ReadIdeology(reader);
                     break;
             }
+
             reader.SkipWhitespace();
         }
+
         reader.Read();
         return group;
     }
@@ -71,7 +75,7 @@ public sealed class IdeologyGroup
 
 public sealed class Ideology
 {
-    public Color Color { get; set; }
+    public System.Windows.Media.Color Color { get; set; }
     public string CanReduceMilitary { get; set; }
     public string Date { get; set; }
     public string Uncivilized { get; set; }
@@ -79,7 +83,7 @@ public sealed class Ideology
     public List<string> FirstNames { get; } = new();
     public List<string> LastNames { get; } = new();
 
-    public static Ideology Parse(StreamReader reader)
+    public static Ideology ReadIdeology(StreamReader reader)
     {
         Ideology culture = new();
         reader.SkipUntil('{');
@@ -90,7 +94,7 @@ public sealed class Ideology
             switch (item)
             {
                 case "color":
-                    culture.Color = Color.Parse(reader);
+                    culture.Color = ColorParser.Parse(reader);
                     break;
                 case "first_names":
                     reader.SkipUntil('{');
@@ -106,8 +110,10 @@ public sealed class Ideology
                         {
                             culture.FirstNames.Add(reader.ReadUntilWhitespace());
                         }
+
                         reader.SkipWhitespace();
                     }
+
                     reader.Read();
                     break;
                 case "last_names":
@@ -124,13 +130,17 @@ public sealed class Ideology
                         {
                             culture.LastNames.Add(reader.ReadUntilWhitespace());
                         }
+
                         reader.SkipWhitespace();
                     }
+
                     reader.Read();
                     break;
             }
+
             reader.SkipWhitespace();
         }
+
         reader.Read();
         return culture;
     }

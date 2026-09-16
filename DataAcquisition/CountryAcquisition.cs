@@ -1,24 +1,22 @@
 ﻿using System;
-using Paradox_Editor.Extensions.Types;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Paradox_Editor.Types;
 
-namespace Paradox_Editor.Data_Handling;
+namespace Paradox_Editor.DataAcquisition;
 
 /*
- * TODO:
- * - ADD READING FORCOUNTRY HISTORY DATA
- * - SEE CULTURE PARSER FOR INSPIRATIONS
- * - DONT FORGET CHECKING FOR FALLBACKS
- * - READ IDEOLOGIES FOR IDEOLOGICAL FLAG COMPARISONS
+ * TODO: ADD READING FOR COUNTRY HISTORY DATA
+ * TODO: READ IDEOLOGIES FOR IDEOLOGICAL FLAG COMPARISONS
  */
 public class CountryAcquisition
 {
     private readonly string CountriesCommonTextFile;
     private readonly Dictionary<string, string> CountriesCommonFiles = new();
-    private readonly Dictionary<string, string> CountriesHistoryFiles = new(); //IN DEVELOPMENT
-    private readonly Dictionary<string, Country> Countries = new();
+    private readonly Dictionary<string, string> CountriesHistoryFiles = new(); // WIP: IN DEVELOPMENT
+    private readonly Dictionary<Tag, Country?> Countries = new();
+    private readonly Dictionary<Tag, bool> VanillaCountries = new(); // TODO: Countries borrowed from Vanilla.
 
     public CountryAcquisition(string directory)
     {
@@ -39,20 +37,20 @@ public class CountryAcquisition
 
         #region History Files
 
-        var countryFiles = Directory.GetFiles(Path.Combine(directory, "history", "countries"), 
-            "*.txt",SearchOption.AllDirectories);
+        var countryFiles = Directory.GetFiles(Path.Combine(directory, "history", "countries"),
+            "*.txt", SearchOption.AllDirectories);
         foreach (string file in countryFiles)
         {
             string[] splitFile = file.Split('\\');
             string tag = splitFile[^1][..3];
             if (CountriesHistoryFiles.TryAdd(tag, file))
                 continue;
-                
+
             string[] testLine = File.ReadAllLines(file);
             MessageBox.Show("Duplicate Tag in History Files: " + tag);
             if (testLine.Length == 0)
                 continue;
-                    
+
             CountriesHistoryFiles.TryGetValue(tag, out var alreadyInsertedCountry);
             if (alreadyInsertedCountry != null)
             {
@@ -70,7 +68,8 @@ public class CountryAcquisition
         LoadCountries();
     }
 
-    public Dictionary<string, Country> GetCountries() => Countries;
+    public Dictionary<Tag, Country?> GetCountries() => Countries;
+    public bool HasCountry(string tag) => !string.IsNullOrEmpty(tag) && Countries.ContainsKey(tag);
     public string GetCountryTextFile() => CountriesCommonTextFile;
 
     /// <summary>
@@ -98,8 +97,8 @@ public class CountryAcquisition
             if (Countries.ContainsKey(tag))
                 continue; // Possible implementation for fallbacks HERE
 
-            if (!CountriesCommonFiles.TryGetValue(name, out string commonFilePath) ||
-                !CountriesHistoryFiles.TryGetValue(tag, out string historyFilePath))
+            if (!CountriesCommonFiles.TryGetValue(name, out string? commonFilePath) ||
+                !CountriesHistoryFiles.TryGetValue(tag, out string? historyFilePath))
                 continue;
 
             var country = new Country(tag, name, commonFilePath, historyFilePath);

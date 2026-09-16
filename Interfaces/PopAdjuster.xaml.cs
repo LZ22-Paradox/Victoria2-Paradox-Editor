@@ -13,16 +13,18 @@ public partial class PopAdjuster : UserControl
     {
         InitializeComponent();
     }
+
     public void Update()
     {
         cultureBox.Items.Clear();
         continentsComboBox.Items.Clear();
         continentsComboBox.Items.Add("all continents");
-        foreach (var continent in ModData.MAP_DATA.GetContinents())
+        foreach (var continent in ModData.Instance.MAP_DATA.GetContinents())
         {
             continentsComboBox.Items.Add(continent.Key);
         }
-        foreach (var culture in ModData.CULTURES_DATA.GetCultures())
+
+        foreach (var culture in ModData.Instance.CULTURES_DATA.GetCultures())
         {
             cultureBox.Items.Add(culture);
             cultureSpecifier.Items.Add(culture);
@@ -31,28 +33,28 @@ public partial class PopAdjuster : UserControl
 
     private void deletePopsCheckbox_Checked(object sender, RoutedEventArgs e)
     {
-
     }
 
     private void addToListButton_Click(object sender, RoutedEventArgs e)
     {
-        if (continentsComboBox.SelectedIndex != -1)
+        switch (continentsComboBox.SelectedIndex)
         {
-            if (continentsComboBox.SelectedIndex == 0)
+            case -1: return; // Nothing is selected.
+            case 0: break; //If ALL Continents are selected
+            default:
             {
-                //If ALL Continents are selected
-            } else
-            {
-                ModData.MAP_DATA.GetContinents().TryGetValue(continentsComboBox.Text, out Continent continent);
+                ModData.Instance.MAP_DATA.GetContinents().TryGetValue(continentsComboBox.Text, out Continent continent);
                 foreach (var province in continent.Provinces) //Temporary; for testing
                 {
                     //Already have a list of province ID's. Now just need to access the POP files.
                 }
-                    
+
                 //If only one continent is selected
+                break;
             }
         }
     }
+
     private void typesButton_Click(object sender, RoutedEventArgs e)
     {
         MessageBox.Show("Feature Not Implemented; Can't Read For POP Types");
@@ -60,27 +62,21 @@ public partial class PopAdjuster : UserControl
 
     private void goButton_Click(object sender, RoutedEventArgs e)
     {
-
     }
 
     private void clearList_Click(object sender, RoutedEventArgs e)
     {
-
     }
 
     private void cultureBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-
     }
 
     private void religionBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-
     }
 
     private void cultureBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-
     }
-
 }

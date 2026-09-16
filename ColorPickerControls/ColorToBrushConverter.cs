@@ -30,7 +30,7 @@ public class ColorToBrushConverter : IValueConverter
         if (value == null || value == DependencyProperty.UnsetValue
                           || value.GetType() != typeof(Color))
             return Brushes.Transparent;
-        Color color = (Color)value;
+        var color = (Color)value;
         return new SolidColorBrush(color);
     }
 

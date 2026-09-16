@@ -194,7 +194,7 @@ public class ImageColorPicker : Image
         {
             if (cachedTargetBitmap == null)
             {
-                DrawingImage drawingImage = Source as DrawingImage;
+                var drawingImage = Source as DrawingImage;
                 if (drawingImage != null)
                 {
                     DrawingVisual drawingVisual = new();
@@ -268,7 +268,7 @@ public class ImageColorPicker : Image
         if (Source == null)
             throw new InvalidOperationException("Image Source not set");
 
-        BitmapSource bitmapSource = Source as BitmapSource;
+        var bitmapSource = Source as BitmapSource;
         if (bitmapSource != null)
         { // Get color from bitmap pixel.
             // Convert coopdinates from WPF pixels to Bitmap pixels and restrict them by the Bitmap bounds.
@@ -321,7 +321,7 @@ public class ImageColorPicker : Image
             // TODO There are other PixelFormats which processing should be added if desired.
         }
 
-        DrawingImage drawingImage = Source as DrawingImage;
+        var drawingImage = Source as DrawingImage;
         if (drawingImage != null)
         { // Get color from drawing pixel.
             RenderTargetBitmap targetBitmap = TargetBitmap;
@@ -357,7 +357,7 @@ public class ImageColorPicker : Image
         if (image.Source == null)
             throw new InvalidOperationException("Image Source not set");
 
-        BitmapSource bitmapSource = image.Source as BitmapSource;
+        var bitmapSource = image.Source as BitmapSource;
         if (bitmapSource != null)
         { // Get color from bitmap pixel.
             // Convert coopdinates from WPF pixels to Bitmap pixels and restrict them by the Bitmap bounds.
@@ -401,7 +401,7 @@ public class ImageColorPicker : Image
             }
         }
 
-        DrawingImage drawingImage = Source as DrawingImage;
+        var drawingImage = Source as DrawingImage;
         if (drawingImage != null)
         { // Get color from drawing pixel.
             RenderTargetBitmap targetBitmap = TargetBitmap;

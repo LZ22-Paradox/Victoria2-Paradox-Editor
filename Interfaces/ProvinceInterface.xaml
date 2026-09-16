@@ -167,7 +167,7 @@
                           VerticalAlignment="Top" Foreground="Black" BorderBrush="{x:Null}"
                           ItemsSource="{Binding Cores}" HorizontalAlignment="Center">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding TAG}" Width="40">
+                        <DataGridTextColumn x:Name="TAGColumn" Binding="{Binding Value}" Width="40">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Background" Value="{DynamicResource theBackgroundBrush}"/>

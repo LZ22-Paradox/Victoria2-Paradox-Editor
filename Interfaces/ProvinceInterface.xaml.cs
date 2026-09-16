@@ -8,32 +8,41 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Paradox_Editor.Extensions;
-using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
+using Paradox_Editor.Types;
 using WpfAnimatedGif;
 using Color = System.Windows.Media.Color;
 
 namespace Paradox_Editor.Interfaces;
 
 [ToolboxItem(true)]
-public partial class ProvinceInterface : UserControl
+public partial class ProvinceInterface
 {
-
-    private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
-    private ProvinceFile _currentProvince = new();
-    private ProvinceFile CurrentProvince { get { return _currentProvince; } set { _currentProvince = value; } }
-    public ObservableCollection<StateBuilding> StateBuildings { get; set; } = new ObservableCollection<StateBuilding>();
+    //private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
+    private uint CurrentProvince { get; set; }
+    public ObservableCollection<StateBuilding> StateBuildings { get; set; } = [];
 
     public event PropertyChangedEventHandler PropertyChanged;
+
     protected void NotifyPropertyChange(string propertyName)
-    { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); }
-    private ObservableCollection<Core> _cores = new();
-    public ObservableCollection<Core> Cores
-    { get => _cores; set { _cores = value; NotifyPropertyChange(nameof(Cores)); } }
+    {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public ObservableCollection<Tag> Cores
+    {
+        get;
+        set
+        {
+            field = value;
+            NotifyPropertyChange(nameof(Cores));
+        }
+    } = [];
+
     public ProvinceInterface()
     {
         InitializeComponent();
-        this.DataContext = this;
+        DataContext = this;
         SetSaveIconToSaved();
     }
 
@@ -82,18 +91,24 @@ public partial class ProvinceInterface : UserControl
 
     private void Save()
     {
-        if (CurrentProvince.Color != 0)
+        if (ModData.Instance.PROVINCE_DATA.GetColor(CurrentProvince) != 0)
         {
-            if (File.Exists(CurrentProvince.HistoryFilePath))
-                File.Delete(CurrentProvince.HistoryFilePath);
+            string historyFile = ModData.Instance.PROVINCE_DATA.GetHistoryFile(CurrentProvince);
+            if (File.Exists(historyFile))
+                File.Delete(historyFile);
 
-            StreamWriter file = File.CreateText(CurrentProvince.HistoryFilePath);
+            StreamWriter file = File.CreateText(historyFile);
 
             PopulateSaveFile(file);
 
             //Currently only refreshes political map
-            MapViewer.SetMap(0, new MapRenderer(ModData.PROVINCE_DATA)
-                .RefreshProvincePolitical(MapViewer.GetMap(1), MapViewer.GetMap(0), CurrentProvince.Color));
+            var currentColor = ModData.Instance.PROVINCE_DATA.GetIDFromColor(CurrentProvince);
+            MapViewer.SetMap(0, new MapRenderer()
+                .RefreshProvincePolitical(
+                    MapViewer.GetMap(MapViewer.MapMode.PROVENCIAL),
+                    MapViewer.GetMap(MapViewer.MapMode.POLITICAL),
+                    currentColor)
+            );
 
             SetSaveIconToSaved();
         }
@@ -106,104 +121,102 @@ public partial class ProvinceInterface : UserControl
 
     private void PopulateSaveFile(StreamWriter file)
     {
-        ProvinceFile tempFile = ModData.PROVINCE_DATA.GetProvince(Convert.ToUInt32(PROVIDBOX.Text));
-        if (!OWNERBOX.Text.Equals(""))
+        var provinceID = Convert.ToUInt32(PROVIDBOX.Text);
+        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
+
+        bool hasCountry = ModData.Instance.COUNTRY_DATA.HasCountry(OWNERBOX.Text);
+        if (hasCountry)
         {
-            ModData.COUNTRY_DATA.GetCountries().TryGetValue(OWNERBOX.Text, out Country country);
-            if (country != null)
-            {
-                file.WriteLine("owner = " + OWNERBOX.Text);
-                tempFile.Owner = OWNERBOX.Text;
-            }
-            else
-            {
-                MessageBox.Show("Owner TAG invalid! : " + OWNERBOX.Text);
-                tempFile.Owner = null;
-            }
+            file.WriteLine("owner = " + OWNERBOX.Text);
+            database.SetOwner(provinceID, OWNERBOX.Text);
         }
         else
         {
-            tempFile.Owner = null;
-        }
-        if (!CONTROLLERBOX.Text.Equals(""))
-        {
-            ModData.COUNTRY_DATA.GetCountries().TryGetValue(CONTROLLERBOX.Text, out Country country);
-            if (country != null)
-            {
-                file.WriteLine("controller = " + CONTROLLERBOX.Text);
-                tempFile.Controller = CONTROLLERBOX.Text;
-            }
-            else
-            {
-                MessageBox.Show("Controller TAG invalid! : " + CONTROLLERBOX.Text);
-                tempFile.Controller = null;
-            }
-        }
-        else
-        {
-            tempFile.Controller = null;
+            MessageBox.Show("Owner TAG invalid ! : " + OWNERBOX.Text);
+            database.SetOwner(provinceID);
         }
 
-        var tradeGoodDropdown = (TRADEGOODBOX.Items.GetItemAt(TRADEGOODBOX.SelectedIndex) as ComboBox);
-        if (tradeGoodDropdown.SelectedIndex != 0)
+        hasCountry = ModData.Instance.COUNTRY_DATA.HasCountry(CONTROLLERBOX.Text);
+        if (hasCountry)
         {
-            string tradeGoodBoxText = tradeGoodDropdown.Text.ToString();
-            file.WriteLine("trade_goods = " + tradeGoodBoxText);
-            tempFile.TradeGoods = tradeGoodBoxText;
+            file.WriteLine("controller = " + CONTROLLERBOX.Text);
+            database.SetController(provinceID, CONTROLLERBOX.Text);
+        }
+        else
+        {
+            MessageBox.Show("Controller TAG invalid! : " + CONTROLLERBOX.Text);
+            database.SetController(provinceID);
+        }
+
+        if (TRADEGOODBOX.Items.GetItemAt(TRADEGOODBOX.SelectedIndex) is ComboBox tradeGoodDropdown &&
+            tradeGoodDropdown.SelectedIndex != 0)
+        {
+            string goodText = tradeGoodDropdown.Text;
+            file.WriteLine("trade_goods = " + goodText);
+            database.SetTradeGood(provinceID, goodText);
         }
 
         if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
         {
             file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
-            tempFile.LifeRating = Convert.ToInt16(LIFERATINGBOX.Text);
+            database.SetLifeRating(provinceID, Convert.ToInt16(LIFERATINGBOX.Text));
         }
+
         if (!COLONIALBOX.Text.Equals(""))
         {
             file.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
-            tempFile.Colonial = Convert.ToInt16(COLONIALBOX.Text);
+            database.SetColonial(provinceID, Convert.ToInt16(COLONIALBOX.Text));
         }
+
         if (COREGRID.HasItems)
         {
-            tempFile.Cores.Clear();
-            foreach (Core item in COREGRID.Items)
+            database.ClearCores(provinceID);
+            foreach (Tag item in COREGRID.Items)
             {
-                if (item.TAG is not "" or null)
-                {
-                    file.WriteLine("add_core = " + item.TAG);
-                    tempFile.Cores.Add(item);
-                }
+                if (string.IsNullOrEmpty(item.Value))
+                    continue;
+                file.WriteLine("add_core = " + item.Value);
+                database.AddCore(provinceID, item);
             }
         }
         else
         {
-            tempFile.Cores.Clear();
+            database.ClearCores(provinceID);
         }
-        if (!TERRAINBOX.Text.Equals("")) //Simplify this area
+
+        // TODO: Simplify this area.
+        if (!TERRAINBOX.Text.Equals(""))
         {
             file.WriteLine("terrain = " + TERRAINBOX.Text);
-            tempFile.Terrain = TERRAINBOX.Text;
+            database.SetTerrain(provinceID, TERRAINBOX.Text);
         }
+
         if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
         {
             file.WriteLine("naval_base = " + NAVALBASEBOX.Text + "\t");
-            tempFile.Naval_Base = Convert.ToInt16(NAVALBASEBOX.Text);
+            database.SetNavalBaseLevel(provinceID, Convert.ToInt16(NAVALBASEBOX.Text));
         }
+
         if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("\t"))
         {
             file.WriteLine("fort = " + FORTBOX.Text + "\t");
-            tempFile.Fort = Convert.ToInt16(FORTBOX.Text);
+            database.SetFortLevel(provinceID, Convert.ToInt16(FORTBOX.Text));
         }
+
         if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
         {
             file.WriteLine("railroad = " + RAILROADBOX.Text + "\t");
-            tempFile.Railroad = Convert.ToInt16(RAILROADBOX.Text);
+            database.SetRailroadLevel(provinceID, Convert.ToInt16(RAILROADBOX.Text));
         }
+
+        database.ClearBuildings(provinceID);
         if (STATEBUILDING_GRID.HasItems)
         {
-            tempFile.State_Buildings.Clear();
             foreach (StateBuilding building in STATEBUILDING_GRID.Items)
             {
-                if (building.Building != null && building.Level != null && building.Upgrade != null)
+                if (string.IsNullOrEmpty(building.Building) &&
+                    string.IsNullOrEmpty(building.Level) &&
+                    string.IsNullOrEmpty(building.Upgrade))
                 {
                     file.WriteLine("state_building = {");
                     file.WriteLine("\tlevel = " + building.Level);
@@ -211,17 +224,12 @@ public partial class ProvinceInterface : UserControl
                     file.WriteLine("\tupgrade = " + building.Upgrade);
                     file.WriteLine("}");
                 }
-                tempFile.State_Buildings.Add(building);
+
+                database.AddStateBuilding(provinceID, building);
             }
-        }
-        else
-        {
-            tempFile.State_Buildings.Clear();
         }
 
         file.Close();
-
-        ModData.PROVINCE_DATA.ReplaceProvince(tempFile);
         SoundHandler.PlayConnecting(); //Perhaps change to success sound or change connecting sound to something else?
     }
 
@@ -246,16 +254,19 @@ public partial class ProvinceInterface : UserControl
     }
 
     #region Core and State-Building Button Events
+
     public void ResetCores(object sender, RoutedEventArgs e)
     {
         Cores.Clear();
         Interface_Changed(sender, e);
     }
+
     public void AddBlankCore(object sender, RoutedEventArgs e)
     {
-        Cores.Add(new Core(""));
+        Cores.Add(new Tag(""));
         Interface_Changed(sender, e);
     }
+
     public void RemoveCore(object sender, RoutedEventArgs e)
     {
         Cores.RemoveAt(COREGRID.SelectedIndex);
@@ -267,96 +278,116 @@ public partial class ProvinceInterface : UserControl
         StateBuildings.Clear();
         Interface_Changed(sender, e);
     }
+
     public void AddBlankBuilding(object sender, RoutedEventArgs e)
     {
         StateBuildings.Add(new StateBuilding());
         Interface_Changed(sender, e);
     }
+
     public void RemoveBuilding(object sender, RoutedEventArgs e)
     {
         StateBuildings.RemoveAt(STATEBUILDING_GRID.SelectedIndex);
         Interface_Changed(sender, e);
     }
+
     #endregion
 
-    private static uint GetRawColor(Color color) => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
     /// <summary>
     /// Extrapolates province data from a given colour and fills the province interface with the said-data.
     /// </summary>
     /// <param name="color"></param>
     public void PopulateInterface(Color color)
     {
-        ModData.PROVINCE_DATA.GetColorsToProvinceIDs().TryGetValue(GetRawColor(color), out var provinceID);
-        ProvinceFile province = ModData.PROVINCE_DATA.GetProvince((uint)provinceID);
-        CurrentProvince = province;
-        if (province != null)
+        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
+        var provinceID = database.GetIDFromColor(color);
+        CurrentProvince = provinceID;
+        if (!database.IsValidLandProvince(provinceID))
         {
-            PROVIDBOX.Text = Convert.ToString(province.ProvinceID);
-            NAMEBOX.Text = Convert.ToString(province.ProvinceName);
-            OWNERBOX.Text = Convert.ToString(province.Owner);
-            CONTROLLERBOX.Text = Convert.ToString(province.Controller);
+            PROVIDBOX.Text = Convert.ToString(provinceID);
+
+            // Set name.
+            NAMEBOX.Text = database.GetName(provinceID);
+
+            // Set owner.
+            database.TryGetOwner(provinceID, out var owner);
+            OWNERBOX.Text = owner ?? "";
+
+            // Set controller.
+            database.TryGetController(provinceID, out var controller);
+            CONTROLLERBOX.Text = controller ?? "";
+
+            // Set Color display.
             COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
 
-            string loggedTradeGood = Convert.ToString(province.TradeGoods);
+            string loggedTradeGood = database.GetTradeGood(provinceID);
             bool breakLoop = false;
             for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
             {
                 for (int k = 1; k < TRADEGOODBOX.Items.Count; k++)
                 {
-                    (TRADEGOODBOX.Items.GetItemAt(k) as ComboBox).SelectedIndex = 0;
+                    // Wipe selections.
+                    (TRADEGOODBOX.Items.GetItemAt(k) as ComboBox)!.SelectedIndex = 0;
                 }
-                var goodGroup = TRADEGOODBOX.Items.GetItemAt(i) as ComboBox;
-                for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
-                {
-                    if (goodGroup.Items[j].Equals(loggedTradeGood))
+
+                if (TRADEGOODBOX.Items.GetItemAt(i) is ComboBox goodGroup)
+                    for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
                     {
+                        var goodGroupItem = goodGroup.Items[j];
+                        if (goodGroupItem != null && !goodGroupItem.Equals(loggedTradeGood))
+                            continue;
+
                         TRADEGOODBOX.SelectedIndex = i;
-                        (TRADEGOODBOX.Items.GetItemAt(i) as ComboBox).SelectedIndex = j;
+                        (TRADEGOODBOX.Items.GetItemAt(i) as ComboBox)!.SelectedIndex = j;
                         breakLoop = true;
                         break;
                     }
-                }
+
                 if (breakLoop)
                     break;
-
             }
 
-            LIFERATINGBOX.Text = Convert.ToString(province.LifeRating);
-            COLONIALBOX.Text = Convert.ToString(province.Colonial);
-            NAVALBASEBOX.Text = Convert.ToString(province.Naval_Base);
-            TERRAINBOX.Text = Convert.ToString(province.Terrain);
-            FORTBOX.Text = Convert.ToString(province.Fort);
-            RAILROADBOX.Text = Convert.ToString(province.Railroad);
+            LIFERATINGBOX.Text = Convert.ToString(database.GetLifeRating(provinceID));
+            COLONIALBOX.Text = Convert.ToString(database.GetColonial(provinceID));
+            NAVALBASEBOX.Text = Convert.ToString(database.GetNavalBaseLevel(provinceID));
+            TERRAINBOX.Text = Convert.ToString(database.GetTerrain(provinceID));
+            FORTBOX.Text = Convert.ToString(database.GetFortLevel(provinceID));
+            RAILROADBOX.Text = Convert.ToString(database.GetRailroadLevel(provinceID));
 
-            object sender = this; RoutedEventArgs e = new();
+            object sender = this;
+            RoutedEventArgs e = new();
 
             ResetCores(sender, e);
-            foreach (Core core in province.Cores) //Populates Core List
+            foreach (Tag core in database.GetCores(provinceID)) //Populates Core List
                 Cores.Add(core);
             ResetBuildings(sender, e);
-            foreach (StateBuilding stateBuilding in province.State_Buildings)
-                StateBuildings.Add(stateBuilding); //NonFunctional, see "StateBuildings" binding
-                
-            this.Visibility = Visibility.Visible;
+            foreach (StateBuilding stateBuilding in database.GetStateBuildings(provinceID))
+                StateBuildings.Add(stateBuilding); // WARN: Does not work!
+
+            Visibility = Visibility.Visible;
         }
         else
         {
             Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
-            this.Visibility = Visibility.Hidden;
+            Visibility = Visibility.Hidden;
         }
+
         SetSaveIconToSaved();
     }
 
     private void Interface_Loaded(object sender, RoutedEventArgs e)
     {
         var window = Window.GetWindow(this);
-        window.KeyDown += HandleKeyPress;
+        if (window != null)
+            window.KeyDown += HandleKeyPress;
     }
+
     private void HandleKeyPress(object sender, KeyEventArgs e)
     {
-        if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control) // Is Alt key pressed
-            if (Keyboard.IsKeyDown(Key.S))
-                Save();
+        if ((Keyboard.Modifiers & ModifierKeys.Control) != ModifierKeys.Control)
+            return;
+        if (Keyboard.IsKeyDown(Key.S))
+            Save();
     }
 
     internal void Update()
@@ -364,24 +395,24 @@ public partial class ProvinceInterface : UserControl
         for (int i = 1; i < TRADEGOODBOX.Items.Count; i++)
             TRADEGOODBOX.Items.RemoveAt(i);
 
-        foreach (var group_of_goods in ModData.MAP_DATA.GetGoods())
+        foreach (var group_of_goods in ModData.Instance.GOODS_DATA.GetGoods())
         {
-            ComboBox group_as_combobox = new ComboBox();
-            group_as_combobox.Name = group_of_goods.Key;
-                
-            ComboBoxItem good_item = new ComboBoxItem() //Blank Option
-            { Content = group_of_goods.Key, Focusable= false, IsHitTestVisible = false, IsSelected = true,
-                HorizontalContentAlignment = HorizontalAlignment.Center, FontWeight= FontWeights.Bold, };
+            // Populate goods groups.
+            var groupComboBox = new ComboBox { Name = group_of_goods.Key };
+            var good_item = new ComboBoxItem() //Blank Option
+            {
+                Content = group_of_goods.Key, Focusable = false, IsHitTestVisible = false, IsSelected = true,
+                HorizontalContentAlignment = HorizontalAlignment.Center, FontWeight = FontWeights.Bold,
+            };
 
-            group_as_combobox.Items.Add(good_item);
-
+            // Populate with even more goods.
+            groupComboBox.Items.Add(good_item);
             foreach (var good in group_of_goods.Value.Goods.Keys)
             {
-                group_as_combobox.Items.Add(good);
+                groupComboBox.Items.Add(good);
             }
-                
-            TRADEGOODBOX.Items.Add(group_as_combobox);
+
+            TRADEGOODBOX.Items.Add(groupComboBox);
         }
     }
-
 }

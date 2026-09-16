@@ -1,24 +1,55 @@
-﻿using Paradox_Editor.Data_Handling;
+﻿using System.Threading;
+using Paradox_Editor.DataAcquisition;
+using Paradox_Editor.Extensions;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor;
 
-public static class ModData
+public class ModData
 {
-    public static ModInfoAcquisition MOD_DATA;
-    public static ProvinceDataAcquisition PROVINCE_DATA;
-    public static CountryAcquisition COUNTRY_DATA;
-    public static CultureDataAcquisition CULTURES_DATA;
-    public static MapFileDataAcquisition MAP_DATA;
-    public static LocalizationAcquisition LOCALIZATION_DATA;
+    public ModInfoAcquisition MOD_DATA = null!;
+    public ProvinceDatabase PROVINCE_DATA = null!;
+    public CountryAcquisition COUNTRY_DATA = null!;
+    public CultureDataAcquisition CULTURES_DATA = null!;
+    public MapFileDataAcquisition MAP_DATA = null!;
+    public GoodsFileDataAcquisition GOODS_DATA = null!;
+    public LocalizationAcquisition LOCALIZATION_DATA = null!;
 
-    public static void AcquisitionData(string modFolder)
+    public static ModData Instance = null!;
+
+    public ModData(string modFolder)
     {
+        Instance = this;
+        Utilities.ModDirectory = modFolder;
+
         // WARN: DOES NOT HANDLE MAPS W. CUSTOM PROVINCES. FIX THAT.
-        MOD_DATA = new ModInfoAcquisition(modFolder);
-        PROVINCE_DATA = new ProvinceDataAcquisition(modFolder);
-        COUNTRY_DATA = new CountryAcquisition(modFolder);
-        CULTURES_DATA = new CultureDataAcquisition(modFolder);
-        MAP_DATA = new MapFileDataAcquisition(modFolder);
+
+        var thread = new Thread(() =>
+        {
+            // VITAL FRAMEWORK DATA
+            MOD_DATA = new ModInfoAcquisition(modFolder);
+            // -> Game 
+            
+            MAP_DATA = new MapFileDataAcquisition(modFolder);
+            // -> map/continents.txt
+            // -> map/default.map
+            
+            // LOCALIZATION
+            
+            // COMMON (DEFINITION) FILES
+            GOODS_DATA = new GoodsFileDataAcquisition(modFolder);
+            CULTURES_DATA = new CultureDataAcquisition(modFolder);
+
+            // HISTORY (DATA) FILES
+            PROVINCE_DATA = ProvinceDataAcquisition.CreateDatabase(MAP_DATA.DefaultMapFile, modFolder);
+            COUNTRY_DATA = new CountryAcquisition(modFolder);
+        });
+        thread.Start();
+        thread.Join();
     }
 
+
+    public static void AcquisitionData()
+    {
+    }
 }

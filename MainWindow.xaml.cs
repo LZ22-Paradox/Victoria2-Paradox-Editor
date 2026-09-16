@@ -1,11 +1,11 @@
 ﻿using Paradox_Editor.Extensions;
-using Paradox_Editor.Extensions.Types;
 using Paradox_Editor.Handlers;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows;
+using Paradox_Editor.Interfaces;
+using Paradox_Editor.Types;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -16,12 +16,10 @@ namespace Paradox_Editor;
 public partial class MainWindow : INotifyPropertyChanged
 {
     /// Acquires the data under ProvinceFile; ID, provinceName, Filepath
-    public ProvinceFile SelectedItem { get; set; }
+    public ProvinceWrapper SelectedItem { get; set; }
 
     public int CurrentControlMode { get; set; }
     public static string CurrentGameMode { get; set; }
-
-    #region Calls / constructors methods allowing Province Data to bind to the History-File-List DataGrid.
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -30,19 +28,17 @@ public partial class MainWindow : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private ObservableCollection<ProvinceFile> _provincedata = new();
+    private ObservableCollection<ProvinceWrapper> _provinceData = [];
 
-    public ObservableCollection<ProvinceFile> ProvinceData
+    public ObservableCollection<ProvinceWrapper> ProvinceData
     {
-        get => _provincedata;
+        get => _provinceData;
         set
         {
-            _provincedata = value;
+            _provinceData = value;
             NotifyPropertyChange(nameof(ProvinceData));
         }
     }
-
-    #endregion
 
     public MainWindow()
     {
@@ -53,24 +49,23 @@ public partial class MainWindow : INotifyPropertyChanged
     private void MainWindow_Load(object _1, EventArgs _2)
     {
         VisualHandler.ConductAssetChange("VIC2");
-        mapModeButtons.UpdateMapModeVisibility(1, VisualHandler.MapModeIconSet);
+        mapModeButtons.UpdateMapModeVisibility(MapViewer.MapMode.PROVENCIAL, VisualHandler.MapModeIconSet);
     }
 
+    private ModData _modData;
 
     public void SelectMasterFolder_Click(object sender, EventArgs e)
     {
         //var MainWindow = (MainWindow)Application.Current.MainWindow; //May be useless
 
         string selectedModFolder = Explorer.OpenFolderSelect();
-        if (selectedModFolder == null)
+        if (string.IsNullOrEmpty(selectedModFolder))
             return;
 
-        Thread thread = new Thread(() => ModData.AcquisitionData(selectedModFolder));
-        thread.Start();
-        thread.Join();
+        _modData = new ModData(selectedModFolder);
 
-        //For the History File Lister
-        ProvinceData = new ObservableCollection<ProvinceFile>(ModData.PROVINCE_DATA.GetProvinces().Values);
+        // For the History File Lister. Ignores ocean provinces.
+        ProvinceData = new ObservableCollection<ProvinceWrapper>(_modData.PROVINCE_DATA.GetLandProvinceWrappers());
         fileListView.ItemsSource = ProvinceData;
 
         mapViewer.LoadMaps();
@@ -80,7 +75,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
     public void OpenFileFromList(object sender, RoutedEventArgs e)
     {
-        Explorer.OpenFile(SelectedItem.HistoryFilePath);
+        Explorer.OpenFile(SelectedItem.File);
     }
 
     public static explicit operator MainWindow(WindowCollection v) => throw new NotImplementedException();

@@ -1,18 +1,17 @@
 using Paradox_Editor.Extensions;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Parsers;
 
-public sealed class CultureParser
+public sealed class CultureParser : ParserCommon
 {
-    public static Dictionary<string, CultureGroup> Parse(string directory)
+    
+    public override T Parse<T>(string directory, params string[] fileParts)
     {
         Dictionary<string, CultureGroup> groups = new();
-        string culturesCommonFilePath = Path.Combine(directory, "common", "cultures.txt"); //Find if overwritten
-
-        CultureParser file = new();
+        string culturesCommonFilePath = GetGameFilePath(directory, Path.Combine(fileParts));
         using StreamReader reader = new(File.OpenRead(culturesCommonFilePath));
         while (true)
         {
@@ -21,23 +20,18 @@ public sealed class CultureParser
             {
                 break;
             }
+
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
-            groups[name] = CultureGroup.Parse(reader);
+            groups[name] = ReadCultureGroup(reader);
         }
-        return groups;
+
+        return (T)(object)groups;
     }
-}
+    
 
-public sealed class CultureGroup
-{
-    public string Leader { get; set; }
-    public string Unit { get; set; }
-    public string IsOverseas { get; set; }
-    public Dictionary<string, Culture> Cultures { get; } = new();
-    public string Union { get; set; }
-
-    public static CultureGroup Parse(StreamReader reader)
+    
+    private static CultureGroup ReadCultureGroup(StreamReader reader)
     {
         CultureGroup group = new();
         reader.SkipUntil('{');
@@ -52,12 +46,12 @@ public sealed class CultureGroup
                     reader.SkipWhitespace();
                     group.Leader = reader.ReadUntilWhitespace();
                     break;
-				case "is_overseas":
-					reader.SkipUntil('=');
-					reader.SkipWhitespace();
-					group.IsOverseas = reader.ReadUntilWhitespace();
-					break;
-				case "unit":
+                case "is_overseas":
+                    reader.SkipUntil('=');
+                    reader.SkipWhitespace();
+                    group.IsOverseas = reader.ReadUntilWhitespace();
+                    break;
+                case "unit":
                     reader.SkipUntil('=');
                     reader.SkipWhitespace();
                     group.Unit = reader.ReadUntilWhitespace();
@@ -68,23 +62,18 @@ public sealed class CultureGroup
                     group.Union = reader.ReadUntilWhitespace();
                     break;
                 default:
-                    group.Cultures[item] = Culture.Parse(reader);
+                    group.Cultures[item] = ReadCulture(reader);
                     break;
             }
+
             reader.SkipWhitespace();
         }
+
         reader.Read();
         return group;
     }
-}
 
-public sealed class Culture
-{
-    public Color Color { get; set; }
-    public List<string> FirstNames { get; } = new();
-    public List<string> LastNames { get; } = new();
-
-    public static Culture Parse(StreamReader reader)
+    private static Culture ReadCulture(StreamReader reader)
     {
         Culture culture = new();
         reader.SkipUntil('{');
@@ -95,7 +84,7 @@ public sealed class Culture
             switch (item)
             {
                 case "color":
-                    culture.Color = Color.Parse(reader);
+                    culture.Color = ColorParser.Parse(reader);
                     break;
                 case "first_names":
                     reader.SkipUntil('{');
@@ -111,8 +100,10 @@ public sealed class Culture
                         {
                             culture.FirstNames.Add(reader.ReadUntilWhitespace());
                         }
+
                         reader.SkipWhitespace();
                     }
+
                     reader.Read();
                     break;
                 case "last_names":
@@ -129,30 +120,20 @@ public sealed class Culture
                         {
                             culture.LastNames.Add(reader.ReadUntilWhitespace());
                         }
+
                         reader.SkipWhitespace();
                     }
+
                     reader.Read();
                     break;
             }
+
             reader.SkipWhitespace();
         }
+
         reader.Read();
         return culture;
     }
-}
 
-public record struct Color(byte r, byte b, byte g)
-{
-    public static Color Parse(StreamReader reader)
-    {
-        reader.SkipUntil('{');
-        Span<byte> nums = stackalloc byte[3];
-        for (int i = 0; i < nums.Length; i++)
-        {
-            reader.SkipWhitespace();
-            nums[i] = byte.Parse(reader.ReadUntil(' ', '}'));
-        }
-        reader.SkipUntil('}');
-        return new Color(nums[0], nums[1], nums[2]);
-    }
+
 }
