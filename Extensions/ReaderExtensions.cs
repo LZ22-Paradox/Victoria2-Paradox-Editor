@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,13 +77,14 @@ public static class ReaderExtensions
     internal static string ReadValue(this StreamReader reader)
     {
         reader.SkipWhitespace();
-        if (reader.Peek() != '"')
-            return reader.ReadUntilWhitespace();
-
-        reader.Read();
-        return reader.ReadUntil('"');
+        if (reader.Peek() == '"')
+        {
+            reader.Read();
+            return reader.ReadUntil('"');
+        }
+        return reader.ReadUntilWhitespace();
     }
-    
+
     public static Dictionary<string, int> ReadStringIntDictionary(this StreamReader reader)
     {
         var result = new Dictionary<string, int>();
@@ -103,6 +105,36 @@ public static class ReaderExtensions
             string value = reader.ReadUntil('\n', '}').Trim();
             if (int.TryParse(value, out int number))
                 result[key] = number;
+        }
+
+        return result;
+    }
+
+    public static List<int> ReadIntList(this StreamReader reader)
+    {
+        var result = new List<int>();
+
+        reader.SkipWhitespace();
+
+        if (reader.Read() != '{')
+            throw new FormatException("Expected '{'.");
+
+        while (!reader.EndOfStream)
+        {
+            reader.SkipWhitespace();
+
+            if (reader.Peek() == '}')
+            {
+                reader.Read();
+                break;
+            }
+
+            string value = reader.ReadUntilWhitespace();
+
+            if (int.TryParse(value, out int number))
+                result.Add(number);
+            else
+                throw new FormatException($"Invalid integer: '{value}'.");
         }
 
         return result;

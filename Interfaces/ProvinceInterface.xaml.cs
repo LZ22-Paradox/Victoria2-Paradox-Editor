@@ -18,6 +18,8 @@ namespace Paradox_Editor.Interfaces;
 [ToolboxItem(true)]
 public partial class ProvinceInterface
 {
+    private ObservableCollection<Tag> _cores = [];
+
     //private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
     private uint CurrentProvince { get; set; }
     public ObservableCollection<StateBuilding> StateBuildings { get; set; } = [];
@@ -31,13 +33,13 @@ public partial class ProvinceInterface
 
     public ObservableCollection<Tag> Cores
     {
-        get;
+        get => _cores;
         set
         {
-            field = value;
+            _cores = value;
             NotifyPropertyChange(nameof(Cores));
         }
-    } = [];
+    }
 
     public ProvinceInterface()
     {

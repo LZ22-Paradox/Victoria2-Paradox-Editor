@@ -31,11 +31,9 @@ public sealed class CountryParserCommon(DatabaseCountries database, string Direc
                 case "graphical_culture":
                     database.SetGraphicalCulture(tag, reader.ReadAssignmentValue());
                     break;
-
                 case "party":
                     database.AddParty(tag, ReadParty(reader));
                     break;
-
                 case "unit_names":
                     database.SetUnitNames(tag, ReadUnitNames(reader));
                     break;
@@ -70,7 +68,6 @@ public sealed class CountryParserCommon(DatabaseCountries database, string Direc
                 case "end_date":
                     party.EndDate = reader.ReadAssignmentValue();
                     break;
-
                 case "ideology":
                     party.Ideology = reader.ReadAssignmentValue();
                     break;

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 using System.Windows.Media;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Parsers;
@@ -10,10 +13,10 @@ namespace Paradox_Editor.Types;
 public class DatabaseProvinces
 {
     /// Indexed Province Color -> Province ID 
-    public readonly Dictionary<uint, uint> ColorsToProvinceIDs = new();
+    public readonly ConcurrentDictionary<uint, uint> ColorsToProvinceIDs = new();
 
     // FILE I/O
-    private readonly List<uint> ProvinceID = []; //✓
+    private readonly uint[] ProvinceID; //✓
     private string[] ProvinceName = [];
     private string[] HistoryFilePath = []; //✓
     private string[] ProvinceFileName = []; //✓
@@ -41,6 +44,7 @@ public class DatabaseProvinces
 
     public DatabaseProvinces(int size)
     {
+        ProvinceID = new uint[size];
         ProvinceCount = size;
         Expand(size);
     }
@@ -70,9 +74,22 @@ public class DatabaseProvinces
     #region Get Methods
 
     public uint GetColor(uint provinceId) => Color[provinceId];
-
+    
     public uint GetIDFromColor(uint color) => ColorsToProvinceIDs[color];
     public uint GetIDFromColor(Color color) => GetIDFromColor(color.ToPackedColor());
+
+    public bool TryGetIDFromColor(uint color, [NotNullWhen(true)] out uint? id)
+    {
+        id = null;
+        if (!ColorsToProvinceIDs.Keys.Contains(color))
+            return false;
+        
+        id = ColorsToProvinceIDs[color];
+        return true;
+    }
+
+    public bool TryGetIDFromColor(Color color, [NotNullWhen(true)] out uint? id)
+        => TryGetIDFromColor(color.ToPackedColor(), out id);
 
     public string GetHistoryFile(uint provinceId) => HistoryFilePath[provinceId];
 
@@ -173,13 +190,8 @@ public class DatabaseProvinces
             State_Buildings[provinceId].Add(building);
     }
 
-    public void SetFileData(uint provinceId, string historyFilePath, string provinceName)
+    public void SetHistoryData(uint provinceId, string historyFilePath, string provinceName)
     {
-        // Avoid duplicates.
-        if (!ProvinceID.Contains(provinceId))
-            ProvinceID.Add(provinceId);
-        else throw new Exception($"Duplicate province ID found: {provinceId}");
-
         HistoryFilePath[provinceId] = historyFilePath;
 
         // WARN: TODO: Fix for the case where the name is only a number.
@@ -193,11 +205,15 @@ public class DatabaseProvinces
     /// Populate province data with CSV Info
     public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName)
     {
+        // Avoid duplicates.
+        if (ProvinceID.Contains(id))
+            throw new Exception($"Duplicate province ID found: {id}");
+        
         // ERR: Faulty. Some provinces bug. (Tested Vanilla Vic2)
-        ProvinceID.Add(id);
+        ProvinceID[id] = id;
         uint packedColor = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
         Color[id] = packedColor;
-        ColorsToProvinceIDs.Add(packedColor, id);
+        ColorsToProvinceIDs[packedColor] = id;
         ProvinceName[id] = recordName;
 
         // Ensure the arrays with internal lists are instantiated in memory to avoid any pesky null pointer

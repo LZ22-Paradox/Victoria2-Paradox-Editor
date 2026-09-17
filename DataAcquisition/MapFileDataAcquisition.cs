@@ -31,15 +31,15 @@ public class MapFileDataAcquisition
         Task task = Task.Run(() =>
         {
             var records = new ProvinceDefinitionsFileParser(directory)
-                .Parse<List<ProvinceCSVDefinition>>("map", "definition.csv");
+                .ParseList<ProvinceDefinitionsFileParser.ProvinceCSVDefinition>("map", "definition.csv");
 
             Parallel.ForEach(records, record =>
             {
                 // Avoid parsing null / blank provinces, and especially entries that begin with entries that aren't
                 //  numerical.
-                if (string.IsNullOrWhiteSpace(record.Province) ||
-                    Regex.IsMatch(record.Province, @"\bprovince\b") ||
-                    !int.TryParse(record.Province, out int _))
+                if (string.IsNullOrWhiteSpace(record.Id) ||
+                    Regex.IsMatch(record.Id, @"\bprovince\b") ||
+                    !int.TryParse(record.Id, out int _))
                     return;
 
                 if (!uint.TryParse(record.Red.Replace(".", ""), out var red) ||
@@ -50,7 +50,7 @@ public class MapFileDataAcquisition
                 // Create the province entry in the database. Order of operations demands this be done before Common
                 //  and History data fill-in.
                 database.CreateProvince(
-                    /*Province ID*/ id: Convert.ToUInt32(record.Province),
+                    /*Province ID*/ id: Convert.ToUInt32(record.Id),
                     /*Color*/ red, green, blue,
                     /*Province Name*/ record.Name
                 );

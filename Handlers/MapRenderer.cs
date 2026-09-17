@@ -27,7 +27,7 @@ public class MapRenderer
 
         DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
         DatabaseCountries databaseCountries = ModData.Instance.DatabaseCountries;
-        Parallel.For(0, pixelCount, (index) =>
+        Parallel.For(0, pixelCount, index =>
         {
             if (pixels == null)
                 return; // No null pointer exceptions, today!
@@ -46,7 +46,7 @@ public class MapRenderer
             else
             {
                 // Checking if province exists. Ocean provinces are not added to the province list.
-                if (databaseProvinces.IsValidLandProvince(provinceID))
+                if (!databaseProvinces.IsOceanProvince(provinceID))
                     pixels[index] = GetRawColor(Colors.Black); // Uncolonized
                 else
                     pixels[index] = GetRawColor(Colors.White); // Ocean
@@ -80,7 +80,7 @@ public class MapRenderer
     /// <param name="image"></param>
     /// <param name="color"></param>
     /// <returns></returns>
-    public static unsafe WriteableBitmap DrawSelectedProvince(WriteableBitmap image, uint color)
+    public static unsafe WriteableBitmap DrawConnectedColors(WriteableBitmap image, uint color)
     {
         image.Lock();
         var pixels = (uint*)image.BackBuffer;

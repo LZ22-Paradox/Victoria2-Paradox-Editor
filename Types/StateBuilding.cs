@@ -1,8 +1,6 @@
 namespace Paradox_Editor.Extensions;
 
-public class Building
-{
-}
+public class Building;
 
 public class StateBuilding : Building
 {

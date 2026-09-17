@@ -17,16 +17,23 @@ public abstract class ParserCommon(string Directory)
     /// <returns></returns>
     protected string GetGameFilePath(string fileName)
     {
-        string continentFilePath = Path.Combine(Directory, fileName);
+        // Find the file from vanilla if it's not overwritten.
+        bool pathIsLocalToMod = GetGameFilePath(Directory, fileName, out var path);
+        IsIncludedInMod = pathIsLocalToMod;
+        return path;
+    }
+
+    internal static bool GetGameFilePath(string directory, string fileName, out string path)
+    {
+        string gamePath = Path.Combine(directory, fileName);
         if (Utilities.FileIsInMod(fileName))
         {
-            IsIncludedInMod = true;
-            return continentFilePath;
+            path = gamePath;
+            return true;
         }
 
         // Find the file from vanilla if it's not overwritten.
-        IsIncludedInMod = false;
-        continentFilePath = Path.Combine(ModData.Instance.MOD_DATA.GetGameDirectory(), fileName);
-        return continentFilePath;
+        path = Path.Combine(ModData.Instance.MOD_DATA.GetGameDirectory(), fileName);
+        return false;
     }
 }

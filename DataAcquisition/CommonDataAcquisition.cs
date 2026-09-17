@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Paradox_Editor.Extensions;
@@ -53,13 +54,13 @@ public class CommonDataAcquisition
         {
             // Pre-build the countries expected to exist.
             LoadCommonCountriesFile(database, directory);
-            Parallel.ForEach(database.CommonFile,
+            Parallel.ForEach(database.Tags,
                 tag => new CountryParserCommon(database, directory, tag).Parse<object>());
         });
         task.Wait();
     }
 
-    private static void LoadCommonCountriesFile(DatabaseCountries databaseCountries, string directory)
+    private static void LoadCommonCountriesFile(DatabaseCountries database, string directory)
     {
         var countriesFile = Path.Combine(directory, "common", "countries.txt");
         foreach (var line in File.ReadAllLines(countriesFile))
@@ -74,21 +75,48 @@ public class CommonDataAcquisition
             if (string.IsNullOrEmpty(input))
                 continue;
 
-            var removal = input.Replace("\t", "").Replace("\"countries/", "").Replace(".txt\"", "");
-            var words = removal.Split('='); //Has the actual country names
-            string tag = words[0].Trim();
-            string name = words[1].Trim();
+            // Clean tabs, normalize path, and split.
+            var halves = input.Replace("\t", "")
+                .Replace('/', Path.DirectorySeparatorChar)
+                .Replace("\"", "")
+                .Split("=");
+            string tag = halves[0].Trim();
+            string path = halves[1].Trim();
 
-            string commonFilePath = "";
-            string historyFilePath = "";
+            // Extract the common path in advance.
+            var commonPath = Path.Combine(directory, "common", path);
 
-            // WIP: Check this to make sure it actually exists.
-            //  - Check Common, then check vanilla.
-            //  - Check history files to ensure that a file begins with the TAG, and only the tag.
-            //      - If no exist, check vanilla.
+            bool isVanilla = false;
+            string? historyPath = // Check the first three letters of all modded history country files.
+                Directory.EnumerateFiles(Path.Combine(directory, "history", "countries"))
+                    .FirstOrDefault(file =>
+                        Path.GetFileName(file)[..3]
+                            .Equals(tag, StringComparison.OrdinalIgnoreCase));
+            
+            if (historyPath == null)
+            {
+                isVanilla = true;
+                
+                // It failed to find the history data for a country. It will need to fall back to vanilla, which is
+                //  incredibly dangerous.
+                historyPath = Directory.EnumerateFiles(Path.Combine(ModData.Instance.MOD_DATA.GetGameDirectory(),
+                        "history", "countries"))
+                    .FirstOrDefault(file =>
+                        Path.GetFileName(file)[..3].Equals(tag, StringComparison.OrdinalIgnoreCase));
+            }
 
+            if (historyPath == null)
+                throw new Exception($"The country \'{tag}\' does not exist in Modded nor Vanilla history files.");
+
+            // Extract country name from here.
+            // TODO: Go it from Localization instead using the tag.
+            string name = path
+                .Replace("countries","")
+                .Replace(Path.DirectorySeparatorChar.ToString(), "")
+                .Replace(".txt", "");;
+            
             //Possible check / display message for missing common or history file
-            databaseCountries.CreateCountry(tag, name, commonFilePath, historyFilePath);
+            database.CreateCountry(tag, name, commonPath, historyPath, isVanilla);
         }
     }
 }

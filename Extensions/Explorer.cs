@@ -10,14 +10,11 @@ public static class Explorer
     {
         var dialog = new FolderBrowserDialog();
         if (dialog.ShowDialog() != DialogResult.OK)
-        {
-            return null;
-        }
+            return "";
+        
         MessageBox.Show(@"You selected Filepath: " + dialog.SelectedPath);
         Console.WriteLine(dialog.SelectedPath);
         var selectDirectory = dialog.SelectedPath;
-
-        Console.ReadLine();
         return selectDirectory;
     }
 
@@ -25,7 +22,7 @@ public static class Explorer
     {
         var dialog = new OpenFileDialog();
         if (dialog.ShowDialog() != DialogResult.OK)
-            return null;
+            return "";
 
         MessageBox.Show(@"You selected Filepath: " + dialog.FileName);
         return dialog.FileName;

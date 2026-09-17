@@ -10,15 +10,13 @@ public class CountryParserHistory(DatabaseCountries database, string Directory, 
 {
     public override T Parse<T>(params string[] fileParts)
     {
-        var historyFilePath = Path.Combine(Path.Combine(fileParts));
+        var historyFilePath = database.GetHistoryFile(tag);
         using StreamReader reader = new(File.OpenRead(historyFilePath));
         while (true)
         {
             int c = reader.Peek();
             if (c == -1)
-            {
                 break;
-            }
 
             reader.SkipWhitespace();
             string unused = reader.ReadUntil(' ');
@@ -74,14 +72,14 @@ public class CountryParserHistory(DatabaseCountries database, string Directory, 
                     database.SetNational_Value(tag, reader.ReadUntilWhitespace());
                     break;
                 case "literacy":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    database.SetLiteracy(tag, double.Parse(reader.ReadUntilWhitespace()));
+                    var literacyString = reader.ReadAssignmentValue();
+                    var literacy = double.Parse(literacyString);
+                    database.SetLiteracy(tag, literacy);
                     break;
                 case "non_state_culture_literacy":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    database.SetNon_State_Culture_Literacy(tag, double.Parse(reader.ReadAssignmentValue()));
+                    literacyString = reader.ReadAssignmentValue();
+                    literacy = double.Parse(literacyString);
+                    database.SetNon_State_Culture_Literacy(tag, literacy);
                     break;
                 case "civilized":
                     reader.SkipUntil('=');

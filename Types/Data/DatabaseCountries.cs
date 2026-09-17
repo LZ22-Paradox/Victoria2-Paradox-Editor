@@ -58,6 +58,8 @@ public class DatabaseCountries
     public Color GetColor(Tag owner) => CountryColor[TagToIndex[owner]];
 
     public string GetCommonFile(string tag) => CommonFile[TagToIndex[tag]];
+
+    public string GetHistoryFile(Tag tag) => HistoryFile[TagToIndex[tag]];
     
     #endregion
 
@@ -109,6 +111,8 @@ public class DatabaseCountries
     {
         // Only unique parties allowed!
         var parties = Parties[TagToIndex[tag]];
+        
+        
         if (!parties.Any(p => p.Name.Equals(readParty.Name)))
             Parties[TagToIndex[tag]].Add(readParty);
         else MessageBox.Show($"Duplicate party \'{readParty.Name}\' found for \'{tag}\'!");
@@ -136,15 +140,22 @@ public class DatabaseCountries
     private uint countryCounter = 0;
 
     private readonly object _countryLock = new();
-    
-    public void CreateCountry(Tag tag, string name, string commonFilePath, string historyFilePath)
+
+    public void CreateCountry(Tag tag, string name, string commonFilePath, string historyFilePath, bool isVanilla)
     {
+        if (Tags.Contains(tag.ToString()))
+        {
+            MessageBox.Show($"Duplicate country tag \'{tag}\' found in Common File!");
+            return;
+        }
+
         // Ensure there's just enough space.
-        Expand(Tags.Length == 0 ? 1 : Tags.Length);
+        Expand(Tags.Length + 1);
         Tags[^1] = tag;
         Name[^1] = name;
         CommonFile[^1] = commonFilePath;
         HistoryFile[^1] = historyFilePath;
+        Vanilla[^1] = isVanilla;
 
         lock (_countryLock)
         {
@@ -165,6 +176,7 @@ public class DatabaseCountries
         Array.Resize(ref Capital, size);
         Array.Resize(ref PrimaryCulture, size);
         Array.Resize(ref AcceptedCultures, size);
+        AcceptedCultures[size - 1] = [];
         Array.Resize(ref Religion, size);
         Array.Resize(ref Government, size);
         Array.Resize(ref Plurality, size);
@@ -176,16 +188,22 @@ public class DatabaseCountries
         Array.Resize(ref Prestige, size);
         Array.Resize(ref TAG_oob, size);
         Array.Resize(ref CountryFlags, size);
+        CountryFlags[size - 1] = [];
         Array.Resize(ref RulingParty, size);
         Array.Resize(ref LastElection, size);
         Array.Resize(ref Non_State_Culture_Literacy, size);
         Array.Resize(ref Non_State_Consciousness, size);
         Array.Resize(ref Parties, size);
+        Parties[size - 1] = [];
         Array.Resize(ref UnitNames, size);
+        UnitNames[size - 1] = [];
         Array.Resize(ref UpperHouse, size);
+        UpperHouse[size - 1] = [];
         Array.Resize(ref TechSchools, size);
         Array.Resize(ref Inventions, size);
+        Inventions[size - 1] = [];
         Array.Resize(ref Technologies, size);
+        Technologies[size - 1] = [];
     }
 
 

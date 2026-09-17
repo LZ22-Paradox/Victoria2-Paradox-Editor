@@ -25,6 +25,9 @@ public partial class MapViewer
     public static bool IsMapLoaded;
     public static bool IsImageFlipped { get; set; } //Possibly may be useless
 
+    WriteableBitmap ProvinceMap;
+
+    
     public MapViewer()
     {
         InitializeComponent();
@@ -36,6 +39,7 @@ public partial class MapViewer
             { MapMode.PROVENCIAL, mapProvinces },
             { MapMode.TERRAIN, mapTerrain },
         };
+        
     }
 
     public enum MapMode
@@ -69,6 +73,8 @@ public partial class MapViewer
         WriteableBitmap provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
         mapPolitical.Source = new MapRenderer().DrawPoliticalMap(provinceMapSource);
 
+        ProvinceMap = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
+        
         //TODO: Load D_ Map
 
         IsMapLoaded = true;
@@ -95,13 +101,9 @@ public partial class MapViewer
     public void Map_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.MiddleButton.Equals(MouseButtonState.Pressed))
-        {
             MouseDown(sender, e);
-        }
         else if (e.LeftButton.Equals(MouseButtonState.Pressed) && IsMapLoaded)
-        {
             MouseLeftClick(sender, e);
-        }
     }
 
     /// <summary>
@@ -130,9 +132,9 @@ public partial class MapViewer
 
                 break;
             case MapMode.PROVENCIAL: //Province Map
-                WriteableBitmap provMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
                 if (Keyboard.IsKeyDown(Key.LeftShift))
                 {
+                    SelectColor(ProvinceMap, mapProvinces.SelectedColor);
                     Populate(mapProvinces, mapPolitical);
                     MainWindow.provinceInterface.Visibility = Visibility.Hidden;
                     Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
@@ -140,7 +142,7 @@ public partial class MapViewer
                 else
                 {
                     MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
-                    SelectColor(provMapSource, mapProvinces.SelectedColor);
+                    SelectColor(ProvinceMap, mapProvinces.SelectedColor);
                 }
 
                 break;
@@ -163,9 +165,8 @@ public partial class MapViewer
 
     public void SelectColor(WriteableBitmap source, Color selectedColor)
     {
-        var tempMapRenderer = new MapRenderer();
-        WriteableBitmap singleProvince = MapRenderer.DrawSelectedProvince(source,
-            MapRenderer.GetRawColor(selectedColor));
+        WriteableBitmap singleProvince 
+            = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
         flashingSelection.Source = singleProvince;
     }
 
