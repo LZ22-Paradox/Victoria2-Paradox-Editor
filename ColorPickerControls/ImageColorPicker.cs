@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -121,7 +120,7 @@ public class ImageColorPicker : Image
 
             _position = newPosition;
 
-            var color = PickColor(_position.X, _position.Y);
+            Color color = PickColor(_position.X, _position.Y);
 
             if (color == SelectedColor)
                 InvalidateVisual();
@@ -169,12 +168,12 @@ public class ImageColorPicker : Image
 
             var drawingVisual = new DrawingVisual();
 
-            using (var context = drawingVisual.RenderOpen())
+            using (DrawingContext? context = drawingVisual.RenderOpen())
             {
                 context.DrawDrawing(drawingImage.Drawing);
             }
 
-            var bounds = drawingVisual.ContentBounds;
+            Rect bounds = drawingVisual.ContentBounds;
 
             if (bounds.Width <= 0 || bounds.Height <= 0)
                 return null;
@@ -257,7 +256,7 @@ public class ImageColorPicker : Image
         if (image.ActualWidth <= 0 || image.ActualHeight <= 0)
             throw new InvalidOperationException("Image has no valid dimensions.");
 
-        var point = ScaleToBitmap(
+        Point point = ScaleToBitmap(
             _position,
             image.ActualWidth,
             image.ActualHeight,
@@ -275,7 +274,7 @@ public class ImageColorPicker : Image
         if (ActualWidth <= 0 || ActualHeight <= 0)
             throw new InvalidOperationException("Image has no valid dimensions.");
 
-        var point = ScaleToBitmap(
+        Point point = ScaleToBitmap(
             new Point(x, y),
             ActualWidth,
             ActualHeight,
@@ -287,13 +286,13 @@ public class ImageColorPicker : Image
 
     private Color PickDrawingColor(double x, double y)
     {
-        var targetBitmap = TargetBitmap;
+        RenderTargetBitmap? targetBitmap = TargetBitmap;
 
         if (targetBitmap == null)
             throw new InvalidOperationException(
                 "Unable to create a bitmap from the drawing source.");
 
-        var point = ScaleToBitmap(
+        Point point = ScaleToBitmap(
             new Point(x, y),
             ActualWidth,
             ActualHeight,

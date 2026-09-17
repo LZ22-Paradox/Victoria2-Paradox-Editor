@@ -1,6 +1,7 @@
 ﻿using Paradox_Editor.Parsers;
 using System.Windows;
 using System.Windows.Controls;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Interfaces;
 

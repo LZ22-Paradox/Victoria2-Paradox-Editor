@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.Parsers;
 
 public class HistoryFiller : IDisposable
 {
-    public void PopulateHistoryData(uint id, string historyFilePath, DatabaseProvinces databaseProvinces)
+    public void PopulateHistoryData(uint id, string historyFilePath, DatabaseProvinces provinceDatabase)
     {
         List<Tag> tempCoresList = [];
         using StreamReader sr = new(historyFilePath);
@@ -37,18 +38,23 @@ public class HistoryFiller : IDisposable
             //     ...
             // ...
             if (isReadingBuildings == false)
-                FillHistoryFromLine(id, line, value, tempCoresList, databaseProvinces);
+                FillHistoryFromLine(id, line, value, tempCoresList, provinceDatabase);
             else
-                FillBuildingFromLine(id, line, value, databaseProvinces);
+                FillBuildingFromLine(id, line, value, provinceDatabase);
         }
 
-        databaseProvinces.SetCores(id, tempCoresList);
+        provinceDatabase.SetCores(id, tempCoresList);
     }
 
     private bool isReadingBuildings = false;
     private StateBuilding tempStateBuilding = new();
 
-    private void FillHistoryFromLine(uint id, string line, string value, List<Tag> coresTemp, DatabaseProvinces databaseProvinces)
+    private void FillHistoryFromLine(
+        uint id,
+        string line,
+        string value, 
+        List<Tag> coresTemp,
+        DatabaseProvinces databaseProvinces)
     {
         if (string.IsNullOrEmpty(line))
             return;

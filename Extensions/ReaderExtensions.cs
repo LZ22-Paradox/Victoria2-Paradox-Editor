@@ -82,6 +82,7 @@ public static class ReaderExtensions
             reader.Read();
             return reader.ReadUntil('"');
         }
+
         return reader.ReadUntilWhitespace();
     }
 
@@ -105,6 +106,35 @@ public static class ReaderExtensions
             string value = reader.ReadUntil('\n', '}').Trim();
             if (int.TryParse(value, out int number))
                 result[key] = number;
+        }
+
+        return result;
+    }
+
+    public static List<T> ReadList<T>(this StreamReader reader, Func<string, T?> uInt)
+    {
+        var result = new List<T>();
+
+        reader.SkipWhitespace();
+
+        if (reader.Read() != '{')
+            throw new FormatException("Expected '{'.");
+
+        while (!reader.EndOfStream)
+        {
+            reader.SkipWhitespace();
+
+            if (reader.Peek() == '}')
+            {
+                reader.Read();
+                break;
+            }
+
+            string value = reader.ReadUntilWhitespace();
+            T? entry = uInt.Invoke(value);
+            if (entry != null)
+                result.Add(entry);
+            else throw new FormatException($"Invalid integer: '{value}'.");
         }
 
         return result;

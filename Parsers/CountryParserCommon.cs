@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.Parsers;
 

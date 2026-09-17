@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Paradox_Editor.Extensions;
 using Paradox_Editor.Parsers;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.DataAcquisition;
 
@@ -18,9 +18,12 @@ public class MapFileDataAcquisition
     // ReSharper disable once RedundantAssignment
     public MapFileDataAcquisition(ref DatabaseProvinces databaseProvincesReference, string directory)
     {
-        _continents = new ContinentParser(directory)
-            .Parse<Dictionary<string, Continent>>(directory, "map", "continent.txt");
+        string[] continentPathParts = [directory, "map", "continent.txt"];
+        _continents = new ContinentParser(directory).Parse<Dictionary<string, Continent>>(continentPathParts);
+
         DefaultMapFile = new DefaultMapParser(directory).Parse<DefaultMap>("map", "default.map");
+
+        // TODO: Create regions
 
         CreateProvinceDatabase(out databaseProvincesReference, directory);
     }
@@ -28,6 +31,22 @@ public class MapFileDataAcquisition
     private void CreateProvinceDatabase(out DatabaseProvinces databaseProvincesReference, string directory)
     {
         var database = new DatabaseProvinces(DefaultMapFile.MaxProvinces);
+
+        // All begins as ocean before being marked with land provinces.
+        // The reason this is being done here and nowhere else is that this is the earliest, most convenient point to
+        //  check for this property before it becomes "too late" during runtime. "continents.txt" is the only file that
+        //  specifies what is an ocean, and what is not outside the game's regions file, which I do not trust.
+        bool[] isOceanProvinceArray = new bool[DefaultMapFile.MaxProvinces];
+        Array.Fill(isOceanProvinceArray, true);
+        Parallel.ForEach(_continents.Values, continent =>
+        {
+            foreach (var province in continent.Provinces)
+                isOceanProvinceArray[province] = false;
+        });
+
+
+        // Create provinces in memory from the "definition.csv" file. At this stage, they are still missing COMMON
+        //  HISTORY, and POP information, which is handled a layer above this aquisition layer..
         Task task = Task.Run(() =>
         {
             var records = new ProvinceDefinitionsFileParser(directory)
@@ -52,7 +71,8 @@ public class MapFileDataAcquisition
                 database.CreateProvince(
                     /*Province ID*/ id: Convert.ToUInt32(record.Id),
                     /*Color*/ red, green, blue,
-                    /*Province Name*/ record.Name
+                    /*Province Name*/ record.Name,
+                    /*Ocean Array*/ isOceanProvinceArray
                 );
             });
         });

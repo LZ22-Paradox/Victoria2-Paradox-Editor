@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using Paradox_Editor.Extensions;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Parsers;
 

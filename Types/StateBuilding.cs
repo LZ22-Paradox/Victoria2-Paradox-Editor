@@ -1,4 +1,4 @@
-namespace Paradox_Editor.Extensions;
+namespace Paradox_Editor.Types;
 
 public class Building;
 

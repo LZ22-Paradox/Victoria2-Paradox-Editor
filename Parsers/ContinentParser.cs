@@ -1,6 +1,8 @@
 using Paradox_Editor.Extensions;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Parsers;
 
@@ -50,8 +52,11 @@ public sealed class ContinentParser(string Directory) : ParserCommon(Directory)
                     reader.SkipWhitespace();
                     continent.RGOSizeMine = reader.ReadUntilWhitespace();
                     break;
-                default:
-                    continent.Provinces = ReadProvinces(reader);
+                default: // Defaults to "provinces"
+                    reader.SkipUntil('=');
+                    reader.SkipWhitespace();
+                    var provinces = reader.ReadList(ParseUInt).Cast<uint>().ToList();
+                    continent.Provinces = provinces;
                     break;
             }
 
@@ -62,28 +67,9 @@ public sealed class ContinentParser(string Directory) : ParserCommon(Directory)
         return continent;
     }
 
-    private static List<string> ReadProvinces(StreamReader reader)
+    private static uint? ParseUInt(string value)
     {
-        List<string> provIDs = [];
-
-        reader.SkipUntil('{');
-        reader.SkipWhitespace();
-        while (reader.Peek() is not -1 and not '}')
-        {
-            if (reader.Peek() == '\"')
-            {
-                reader.Read();
-                provIDs.Add(reader.ReadUntil('\"'));
-            }
-            else
-            {
-                provIDs.Add(reader.ReadUntilWhitespace());
-            }
-
-            reader.SkipWhitespace();
-        }
-
-        reader.Read();
-        return provIDs; //test*/
+        if (!uint.TryParse(value, out uint result)) return null;
+        return result;
     }
 }

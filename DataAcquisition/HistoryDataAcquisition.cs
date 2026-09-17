@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using Paradox_Editor.Parsers;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.DataAcquisition;
 

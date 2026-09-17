@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Paradox_Editor.Extensions;
 
-namespace Paradox_Editor.Parsers;
+namespace Paradox_Editor.Types;
 
 public sealed class IdeologyGroup
 {

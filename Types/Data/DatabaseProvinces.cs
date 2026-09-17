@@ -3,12 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Windows.Media;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Parsers;
 
-namespace Paradox_Editor.Types;
+namespace Paradox_Editor.Types.Data;
 
 public class DatabaseProvinces
 {
@@ -16,10 +15,10 @@ public class DatabaseProvinces
     public readonly ConcurrentDictionary<uint, uint> ColorsToProvinceIDs = new();
 
     // FILE I/O
-    private readonly uint[] ProvinceID; //✓
+    private readonly uint[] ProvinceID;
     private string[] ProvinceName = [];
-    private string[] HistoryFilePath = []; //✓
-    private string[] ProvinceFileName = []; //✓
+    private string[] HistoryFilePath = [];
+    private string[] ProvinceFileName = [];
     private bool[] IsOcean = [];
     private uint[] Color = []; // Needed for CSV Processing (ESPECIALLY DO NOT TOUCH!)
 
@@ -74,7 +73,7 @@ public class DatabaseProvinces
     #region Get Methods
 
     public uint GetColor(uint provinceId) => Color[provinceId];
-    
+
     public uint GetIDFromColor(uint color) => ColorsToProvinceIDs[color];
     public uint GetIDFromColor(Color color) => GetIDFromColor(color.ToPackedColor());
 
@@ -83,7 +82,7 @@ public class DatabaseProvinces
         id = null;
         if (!ColorsToProvinceIDs.Keys.Contains(color))
             return false;
-        
+
         id = ColorsToProvinceIDs[color];
         return true;
     }
@@ -110,7 +109,7 @@ public class DatabaseProvinces
     public bool IsValidLandProvince(uint provinceId) => IsValidProvince(provinceId) && !IsOcean[provinceId];
 
     // ReSharper disable once UnusedMember.Global
-    public bool IsOceanProvince(uint provinceId) => ProvinceID.Contains(provinceId) && IsOcean[provinceId];
+    public bool IsOceanProvince(uint provinceId) => IsOcean[provinceId];
 
     public string GetName(uint provinceId) => ProvinceName[provinceId];
 
@@ -141,7 +140,7 @@ public class DatabaseProvinces
             if (IsValidLandProvince(id))
                 continue;
 
-            var wrapper = new ProvinceWrapper(id.ToString(), HistoryFilePath[id]);
+            var wrapper = new ProvinceWrapper(id.ToString(), ProvinceName[id], HistoryFilePath[id]);
             yield return wrapper;
         }
     }
@@ -164,6 +163,8 @@ public class DatabaseProvinces
     public void SetLifeRating(uint provinceId, short rating) => LifeRating[provinceId] = rating;
 
     public void SetColonial(uint provinceId, short colonial) => Colonial[provinceId] = colonial;
+
+    public void SetOcean(uint provinceId, bool value) => IsOcean[provinceId] = value;
 
     public void ClearCores(uint provinceId) => Cores[provinceId].Clear();
 
@@ -203,12 +204,12 @@ public class DatabaseProvinces
     }
 
     /// Populate province data with CSV Info
-    public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName)
+    public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName, bool[] isOceanProvinceArray)
     {
         // Avoid duplicates.
         if (ProvinceID.Contains(id))
             throw new Exception($"Duplicate province ID found: {id}");
-        
+
         // ERR: Faulty. Some provinces bug. (Tested Vanilla Vic2)
         ProvinceID[id] = id;
         uint packedColor = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
@@ -221,6 +222,7 @@ public class DatabaseProvinces
         Cores[id] = [];
         Pops[id] = [];
         State_Buildings[id] = [];
+        IsOcean = isOceanProvinceArray;
 
         // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
     }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Paradox_Editor.Types;
+namespace Paradox_Editor.Types.Data;
 
 public class DefaultMap
 {

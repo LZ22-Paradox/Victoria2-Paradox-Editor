@@ -1,5 +1,4 @@
-﻿using Paradox_Editor.ColorPickerControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -154,19 +153,20 @@ public partial class MapViewer
 
     private void HandleProvincialClick()
     {
-        if (Keyboard.IsKeyDown(Key.LeftShift))
+        if (Keyboard.IsKeyDown(Key.LeftCtrl))
         {
-            SelectColor(_provinceMap, mapProvinces.SelectedColor);
-            Populate(mapProvinces, mapPolitical);
-
             _mainWindow.provinceInterface.Visibility = Visibility.Hidden;
-
-            Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED");
+            HandlePoliticalClick(); // TODO: Handle pop edit.
             return;
         }
 
-        _mainWindow.provinceInterface.PopulateInterface(
-            mapProvinces.SelectedColor);
+        Color provinceColor = MapRenderer.GetProvinceColorAt(
+            _provinceMap,
+            mapPolitical.Position,
+            new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
+        );
+
+        _mainWindow.provinceInterface.PopulateInterface(provinceColor);
 
         SelectColor(_provinceMap, mapProvinces.SelectedColor);
     }
@@ -201,17 +201,7 @@ public partial class MapViewer
     }
 
     private void SelectColor(WriteableBitmap source, Color selectedColor)
-    {
-        flashingSelection.Source = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
-    }
-
-    private void Populate(ImageColorPicker source, ImageColorPicker colorSource)
-    {
-        Color color = source.PickColor(colorSource);
-
-        _mainWindow.provinceInterface.PopulateInterface(color);
-        SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorSource.Source), color);
-    }
+        => flashingSelection.Source = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
 
     #endregion
 

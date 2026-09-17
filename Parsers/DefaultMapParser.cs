@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Linq;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.Parsers;
 

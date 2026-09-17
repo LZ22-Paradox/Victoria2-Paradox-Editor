@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Handlers;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 using WpfAnimatedGif;
 using Color = System.Windows.Media.Color;
 
@@ -27,9 +28,7 @@ public partial class ProvinceInterface
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void NotifyPropertyChange(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     public ObservableCollection<Tag> Cores
     {
@@ -103,7 +102,7 @@ public partial class ProvinceInterface
 
             PopulateSaveFile(file);
 
-            //Currently only refreshes political map
+            // IMPL: Currently only refreshes political map
             var currentColor = ModData.Instance.DatabaseProvinces.GetIDFromColor(CurrentProvince);
             MapViewer.SetMap(0, new MapRenderer()
                 .RefreshProvincePolitical(
@@ -301,28 +300,35 @@ public partial class ProvinceInterface
     /// <param name="color"></param>
     public void PopulateInterface(Color color)
     {
-        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
-        var provinceID = databaseProvinces.GetIDFromColor(color);
-        CurrentProvince = provinceID;
-        if (!databaseProvinces.IsValidLandProvince(provinceID))
+        DatabaseProvinces provinceDatabase = ModData.Instance.DatabaseProvinces;
+        if (!provinceDatabase.TryGetIDFromColor(color, out var provinceID))
+        {
+#if DEBUG
+            Debug.WriteLine($"Failed to get ID from province color {color.ToPackedColor()}");
+#endif
+            return;
+        }
+
+        CurrentProvince = provinceID.Value;
+        if (!provinceDatabase.IsValidLandProvince(CurrentProvince))
         {
             PROVIDBOX.Text = Convert.ToString(provinceID);
 
             // Set name.
-            NAMEBOX.Text = databaseProvinces.GetName(provinceID);
+            NAMEBOX.Text = provinceDatabase.GetName(CurrentProvince);
 
             // Set owner.
-            databaseProvinces.TryGetOwner(provinceID, out var owner);
+            provinceDatabase.TryGetOwner(CurrentProvince, out var owner);
             OWNERBOX.Text = owner ?? "";
 
             // Set controller.
-            databaseProvinces.TryGetController(provinceID, out var controller);
+            provinceDatabase.TryGetController(CurrentProvince, out var controller);
             CONTROLLERBOX.Text = controller ?? "";
 
             // Set Color display.
             COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
 
-            string loggedTradeGood = databaseProvinces.GetTradeGood(provinceID);
+            string loggedTradeGood = provinceDatabase.GetTradeGood(CurrentProvince);
             bool breakLoop = false;
             for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
             {
@@ -349,21 +355,21 @@ public partial class ProvinceInterface
                     break;
             }
 
-            LIFERATINGBOX.Text = Convert.ToString(databaseProvinces.GetLifeRating(provinceID));
-            COLONIALBOX.Text = Convert.ToString(databaseProvinces.GetColonial(provinceID));
-            NAVALBASEBOX.Text = Convert.ToString(databaseProvinces.GetNavalBaseLevel(provinceID));
-            TERRAINBOX.Text = Convert.ToString(databaseProvinces.GetTerrain(provinceID));
-            FORTBOX.Text = Convert.ToString(databaseProvinces.GetFortLevel(provinceID));
-            RAILROADBOX.Text = Convert.ToString(databaseProvinces.GetRailroadLevel(provinceID));
+            LIFERATINGBOX.Text = Convert.ToString(provinceDatabase.GetLifeRating(CurrentProvince));
+            COLONIALBOX.Text = Convert.ToString(provinceDatabase.GetColonial(CurrentProvince));
+            NAVALBASEBOX.Text = Convert.ToString(provinceDatabase.GetNavalBaseLevel(CurrentProvince));
+            TERRAINBOX.Text = Convert.ToString(provinceDatabase.GetTerrain(CurrentProvince));
+            FORTBOX.Text = Convert.ToString(provinceDatabase.GetFortLevel(CurrentProvince));
+            RAILROADBOX.Text = Convert.ToString(provinceDatabase.GetRailroadLevel(CurrentProvince));
 
             object sender = this;
             RoutedEventArgs e = new();
 
             ResetCores(sender, e);
-            foreach (Tag core in databaseProvinces.GetCores(provinceID)) //Populates Core List
+            foreach (Tag core in provinceDatabase.GetCores(CurrentProvince)) //Populates Core List
                 Cores.Add(core);
             ResetBuildings(sender, e);
-            foreach (StateBuilding stateBuilding in databaseProvinces.GetStateBuildings(provinceID))
+            foreach (StateBuilding stateBuilding in provinceDatabase.GetStateBuildings(CurrentProvince))
                 StateBuildings.Add(stateBuilding); // WARN: Does not work!
 
             Visibility = Visibility.Visible;

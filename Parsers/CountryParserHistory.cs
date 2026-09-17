@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.Parsers;
 

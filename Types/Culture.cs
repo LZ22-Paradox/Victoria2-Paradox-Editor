@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace Paradox_Editor.Parsers;
+namespace Paradox_Editor.Types;
 
 public sealed class Culture
 {

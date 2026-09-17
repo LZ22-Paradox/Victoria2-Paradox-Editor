@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Paradox_Editor.Types;
+namespace Paradox_Editor.Types.Data;
 
 public class DatabaseCountries
 {

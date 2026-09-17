@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows;
 using Paradox_Editor.Interfaces;
 using Paradox_Editor.Types;
+using Paradox_Editor.Types.Data;
 
 //F1 to see WIKI detail on part
 //F12 to see usage in VS
@@ -107,7 +108,7 @@ public partial class MainWindow : INotifyPropertyChanged
     private void ChangeControlScheme(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         => CurrentControlMode = ControlMode.SelectedIndex;
 
+    // Hide the province interface on boot.
     private void provinceInterface_Loaded(object sender, RoutedEventArgs e)
-    {
-    }
+        => provinceInterface.Visibility = Visibility.Hidden;
 }
