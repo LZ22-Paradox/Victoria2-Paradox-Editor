@@ -91,9 +91,9 @@ public partial class ProvinceInterface
 
     private void Save()
     {
-        if (ModData.Instance.PROVINCE_DATA.GetColor(CurrentProvince) != 0)
+        if (ModData.Instance.DatabaseProvinces.GetColor(CurrentProvince) != 0)
         {
-            string historyFile = ModData.Instance.PROVINCE_DATA.GetHistoryFile(CurrentProvince);
+            string historyFile = ModData.Instance.DatabaseProvinces.GetHistoryFile(CurrentProvince);
             if (File.Exists(historyFile))
                 File.Delete(historyFile);
 
@@ -102,7 +102,7 @@ public partial class ProvinceInterface
             PopulateSaveFile(file);
 
             //Currently only refreshes political map
-            var currentColor = ModData.Instance.PROVINCE_DATA.GetIDFromColor(CurrentProvince);
+            var currentColor = ModData.Instance.DatabaseProvinces.GetIDFromColor(CurrentProvince);
             MapViewer.SetMap(0, new MapRenderer()
                 .RefreshProvincePolitical(
                     MapViewer.GetMap(MapViewer.MapMode.PROVENCIAL),
@@ -122,30 +122,30 @@ public partial class ProvinceInterface
     private void PopulateSaveFile(StreamWriter file)
     {
         var provinceID = Convert.ToUInt32(PROVIDBOX.Text);
-        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
+        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
 
-        bool hasCountry = ModData.Instance.COUNTRY_DATA.HasCountry(OWNERBOX.Text);
+        bool hasCountry = ModData.Instance.DatabaseCountries.HasCountry(OWNERBOX.Text);
         if (hasCountry)
         {
             file.WriteLine("owner = " + OWNERBOX.Text);
-            database.SetOwner(provinceID, OWNERBOX.Text);
+            databaseProvinces.SetOwner(provinceID, OWNERBOX.Text);
         }
         else
         {
             MessageBox.Show("Owner TAG invalid ! : " + OWNERBOX.Text);
-            database.SetOwner(provinceID);
+            databaseProvinces.SetOwner(provinceID);
         }
 
-        hasCountry = ModData.Instance.COUNTRY_DATA.HasCountry(CONTROLLERBOX.Text);
+        hasCountry = ModData.Instance.DatabaseCountries.HasCountry(CONTROLLERBOX.Text);
         if (hasCountry)
         {
             file.WriteLine("controller = " + CONTROLLERBOX.Text);
-            database.SetController(provinceID, CONTROLLERBOX.Text);
+            databaseProvinces.SetController(provinceID, CONTROLLERBOX.Text);
         }
         else
         {
             MessageBox.Show("Controller TAG invalid! : " + CONTROLLERBOX.Text);
-            database.SetController(provinceID);
+            databaseProvinces.SetController(provinceID);
         }
 
         if (TRADEGOODBOX.Items.GetItemAt(TRADEGOODBOX.SelectedIndex) is ComboBox tradeGoodDropdown &&
@@ -153,63 +153,63 @@ public partial class ProvinceInterface
         {
             string goodText = tradeGoodDropdown.Text;
             file.WriteLine("trade_goods = " + goodText);
-            database.SetTradeGood(provinceID, goodText);
+            databaseProvinces.SetTradeGood(provinceID, goodText);
         }
 
         if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
         {
             file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
-            database.SetLifeRating(provinceID, Convert.ToInt16(LIFERATINGBOX.Text));
+            databaseProvinces.SetLifeRating(provinceID, Convert.ToInt16(LIFERATINGBOX.Text));
         }
 
         if (!COLONIALBOX.Text.Equals(""))
         {
             file.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
-            database.SetColonial(provinceID, Convert.ToInt16(COLONIALBOX.Text));
+            databaseProvinces.SetColonial(provinceID, Convert.ToInt16(COLONIALBOX.Text));
         }
 
         if (COREGRID.HasItems)
         {
-            database.ClearCores(provinceID);
+            databaseProvinces.ClearCores(provinceID);
             foreach (Tag item in COREGRID.Items)
             {
                 if (string.IsNullOrEmpty(item.Value))
                     continue;
                 file.WriteLine("add_core = " + item.Value);
-                database.AddCore(provinceID, item);
+                databaseProvinces.AddCore(provinceID, item);
             }
         }
         else
         {
-            database.ClearCores(provinceID);
+            databaseProvinces.ClearCores(provinceID);
         }
 
         // TODO: Simplify this area.
         if (!TERRAINBOX.Text.Equals(""))
         {
             file.WriteLine("terrain = " + TERRAINBOX.Text);
-            database.SetTerrain(provinceID, TERRAINBOX.Text);
+            databaseProvinces.SetTerrain(provinceID, TERRAINBOX.Text);
         }
 
         if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
         {
             file.WriteLine("naval_base = " + NAVALBASEBOX.Text + "\t");
-            database.SetNavalBaseLevel(provinceID, Convert.ToInt16(NAVALBASEBOX.Text));
+            databaseProvinces.SetNavalBaseLevel(provinceID, Convert.ToInt16(NAVALBASEBOX.Text));
         }
 
         if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("\t"))
         {
             file.WriteLine("fort = " + FORTBOX.Text + "\t");
-            database.SetFortLevel(provinceID, Convert.ToInt16(FORTBOX.Text));
+            databaseProvinces.SetFortLevel(provinceID, Convert.ToInt16(FORTBOX.Text));
         }
 
         if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
         {
             file.WriteLine("railroad = " + RAILROADBOX.Text + "\t");
-            database.SetRailroadLevel(provinceID, Convert.ToInt16(RAILROADBOX.Text));
+            databaseProvinces.SetRailroadLevel(provinceID, Convert.ToInt16(RAILROADBOX.Text));
         }
 
-        database.ClearBuildings(provinceID);
+        databaseProvinces.ClearBuildings(provinceID);
         if (STATEBUILDING_GRID.HasItems)
         {
             foreach (StateBuilding building in STATEBUILDING_GRID.Items)
@@ -225,7 +225,7 @@ public partial class ProvinceInterface
                     file.WriteLine("}");
                 }
 
-                database.AddStateBuilding(provinceID, building);
+                databaseProvinces.AddStateBuilding(provinceID, building);
             }
         }
 
@@ -299,28 +299,28 @@ public partial class ProvinceInterface
     /// <param name="color"></param>
     public void PopulateInterface(Color color)
     {
-        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
-        var provinceID = database.GetIDFromColor(color);
+        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
+        var provinceID = databaseProvinces.GetIDFromColor(color);
         CurrentProvince = provinceID;
-        if (!database.IsValidLandProvince(provinceID))
+        if (!databaseProvinces.IsValidLandProvince(provinceID))
         {
             PROVIDBOX.Text = Convert.ToString(provinceID);
 
             // Set name.
-            NAMEBOX.Text = database.GetName(provinceID);
+            NAMEBOX.Text = databaseProvinces.GetName(provinceID);
 
             // Set owner.
-            database.TryGetOwner(provinceID, out var owner);
+            databaseProvinces.TryGetOwner(provinceID, out var owner);
             OWNERBOX.Text = owner ?? "";
 
             // Set controller.
-            database.TryGetController(provinceID, out var controller);
+            databaseProvinces.TryGetController(provinceID, out var controller);
             CONTROLLERBOX.Text = controller ?? "";
 
             // Set Color display.
             COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
 
-            string loggedTradeGood = database.GetTradeGood(provinceID);
+            string loggedTradeGood = databaseProvinces.GetTradeGood(provinceID);
             bool breakLoop = false;
             for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
             {
@@ -347,21 +347,21 @@ public partial class ProvinceInterface
                     break;
             }
 
-            LIFERATINGBOX.Text = Convert.ToString(database.GetLifeRating(provinceID));
-            COLONIALBOX.Text = Convert.ToString(database.GetColonial(provinceID));
-            NAVALBASEBOX.Text = Convert.ToString(database.GetNavalBaseLevel(provinceID));
-            TERRAINBOX.Text = Convert.ToString(database.GetTerrain(provinceID));
-            FORTBOX.Text = Convert.ToString(database.GetFortLevel(provinceID));
-            RAILROADBOX.Text = Convert.ToString(database.GetRailroadLevel(provinceID));
+            LIFERATINGBOX.Text = Convert.ToString(databaseProvinces.GetLifeRating(provinceID));
+            COLONIALBOX.Text = Convert.ToString(databaseProvinces.GetColonial(provinceID));
+            NAVALBASEBOX.Text = Convert.ToString(databaseProvinces.GetNavalBaseLevel(provinceID));
+            TERRAINBOX.Text = Convert.ToString(databaseProvinces.GetTerrain(provinceID));
+            FORTBOX.Text = Convert.ToString(databaseProvinces.GetFortLevel(provinceID));
+            RAILROADBOX.Text = Convert.ToString(databaseProvinces.GetRailroadLevel(provinceID));
 
             object sender = this;
             RoutedEventArgs e = new();
 
             ResetCores(sender, e);
-            foreach (Tag core in database.GetCores(provinceID)) //Populates Core List
+            foreach (Tag core in databaseProvinces.GetCores(provinceID)) //Populates Core List
                 Cores.Add(core);
             ResetBuildings(sender, e);
-            foreach (StateBuilding stateBuilding in database.GetStateBuildings(provinceID))
+            foreach (StateBuilding stateBuilding in databaseProvinces.GetStateBuildings(provinceID))
                 StateBuildings.Add(stateBuilding); // WARN: Does not work!
 
             Visibility = Visibility.Visible;
@@ -395,7 +395,7 @@ public partial class ProvinceInterface
         for (int i = 1; i < TRADEGOODBOX.Items.Count; i++)
             TRADEGOODBOX.Items.RemoveAt(i);
 
-        foreach (var group_of_goods in ModData.Instance.GOODS_DATA.GetGoods())
+        foreach (var group_of_goods in ModData.Instance.COMMON_DATA.Goods)
         {
             // Populate goods groups.
             var groupComboBox = new ComboBox { Name = group_of_goods.Key };

@@ -4,13 +4,12 @@ using System.IO;
 
 namespace Paradox_Editor.Parsers;
 
-public sealed class ContinentParser : ParserCommon
+public sealed class ContinentParser(string Directory) : ParserCommon(Directory)
 {
-    public override T Parse<T>(string directory, params string[] fileParts)
+    public override T Parse<T>(params string[] fileParts)
     {
         Dictionary<string, Continent> continents = new();
-
-        var continentFilePath = GetGameFilePath(directory, Path.Combine(fileParts));
+        var continentFilePath = GetGameFilePath(Path.Combine(fileParts));
         using StreamReader reader = new(File.OpenRead(continentFilePath));
         while (true)
         {

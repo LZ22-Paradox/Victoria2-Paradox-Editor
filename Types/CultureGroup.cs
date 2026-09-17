@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using Paradox_Editor.Extensions;
 using Paradox_Editor.Parsers;
 
 namespace Paradox_Editor.Types;

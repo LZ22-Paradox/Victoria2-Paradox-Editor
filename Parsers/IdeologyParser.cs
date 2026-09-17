@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Paradox_Editor.Extensions;
 
 namespace Paradox_Editor.Parsers;
@@ -27,9 +28,7 @@ public sealed class IdeologiesFile // TODO: This all needs work.
         {
             int c = reader.Peek();
             if (c == -1)
-            {
                 break;
-            }
 
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
@@ -38,110 +37,30 @@ public sealed class IdeologiesFile // TODO: This all needs work.
 
         return file;
     }
-}
-
-public sealed class IdeologyGroup
-{
-    //public string Unit { get; set; }
-    public Dictionary<string, Ideology> Ideologies { get; } = new();
-
-    public static IdeologyGroup Parse(StreamReader reader)
+    
+    public static List<Ideology> Read(StreamReader reader)
     {
-        IdeologyGroup group = new();
-        reader.SkipUntil('{');
+        List<Ideology> ideologyList = [];
+        // TODO: Go through this.
+        /*reader.SkipUntil('{');
         reader.SkipWhitespace();
         while (reader.Peek() is not -1 and not '}')
         {
-            string item = reader.ReadUntilWhitespace();
-            switch (item)
+            Ideology ideology = new();
+            string? line = reader.ReadLine();
+            var regex = new Regex("\t|\\s+");
+            if (!string.IsNullOrEmpty(line))
             {
-                /*case "unit":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    group.Unit = reader.ReadUntilWhitespace();
-                    break;*/
-                default:
-                    group.Ideologies[item] = Ideology.ReadIdeology(reader);
-                    break;
+                string[] cleanedLine = regex.Replace(line, "").Split('=');
+                ideology.Name = cleanedLine[0];
+                ideology.Percentage = cleanedLine[1];
             }
 
+            ideologyList.Add(ideology);
             reader.SkipWhitespace();
         }
 
-        reader.Read();
-        return group;
-    }
-}
-
-public sealed class Ideology
-{
-    public System.Windows.Media.Color Color { get; set; }
-    public string CanReduceMilitary { get; set; }
-    public string Date { get; set; }
-    public string Uncivilized { get; set; }
-
-    public List<string> FirstNames { get; } = new();
-    public List<string> LastNames { get; } = new();
-
-    public static Ideology ReadIdeology(StreamReader reader)
-    {
-        Ideology culture = new();
-        reader.SkipUntil('{');
-        reader.SkipWhitespace();
-        while (reader.Peek() is not -1 and not '}')
-        {
-            string item = reader.ReadUntilWhitespace();
-            switch (item)
-            {
-                case "color":
-                    culture.Color = ColorParser.Parse(reader);
-                    break;
-                case "first_names":
-                    reader.SkipUntil('{');
-                    reader.SkipWhitespace();
-                    while (reader.Peek() is not -1 and not '}')
-                    {
-                        if (reader.Peek() == '\"')
-                        {
-                            reader.Read();
-                            culture.FirstNames.Add(reader.ReadUntil('\"'));
-                        }
-                        else
-                        {
-                            culture.FirstNames.Add(reader.ReadUntilWhitespace());
-                        }
-
-                        reader.SkipWhitespace();
-                    }
-
-                    reader.Read();
-                    break;
-                case "last_names":
-                    reader.SkipUntil('{');
-                    reader.SkipWhitespace();
-                    while (reader.Peek() is not -1 and not '}')
-                    {
-                        if (reader.Peek() == '\"')
-                        {
-                            reader.Read();
-                            culture.LastNames.Add(reader.ReadUntil('\"'));
-                        }
-                        else
-                        {
-                            culture.LastNames.Add(reader.ReadUntilWhitespace());
-                        }
-
-                        reader.SkipWhitespace();
-                    }
-
-                    reader.Read();
-                    break;
-            }
-
-            reader.SkipWhitespace();
-        }
-
-        reader.Read();
-        return culture;
+        reader.Read();*/
+        return ideologyList;
     }
 }

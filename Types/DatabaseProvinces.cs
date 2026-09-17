@@ -1,49 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Windows.Media;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Parsers;
 
 namespace Paradox_Editor.Types;
 
-public class ProvinceDatabase
+public class DatabaseProvinces
 {
     /// Indexed Province Color -> Province ID 
     public readonly Dictionary<uint, uint> ColorsToProvinceIDs = new();
 
     // FILE I/O
-    public readonly List<uint> ProvinceID = []; //✓
-    public string[] ProvinceName = [];
-    public string[] HistoryFilePath = []; //✓
-    public string[] ProvinceFileName = []; //✓
-    public bool[] IsOcean = [];
+    private readonly List<uint> ProvinceID = []; //✓
+    private string[] ProvinceName = [];
+    private string[] HistoryFilePath = []; //✓
+    private string[] ProvinceFileName = []; //✓
+    private bool[] IsOcean = [];
+    private uint[] Color = []; // Needed for CSV Processing (ESPECIALLY DO NOT TOUCH!)
 
-    /// IO Needed for CSV Processing (ESPECIALLY DO NOT TOUCH!)
-    public uint[] Color = [];
+    // COMMON DATA
+    private List<Pop>[] Pops = []; // TODO: Store pop data, here.
 
     // HISTORY DATA
-    public string[] Owner = [];
-    public string[] Controller = [];
-    public List<Tag>[] Cores = [];
-    public string[] TradeGoods = [];
-    public int[] LifeRating = [];
-    public string[] Terrain = [];
-    public int[] Colonial = [];
-    public List<StateBuilding>[] State_Buildings = [];
-    public int[] Naval_Base = [];
-    public int[] Fort = [];
-    public int[] Railroad = [];
+    private string[] Owner = [];
+    private string[] Controller = [];
+    private List<Tag>[] Cores = [];
+    private string[] TradeGoods = [];
+    private int[] LifeRating = [];
+    private string[] Terrain = [];
+    private int[] Colonial = [];
+    private List<StateBuilding>[] State_Buildings = [];
+    private int[] Naval_Base = [];
+    private int[] Fort = [];
+    private int[] Railroad = [];
 
-    public static ProvinceDatabase Instance = null!;
+    // ReSharper disable once NotAccessedField.Local
     private readonly int ProvinceCount;
 
-    public ProvinceDatabase(int size)
+    public DatabaseProvinces(int size)
     {
         ProvinceCount = size;
         Expand(size);
-        Instance = this;
     }
 
     /// <param name="size">Province Maximum Size obtained by the default.map</param>
@@ -65,6 +64,7 @@ public class ProvinceDatabase
         Array.Resize(ref Fort, size);
         Array.Resize(ref Railroad, size);
         Array.Resize(ref IsOcean, size);
+        Array.Resize(ref Pops, size);
     }
 
     #region Get Methods
@@ -92,6 +92,7 @@ public class ProvinceDatabase
 
     public bool IsValidLandProvince(uint provinceId) => IsValidProvince(provinceId) && !IsOcean[provinceId];
 
+    // ReSharper disable once UnusedMember.Global
     public bool IsOceanProvince(uint provinceId) => ProvinceID.Contains(provinceId) && IsOcean[provinceId];
 
     public string GetName(uint provinceId) => ProvinceName[provinceId];
@@ -126,6 +127,11 @@ public class ProvinceDatabase
             var wrapper = new ProvinceWrapper(id.ToString(), HistoryFilePath[id]);
             yield return wrapper;
         }
+    }
+
+    public List<Pop> GetPops(uint provinceId)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion
@@ -185,7 +191,7 @@ public class ProvinceDatabase
     }
 
     /// Populate province data with CSV Info
-    public void SetCSVData(uint id, uint red, uint green, uint blue, string recordName)
+    public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName)
     {
         // ERR: Faulty. Some provinces bug. (Tested Vanilla Vic2)
         ProvinceID.Add(id);
@@ -193,7 +199,26 @@ public class ProvinceDatabase
         Color[id] = packedColor;
         ColorsToProvinceIDs.Add(packedColor, id);
         ProvinceName[id] = recordName;
+
+        // Ensure the arrays with internal lists are instantiated in memory to avoid any pesky null pointer
+        //  exceptions. :)
+        Cores[id] = [];
+        Pops[id] = [];
+        State_Buildings[id] = [];
+
         // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
+    }
+
+    public void SetCores(uint id, List<Tag> tempCoresList) => Cores[id] = tempCoresList;
+
+    public void SetPops(uint provinceId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void AddPops(uint provinceId)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion

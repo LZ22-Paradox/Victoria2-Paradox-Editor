@@ -5,12 +5,12 @@ using Paradox_Editor.Parsers;
 
 namespace Paradox_Editor.Types;
 
-public class GoodsParser : ParserCommon
+public class GoodsParser(string Directory) : ParserCommon(Directory)
 {
-    public override T Parse<T>(string directory, params string[] fileParts)
+    public override T Parse<T>(params string[] fileParts)
     {
         Dictionary<string, GoodGroup> goods = new();
-        var goodsPath = GetGameFilePath(directory, Path.Combine(fileParts));
+        var goodsPath = GetGameFilePath(Path.Combine(fileParts));
         using StreamReader reader = new(File.OpenRead(goodsPath));
         while (true)
         {

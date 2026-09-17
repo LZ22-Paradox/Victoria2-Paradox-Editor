@@ -187,9 +187,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Types\Country.Ideology.cs">
-      <DependentUpon>Country.cs</DependentUpon>
-    </Compile>
     <Compile Update="Types\Good.cs">
       <DependentUpon>GoodGroup.cs</DependentUpon>
     </Compile>

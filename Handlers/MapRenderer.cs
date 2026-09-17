@@ -25,7 +25,8 @@ public class MapRenderer
         var pixels = (uint*)image.BackBuffer;
         var pixelCount = image.PixelWidth * image.PixelHeight;
 
-        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
+        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
+        DatabaseCountries databaseCountries = ModData.Instance.DatabaseCountries;
         Parallel.For(0, pixelCount, (index) =>
         {
             if (pixels == null)
@@ -34,20 +35,18 @@ public class MapRenderer
             var rawPixel = pixels[index];
 
             //Below being simplified
-            database.ColorsToProvinceIDs.TryGetValue(rawPixel, out var provinceID);
-            database.TryGetOwner(provinceID, out var owner);
-            if (!string.IsNullOrEmpty(owner))
+            databaseProvinces.ColorsToProvinceIDs.TryGetValue(rawPixel, out var provinceID);
+            databaseProvinces.TryGetOwner(provinceID, out var owner);
+            if (!string.IsNullOrEmpty(owner) && databaseCountries.HasCountry(owner))
             {
-                ModData.Instance.COUNTRY_DATA.GetCountries().TryGetValue(owner, out Country? country);
                 // Some tags are problematic; see Heirs to Aquitania.
                 // TEMP: May be related to the lack of a Fallback for country definitions that rely on vanilla.
-                if (country != null)
-                    pixels[index] = GetRawColor(country.GetColor());
+                pixels[index] = GetRawColor(databaseCountries.GetColor(owner));
             }
             else
             {
                 // Checking if province exists. Ocean provinces are not added to the province list.
-                if (database.IsValidLandProvince(provinceID))
+                if (databaseProvinces.IsValidLandProvince(provinceID))
                     pixels[index] = GetRawColor(Colors.Black); // Uncolonized
                 else
                     pixels[index] = GetRawColor(Colors.White); // Ocean
@@ -118,16 +117,16 @@ public class MapRenderer
         var overWrittenPixels = (uint*)overWrittenMap.BackBuffer;
         var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
 
-        ProvinceDatabase database = ModData.Instance.PROVINCE_DATA;
-        var provinceID = database.GetIDFromColor(provinceColor);
+        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
+        var provinceID = databaseProvinces.GetIDFromColor(provinceColor);
 
         Color countryColor = Colors.Black;
 
-        if (database.TryGetOwner(provinceID, out var owner))
+        DatabaseCountries database = ModData.Instance.DatabaseCountries;
+        if (databaseProvinces.TryGetOwner(provinceID, out var owner))
         {
-            ModData.Instance.COUNTRY_DATA.GetCountries().TryGetValue(owner, out Country? country);
-            if (country != null)
-                countryColor = country.GetColor();
+            if (database.HasCountry(owner))
+                countryColor = database.GetColor(owner);
         }
 
         var newColor = GetRawColor(countryColor);

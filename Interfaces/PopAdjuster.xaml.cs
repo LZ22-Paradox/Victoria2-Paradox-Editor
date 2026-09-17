@@ -24,7 +24,7 @@ public partial class PopAdjuster : UserControl
             continentsComboBox.Items.Add(continent.Key);
         }
 
-        foreach (var culture in ModData.Instance.CULTURES_DATA.GetCultures())
+        foreach (var culture in ModData.Instance.COMMON_DATA.Cultures)
         {
             cultureBox.Items.Add(culture);
             cultureSpecifier.Items.Add(culture);

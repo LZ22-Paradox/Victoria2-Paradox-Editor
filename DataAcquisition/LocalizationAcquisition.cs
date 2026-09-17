@@ -2,14 +2,10 @@
 
 namespace Paradox_Editor.DataAcquisition;
 
-public class LocalizationAcquisition : ParserCommon
+public class LocalizationAcquisition(string Directory) : ParserCommon(Directory)
 {
-    public LocalizationAcquisition(string directory)
-    {
-        // TODO: Add Localization support.
-    }
-
-    public override T Parse<T>(string directory, params string[] fileParts)
+    // TODO: Add Localization support.
+    public override T Parse<T>(params string[] fileParts)
     {
         throw new System.NotImplementedException();
     }

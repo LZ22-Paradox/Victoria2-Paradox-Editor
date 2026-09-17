@@ -5,13 +5,12 @@ using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Parsers;
 
-public sealed class CultureParser : ParserCommon
+public sealed class CultureParser(string Directory) : ParserCommon(Directory)
 {
-    
-    public override T Parse<T>(string directory, params string[] fileParts)
+    public override T Parse<T>(params string[] fileParts)
     {
         Dictionary<string, CultureGroup> groups = new();
-        string culturesCommonFilePath = GetGameFilePath(directory, Path.Combine(fileParts));
+        string culturesCommonFilePath = GetGameFilePath(Path.Combine(fileParts));
         using StreamReader reader = new(File.OpenRead(culturesCommonFilePath));
         while (true)
         {

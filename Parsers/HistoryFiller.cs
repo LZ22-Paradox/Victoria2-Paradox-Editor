@@ -8,7 +8,7 @@ namespace Paradox_Editor.Parsers;
 
 public class HistoryFiller : IDisposable
 {
-    public void PopulateHistoryData(uint id, string historyFilePath, ProvinceDatabase database)
+    public void PopulateHistoryData(uint id, string historyFilePath, DatabaseProvinces databaseProvinces)
     {
         List<Tag> tempCoresList = [];
         using StreamReader sr = new(historyFilePath);
@@ -37,18 +37,18 @@ public class HistoryFiller : IDisposable
             //     ...
             // ...
             if (isReadingBuildings == false)
-                FillHistoryFromLine(id, line, value, tempCoresList, database);
+                FillHistoryFromLine(id, line, value, tempCoresList, databaseProvinces);
             else
-                FillBuildingFromLine(id, line, value, database);
+                FillBuildingFromLine(id, line, value, databaseProvinces);
         }
 
-        database.Cores[id] = tempCoresList;
+        databaseProvinces.SetCores(id, tempCoresList);
     }
 
     private bool isReadingBuildings = false;
     private StateBuilding tempStateBuilding = new();
 
-    private void FillHistoryFromLine(uint id, string line, string value, List<Tag> coresTemp, ProvinceDatabase database)
+    private void FillHistoryFromLine(uint id, string line, string value, List<Tag> coresTemp, DatabaseProvinces databaseProvinces)
     {
         if (string.IsNullOrEmpty(line))
             return;
@@ -61,42 +61,42 @@ public class HistoryFiller : IDisposable
                 tempStateBuilding = new StateBuilding();
                 break;
             case not null when line.StartsWith("owner"):
-                database.SetOwner(id, value.RemoveWhitespace());
+                databaseProvinces.SetOwner(id, value.RemoveWhitespace());
                 break;
             case not null when line.StartsWith("controller"):
-                database.SetController(id, value.RemoveWhitespace());
+                databaseProvinces.SetController(id, value.RemoveWhitespace());
                 break;
             case not null when line.StartsWith("trade_goods"):
-                database.SetTradeGood(id, value);
+                databaseProvinces.SetTradeGood(id, value);
                 break;
             case not null when line.StartsWith("life_rating"):
-                database.SetLifeRating(id, (short)Convert.ToDouble(value));
+                databaseProvinces.SetLifeRating(id, (short)Convert.ToDouble(value));
                 break;
             case not null when line.StartsWith("colonial"):
                 if (short.TryParse(value, out short result)) result = Convert.ToInt16(result);
                 else if (!string.IsNullOrEmpty(value) && value.Equals("yes")) result = Convert.ToInt16(1);
                 else result = Convert.ToInt16(0);
-                database.SetColonial(id, result);
+                databaseProvinces.SetColonial(id, result);
                 break;
             case not null when line.StartsWith("terrain"):
-                database.SetTerrain(id, value);
+                databaseProvinces.SetTerrain(id, value);
                 break;
             case not null when line.StartsWith("add_core"):
                 coresTemp.Add(new Tag(value));
                 break;
             case not null when line.StartsWith("naval_base"):
-                database.SetNavalBaseLevel(id, Convert.ToInt16(value));
+                databaseProvinces.SetNavalBaseLevel(id, Convert.ToInt16(value));
                 break;
             case not null when line.StartsWith("fort"):
-                database.SetFortLevel(id, Convert.ToInt16(value));
+                databaseProvinces.SetFortLevel(id, Convert.ToInt16(value));
                 break;
             case not null when line.StartsWith("railroad"):
-                database.SetRailroadLevel(id, Convert.ToInt16(value));
+                databaseProvinces.SetRailroadLevel(id, Convert.ToInt16(value));
                 break;
         }
     }
 
-    private void FillBuildingFromLine(uint id, string line, string value, ProvinceDatabase database)
+    private void FillBuildingFromLine(uint id, string line, string value, DatabaseProvinces databaseProvinces)
     {
         switch (line)
         {
@@ -110,7 +110,7 @@ public class HistoryFiller : IDisposable
                 tempStateBuilding.Upgrade = value;
                 break;
             default: // Stop reading buildings.
-                database.AddStateBuilding(id, tempStateBuilding);
+                databaseProvinces.AddStateBuilding(id, tempStateBuilding);
                 break;
         }
     }

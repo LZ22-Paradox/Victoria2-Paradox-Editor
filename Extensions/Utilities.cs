@@ -14,5 +14,7 @@ public static class Utilities
 
     // ReSharper disable once RedundantCast
     public static uint ToPackedColor(this Color color)
-        => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | ((uint)color.B);
+        => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | (uint)color.B;
+    
+
 }
