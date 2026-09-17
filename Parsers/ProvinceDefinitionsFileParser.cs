@@ -42,6 +42,7 @@ public class ProvinceDefinitionsFileParser(string Directory) : ParserCommon(Dire
 
         List<ProvinceCSVDefinition> result = [];
 
+        // Clean the records.
         foreach (ProvinceCSVDefinition record in records.ToList())
         {
             if (!record.Name.Equals("x", StringComparison.OrdinalIgnoreCase) ||

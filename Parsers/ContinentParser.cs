@@ -35,26 +35,20 @@ public sealed class ContinentParser(string Directory) : ParserCommon(Directory)
         while (reader.Peek() is not -1 and not '}')
         {
             string item = reader.ReadUntilWhitespace();
+            reader.SkipUntil('=');
+            reader.SkipWhitespace();
             switch (item)
             {
                 case "assimilation_rate":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
                     continent.AssimilationRate = reader.ReadUntilWhitespace();
                     break;
                 case "farm_rgo_size":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
                     continent.RGOSizeFarm = reader.ReadUntilWhitespace();
                     break;
                 case "mine_rgo_size":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
                     continent.RGOSizeMine = reader.ReadUntilWhitespace();
                     break;
                 default: // Defaults to "provinces"
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
                     var provinces = reader.ReadList(ParseUInt).Cast<uint>().ToList();
                     continent.Provinces = provinces;
                     break;

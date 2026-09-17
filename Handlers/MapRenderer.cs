@@ -102,7 +102,7 @@ public class MapRenderer
         DatabaseCountries database = ModData.Instance.DatabaseCountries;
         if (databaseProvinces.TryGetOwner(provinceID, out var owner))
         {
-            if (database.HasCountry(owner))
+            if (database.Contains(owner))
                 countryColor = database.GetColor(owner);
         }
 
@@ -198,10 +198,8 @@ public class MapRenderer
                     return;
                 }
 
-                // Land without an owner is black.
-                if (!provinces.TryGetOwner(provinceId, out var owner) ||
-                    string.IsNullOrEmpty(owner) ||
-                    !countries.HasCountry(owner))
+                // Land without an owner is cleaned.
+                if (!provinces.TryGetOwner(provinceId, out var owner))
                 {
                     resultPixels[index] = GetRawColor(Colors.DarkGray);
                     return;

@@ -15,7 +15,6 @@ public class DatabaseProvinces
     public readonly ConcurrentDictionary<uint, uint> ColorsToProvinceIDs = new();
 
     // FILE I/O
-    private readonly uint[] ProvinceID;
     private string[] ProvinceName = [];
     private string[] HistoryFilePath = [];
     private string[] ProvinceFileName = [];
@@ -38,14 +37,16 @@ public class DatabaseProvinces
     private int[] Fort = [];
     private int[] Railroad = [];
 
+    public List<ProvinceHistoryEvent>[] HistoryEvents = [];
+
     // ReSharper disable once NotAccessedField.Local
     private readonly int ProvinceCount;
 
     public DatabaseProvinces(int size)
     {
-        ProvinceID = new uint[size];
         ProvinceCount = size;
         Expand(size);
+        Array.Fill(IsOcean, true); // Empty the world.
     }
 
     /// <param name="size">Province Maximum Size obtained by the default.map</param>
@@ -68,6 +69,7 @@ public class DatabaseProvinces
         Array.Resize(ref Railroad, size);
         Array.Resize(ref IsOcean, size);
         Array.Resize(ref Pops, size);
+        Array.Resize(ref HistoryEvents, size);
     }
 
     #region Get Methods
@@ -104,10 +106,6 @@ public class DatabaseProvinces
         return !string.IsNullOrEmpty(controller);
     }
 
-    private bool IsValidProvince(uint provinceId) => ProvinceID.Contains(provinceId);
-
-    public bool IsValidLandProvince(uint provinceId) => IsValidProvince(provinceId) && !IsOcean[provinceId];
-
     // ReSharper disable once UnusedMember.Global
     public bool IsOceanProvince(uint provinceId) => IsOcean[provinceId];
 
@@ -134,10 +132,10 @@ public class DatabaseProvinces
     public IEnumerable<ProvinceWrapper> GetLandProvinceWrappers()
     {
         // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-        foreach (var id in ProvinceID)
+        for (uint id = 1; id < ProvinceCount; id++)
         {
             // Ignore Ocean provinces.
-            if (IsValidLandProvince(id))
+            if (IsOceanProvince(id))
                 continue;
 
             var wrapper = new ProvinceWrapper(id.ToString(), ProvinceName[id], HistoryFilePath[id]);
@@ -153,6 +151,8 @@ public class DatabaseProvinces
     #endregion
 
     #region Set Methods
+
+    public void SetHistoryFilePath(uint provinceId, string file) => HistoryFilePath[provinceId] = file;
 
     public void SetOwner(uint provinceId, string tag = "") => Owner[provinceId] = tag;
 
@@ -191,27 +191,15 @@ public class DatabaseProvinces
             State_Buildings[provinceId].Add(building);
     }
 
-    public void SetHistoryData(uint provinceId, string historyFilePath, string provinceName)
-    {
-        HistoryFilePath[provinceId] = historyFilePath;
-
-        // WARN: TODO: Fix for the case where the name is only a number.
-        ProvinceFileName[provinceId] = provinceName;
-
-        // With the history file path now acquired, simply populate the history data.
-        using var historyFiller = new HistoryFiller();
-        historyFiller.PopulateHistoryData(provinceId, historyFilePath, this);
-    }
+    public void AddHistoryEvent(uint provinceId, ProvinceHistoryEvent historyEvent) 
+        => HistoryEvents[provinceId].Add(historyEvent);
+    
+    public void ClearHistoryEvents(uint provinceId) => HistoryEvents[provinceId].Clear();
 
     /// Populate province data with CSV Info
-    public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName, bool[] isOceanProvinceArray)
+    public void CreateProvince(uint id, uint red, uint green, uint blue, string recordName)
     {
-        // Avoid duplicates.
-        if (ProvinceID.Contains(id))
-            throw new Exception($"Duplicate province ID found: {id}");
-
         // ERR: Faulty. Some provinces bug. (Tested Vanilla Vic2)
-        ProvinceID[id] = id;
         uint packedColor = (0xFFu << 24) | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
         Color[id] = packedColor;
         ColorsToProvinceIDs[packedColor] = id;
@@ -222,7 +210,7 @@ public class DatabaseProvinces
         Cores[id] = [];
         Pops[id] = [];
         State_Buildings[id] = [];
-        IsOcean = isOceanProvinceArray;
+        HistoryEvents[id] = [];
 
         // Debug.WriteLine("(RGB: {0}, ID: {1}, NAME: {2})", color, record.province, record.name);
     }

@@ -13,12 +13,12 @@ public abstract class ParserCommon(string Directory)
     /// Obtains a game file from a provided mod directory and file name (that which requires path combination), but
     /// will also default to the game directory if the mod does not contain the file.
     /// </summary>
-    /// <param name="fileName"></param>
+    /// <param name="file"></param>
     /// <returns></returns>
-    protected string GetGameFilePath(string fileName)
+    protected string GetGameFilePath(string file)
     {
         // Find the file from vanilla if it's not overwritten.
-        bool pathIsLocalToMod = GetGameFilePath(Directory, fileName, out var path);
+        bool pathIsLocalToMod = GetGameFilePath(Directory, file, out var path);
         IsIncludedInMod = pathIsLocalToMod;
         return path;
     }

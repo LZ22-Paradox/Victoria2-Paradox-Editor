@@ -67,6 +67,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
         // For the History File Lister. Ignores ocean provinces.
         ProvinceData = new ObservableCollection<ProvinceWrapper>(_modData.DatabaseProvinces.GetLandProvinceWrappers());
+        
         fileListView.ItemsSource = ProvinceData;
 
         mapViewer.LoadMaps();

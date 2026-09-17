@@ -23,7 +23,6 @@ public class DatabaseCountries
     public Color[] CountryColor = [];
     private string[] GraphicalCulture = [];
 
-
     // HISTORY DATA
     private int[] Capital = []; // Province ID.
     private string[] PrimaryCulture = [];
@@ -49,9 +48,6 @@ public class DatabaseCountries
     public Dictionary<string, int>[] UpperHouse = [];
     public Dictionary<string, bool>[] Inventions = [];
     public Dictionary<string, bool>[] Technologies = [];
-
-    // Technologies // TODO: I need to make a technologies type.
-    // Inventions // TODO: Inventions, too.
 
     #region Get Methods
 
@@ -135,7 +131,7 @@ public class DatabaseCountries
 
     #region Utility
 
-    public bool HasCountry(Tag tag) => !string.IsNullOrEmpty(tag) && Tags.Any(d => d.Equals(tag));
+    public bool Contains(Tag tag) => !string.IsNullOrEmpty(tag) && Tags.Any(d => d.Equals(tag));
 
     private uint countryCounter = 0;
 

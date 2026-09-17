@@ -125,7 +125,7 @@ public partial class ProvinceInterface
         var provinceID = Convert.ToUInt32(PROVIDBOX.Text);
         DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
 
-        bool hasCountry = ModData.Instance.DatabaseCountries.HasCountry(OWNERBOX.Text);
+        bool hasCountry = ModData.Instance.DatabaseCountries.Contains(OWNERBOX.Text);
         if (hasCountry)
         {
             file.WriteLine("owner = " + OWNERBOX.Text);
@@ -137,7 +137,7 @@ public partial class ProvinceInterface
             databaseProvinces.SetOwner(provinceID);
         }
 
-        hasCountry = ModData.Instance.DatabaseCountries.HasCountry(CONTROLLERBOX.Text);
+        hasCountry = ModData.Instance.DatabaseCountries.Contains(CONTROLLERBOX.Text);
         if (hasCountry)
         {
             file.WriteLine("controller = " + CONTROLLERBOX.Text);
@@ -226,6 +226,7 @@ public partial class ProvinceInterface
                     file.WriteLine("}");
                 }
 
+                databaseProvinces.ClearBuildings(provinceID);
                 databaseProvinces.AddStateBuilding(provinceID, building);
             }
         }
@@ -310,7 +311,7 @@ public partial class ProvinceInterface
         }
 
         CurrentProvince = provinceID.Value;
-        if (!provinceDatabase.IsValidLandProvince(CurrentProvince))
+        if (provinceDatabase.IsOceanProvince(CurrentProvince))
         {
             PROVIDBOX.Text = Convert.ToString(provinceID);
 

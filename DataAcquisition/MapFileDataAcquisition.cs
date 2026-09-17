@@ -36,17 +36,15 @@ public class MapFileDataAcquisition
         // The reason this is being done here and nowhere else is that this is the earliest, most convenient point to
         //  check for this property before it becomes "too late" during runtime. "continents.txt" is the only file that
         //  specifies what is an ocean, and what is not outside the game's regions file, which I do not trust.
-        bool[] isOceanProvinceArray = new bool[DefaultMapFile.MaxProvinces];
-        Array.Fill(isOceanProvinceArray, true);
         Parallel.ForEach(_continents.Values, continent =>
         {
             foreach (var province in continent.Provinces)
-                isOceanProvinceArray[province] = false;
+                database.SetOcean(province, false);
         });
 
 
         // Create provinces in memory from the "definition.csv" file. At this stage, they are still missing COMMON
-        //  HISTORY, and POP information, which is handled a layer above this aquisition layer..
+        //  HISTORY, and POP information, which is handled a layer above this acquisition layer.
         Task task = Task.Run(() =>
         {
             var records = new ProvinceDefinitionsFileParser(directory)
@@ -71,8 +69,7 @@ public class MapFileDataAcquisition
                 database.CreateProvince(
                     /*Province ID*/ id: Convert.ToUInt32(record.Id),
                     /*Color*/ red, green, blue,
-                    /*Province Name*/ record.Name,
-                    /*Ocean Array*/ isOceanProvinceArray
+                    /*Province Name*/ record.Name
                 );
             });
         });

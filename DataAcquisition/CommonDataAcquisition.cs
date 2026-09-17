@@ -18,7 +18,7 @@ public class CommonDataAcquisition
     public readonly Dictionary<string, GoodGroup> Goods;
 
     // ReSharper disable once RedundantAssignment
-    public CommonDataAcquisition(ref DatabaseCountries databaseCountries, string directory)
+    public CommonDataAcquisition(ref DatabaseCountries countryData, string directory)
     {
         // Populate goods.
         Goods = new GoodsParser(directory).Parse<Dictionary<string, GoodGroup>>("common", "goods.txt");
@@ -40,10 +40,10 @@ public class CommonDataAcquisition
         }*/
 
         // Countries.
-        databaseCountries = new DatabaseCountries();
+        countryData = new DatabaseCountries();
 
         // TODO: Check the game files that the flags for these countries exist, maybe even in vanilla.
-        PopulateCountriesDatabase(databaseCountries, directory);
+        PopulateCountriesDatabase(countryData, directory);
     }
 
 

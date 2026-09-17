@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using Paradox_Editor.Parsers;
-using Paradox_Editor.Types;
 using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.DataAcquisition;
@@ -22,10 +21,9 @@ public static class HistoryDataAcquisition
             string[] splitName = fileName.Split(!file.Contains('-') ? ' ' : '-');
             if (uint.TryParse(splitName[0], out var provinceId))
             {
-                string provinceName = splitName[1];
-                provinceName = splitName.Length == 1 ? splitName[0].Trim() : provinceName.Trim();
-
-                database.SetHistoryData(provinceId, file, provinceName);
+                database.SetHistoryFilePath(provinceId, file);
+                // With the history file path now acquired, simply populate the history data.
+                HistoryFiller.PopulateProvinceHistory(provinceId, file, database);
             }
             else Debug.WriteLine("Error listing history provinces. File {0} could not be split.", fileName);
         }
