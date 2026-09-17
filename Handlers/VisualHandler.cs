@@ -8,8 +8,8 @@ namespace Paradox_Editor.Handlers;
 
 public static class VisualHandler
 {
-    public static MapMode_IconSet MapModeIconSet { get; set; }
-    public static Interface_AssetSet InterfaceAssetSet { get; set; }
+    public static MapMode_IconSet MapModeIconSet { get; set; } = null!;
+    public static Interface_AssetSet InterfaceAssetSet { get; set; } = null!;
 
     private static string IconAssetsPath = @"/Assets/VIC2/Icons/"; //The Resource Path for the Icons
     private static string ImageAssetsPath = @"/Assets/VIC2/Icons/"; //The Resource Path for the Icons
@@ -33,7 +33,7 @@ public static class VisualHandler
                 IconAssetsPath = @"/Assets/EU4/Icons/";
                 ImageAssetsPath = @"/Assets/EU4/Images/";
                 textColor = Brushes.White;
-                boxColor = (SolidColorBrush)new BrushConverter().ConvertFromString("#191F23"); //#2B353C - EU4 Background
+                boxColor = (SolidColorBrush)new BrushConverter().ConvertFromString("#191F23")!; //#2B353C - EU4 Background
                 break;
             default:
                 IconAssetsPath = @"/Assets/VIC2/Icons/";

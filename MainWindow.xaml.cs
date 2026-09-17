@@ -19,9 +19,9 @@ public partial class MainWindow : INotifyPropertyChanged
     public ProvinceWrapper SelectedItem { get; set; }
 
     public int CurrentControlMode { get; set; }
-    public static string CurrentGameMode { get; set; }
+    public static string CurrentGameMode { get; set; } = null!;
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void NotifyPropertyChange(string propertyName)
     {
@@ -49,7 +49,7 @@ public partial class MainWindow : INotifyPropertyChanged
     private void MainWindow_Load(object _1, EventArgs _2)
     {
         VisualHandler.ConductAssetChange("VIC2");
-        mapModeButtons.UpdateMapModeVisibility(MapViewer.MapMode.PROVENCIAL, VisualHandler.MapModeIconSet);
+        mapModeButtons.UpdateMapModeVisibility(MapViewer.MapMode.Provincial, VisualHandler.MapModeIconSet);
     }
 
     private ModData _modData;

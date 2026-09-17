@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Paradox_Editor.ColorPickerControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Paradox_Editor.ColorPickerControls;
 using Paradox_Editor.DataAcquisition;
 using Paradox_Editor.Handlers;
 
@@ -18,16 +17,18 @@ namespace Paradox_Editor.Interfaces;
 [ToolboxItem(true)]
 public partial class MapViewer
 {
-    private MainWindow MainWindow { get; set; } = (Application.Current.MainWindow as MainWindow)!;
-    private Point start;
+    private readonly MainWindow _mainWindow = (Application.Current.MainWindow as MainWindow)!;
 
-    public static Dictionary<MapMode, Image> MapModes { get; set; }
-    public static bool IsMapLoaded;
-    public static bool IsImageFlipped { get; set; } //Possibly may be useless
+    private Point _dragStart;
 
-    WriteableBitmap ProvinceMap;
+    private WriteableBitmap _provinceMap = null!;
 
-    
+    public static Dictionary<MapMode, Image> MapModes { get; private set; } = [];
+
+    public static bool IsMapLoaded { get; private set; }
+
+    public static bool IsImageFlipped { get; private set; }
+
     public MapViewer()
     {
         InitializeComponent();
@@ -35,279 +36,311 @@ public partial class MapViewer
 
         MapModes = new Dictionary<MapMode, Image>
         {
-            { MapMode.POLITICAL, mapPolitical },
-            { MapMode.PROVENCIAL, mapProvinces },
-            { MapMode.TERRAIN, mapTerrain },
+            [MapMode.Political] = mapPolitical,
+            [MapMode.Provincial] = mapProvinces,
+            [MapMode.Terrain] = mapTerrain
         };
-        
     }
 
     public enum MapMode
     {
-        POLITICAL,
-        PROVENCIAL,
-        TERRAIN
+        Political,
+        Provincial,
+        Terrain
     }
 
     public static WriteableBitmap GetMap(MapMode mode)
-        => BitmapFactory.ConvertToPbgra32Format((BitmapSource)MapModes[mode].Source);
+    {
+        return BitmapFactory.ConvertToPbgra32Format(
+            (BitmapSource)MapModes[mode].Source);
+    }
 
-    public static void SetMap(MapMode index, WriteableBitmap image) => MapModes[index].Source = image;
+    public static void SetMap(MapMode mode, WriteableBitmap image)
+    {
+        MapModes[mode].Source = image;
+    }
 
     public void LoadMaps()
     {
-        //Load Province Map
         InvertCanvas(mapCanvas);
-        var converter = new ImageSourceConverter(); //Create instance of the image converter
 
-        ModInfoAcquisition instanceModData = ModData.Instance.MOD_DATA;
-        var provincesFileName = Path.Combine("map", "provinces.bmp");
-        string modProvincesFile = Path.Combine(instanceModData.GetModFolder(), provincesFileName);
-        mapProvinces.SetValue(Image.SourceProperty,
-            File.Exists(modProvincesFile)
-                ? converter.ConvertFromString(modProvincesFile)
-                // Quick n dirty fallback for map image to vanilla.
-                : converter.ConvertFromString(Path.Combine(instanceModData.GetGameDirectory(), provincesFileName)));
+        ModInfoAcquisition modData = ModData.Instance.MOD_DATA;
+        var provinceMapPath = Path.Combine("map", "provinces.bmp");
 
-        //Load Political Map
-        WriteableBitmap provinceMapSource = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-        mapPolitical.Source = new MapRenderer().DrawPoliticalMap(provinceMapSource);
+        var modPath = Path.Combine(
+            modData.GetModFolder(),
+            provinceMapPath);
 
-        ProvinceMap = BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapProvinces.Source);
-        
-        //TODO: Load D_ Map
+        var vanillaPath = Path.Combine(
+            modData.GetGameDirectory(),
+            provinceMapPath);
+
+        var path = File.Exists(modPath) ? modPath : vanillaPath;
+
+        // Load the original province map.
+        mapProvinces.Source = new BitmapImage(new Uri(Path.GetFullPath(path), UriKind.Absolute));
+
+        // Keep a private copy for province lookups/selections.
+        _provinceMap = GetMap(MapMode.Provincial);
+
+        // Generate the visible political map from the province map.
+        mapPolitical.Source =
+            new MapRenderer().DrawPoliticalMap(_provinceMap);
 
         IsMapLoaded = true;
     }
 
-    #region Handling Mouse Inputs
-
-    public void Map_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        mapCanvas.ReleaseMouseCapture();
-        mapCanvas.Cursor = Cursors.Arrow;
-    }
-
-    public void Map_MouseLeave(object sender, MouseEventArgs e) => ReleaseMouseCapture();
-
-    public new void MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if (mapCanvas.IsMouseCaptured) return;
-        mapCanvas.Cursor = Cursors.ScrollAll;
-        start = e.MouseDevice.GetPosition(mapCanvas);
-        mapCanvas.CaptureMouse();
-    }
+    #region Mouse Input
 
     public void Map_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (e.MiddleButton.Equals(MouseButtonState.Pressed))
-            MouseDown(sender, e);
-        else if (e.LeftButton.Equals(MouseButtonState.Pressed) && IsMapLoaded)
-            MouseLeftClick(sender, e);
-    }
-
-    /// <summary>
-    /// For alternate accesses to other maps.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void MouseLeftClick(object sender, MouseButtonEventArgs e)
-    {
-        switch (MainWindow.mapModeButtons.GetMapMode())
+        if (e.MiddleButton == MouseButtonState.Pressed)
         {
-            case MapMode.POLITICAL: //Political Map
-                WriteableBitmap politicalMapSource =
-                    BitmapFactory.ConvertToPbgra32Format((BitmapSource)mapPolitical.Source);
-
-                if (Keyboard.IsKeyDown(Key.LeftCtrl))
-                {
-                    Populate(mapPolitical, mapProvinces);
-                }
-                else
-                {
-                    SelectColor(politicalMapSource, mapPolitical.SelectedColor);
-                    MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                    Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
-                }
-
-                break;
-            case MapMode.PROVENCIAL: //Province Map
-                if (Keyboard.IsKeyDown(Key.LeftShift))
-                {
-                    SelectColor(ProvinceMap, mapProvinces.SelectedColor);
-                    Populate(mapProvinces, mapPolitical);
-                    MainWindow.provinceInterface.Visibility = Visibility.Hidden;
-                    Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED"); //Implement opening of countries
-                }
-                else
-                {
-                    MainWindow.provinceInterface.PopulateInterface(mapProvinces.SelectedColor);
-                    SelectColor(ProvinceMap, mapProvinces.SelectedColor);
-                }
-
-                break;
-            case MapMode.TERRAIN: //Terrain Map
-                break;
-            default:
-                throw new NotImplementedException("Map mode not implemented!");
+            BeginPan(e);
+            return;
         }
 
+        if (e.LeftButton == MouseButtonState.Pressed && IsMapLoaded)
+            HandleLeftClick();
+    }
+
+    public void Map_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        ReleaseMouseCapture();
+    }
+
+    public void Map_MouseLeave(object sender, MouseEventArgs e)
+    {
+        ReleaseMouseCapture();
+    }
+
+    private void BeginPan(MouseButtonEventArgs e)
+    {
+        if (mapCanvas.IsMouseCaptured)
+            return;
+
+        mapCanvas.Cursor = Cursors.ScrollAll;
+        _dragStart = e.MouseDevice.GetPosition(mapCanvas);
+        mapCanvas.CaptureMouse();
+    }
+
+    private new void ReleaseMouseCapture()
+    {
+        mapCanvas.ReleaseMouseCapture();
+        mapCanvas.Cursor = Cursors.Arrow;
+        base.ReleaseMouseCapture();
+    }
+
+    private void HandleLeftClick()
+    {
+        MapMode mode = _mainWindow.mapModeButtons.GetMapMode();
+        switch (mode)
+        {
+            case MapMode.Political:
+                HandlePoliticalClick();
+                break;
+
+            case MapMode.Provincial:
+                HandleProvincialClick();
+                break;
+
+            case MapMode.Terrain:
+            default:
+                throw new NotImplementedException($"Map mode '{mode}' is not implemented.");
+        }
 
         SoundHandler.PlayClick();
     }
 
-    private void Populate(ImageColorPicker image, ImageColorPicker colorImageSource)
+    private void HandleProvincialClick()
     {
-        Color pickedColor = image.PickColor(colorImageSource); //Split following code into perhaps its own method
-        MainWindow.provinceInterface.PopulateInterface(pickedColor);
-        SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorImageSource.Source), pickedColor);
+        if (Keyboard.IsKeyDown(Key.LeftShift))
+        {
+            SelectColor(_provinceMap, mapProvinces.SelectedColor);
+            Populate(mapProvinces, mapPolitical);
+
+            _mainWindow.provinceInterface.Visibility = Visibility.Hidden;
+
+            Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED");
+            return;
+        }
+
+        _mainWindow.provinceInterface.PopulateInterface(
+            mapProvinces.SelectedColor);
+
+        SelectColor(_provinceMap, mapProvinces.SelectedColor);
     }
 
-    public void SelectColor(WriteableBitmap source, Color selectedColor)
+    private void HandlePoliticalClick()
     {
-        WriteableBitmap singleProvince 
-            = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
-        flashingSelection.Source = singleProvince;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl))
+        {
+            SelectProvinceFromPoliticalMap();
+            return;
+        }
+
+        SelectCountryFromPoliticalMap();
+
+        _mainWindow.provinceInterface.Visibility = Visibility.Hidden;
+
+        Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED");
     }
 
-    #region Map Navigation Controls
+    private void SelectCountryFromPoliticalMap()
+    {
+        SelectColor(GetMap(MapMode.Political), mapPolitical.SelectedColor);
+    }
 
-    public void Map_MouseWheel(object sender, MouseWheelEventArgs e)
+    private void SelectProvinceFromPoliticalMap()
+    {
+        SelectColor(_provinceMap, MapRenderer.GetProvinceColorAt(
+            _provinceMap,
+            mapPolitical.Position,
+            new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
+        ));
+    }
+
+    private void SelectColor(WriteableBitmap source, Color selectedColor)
+    {
+        flashingSelection.Source = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
+    }
+
+    private void Populate(ImageColorPicker source, ImageColorPicker colorSource)
+    {
+        Color color = source.PickColor(colorSource);
+
+        _mainWindow.provinceInterface.PopulateInterface(color);
+        SelectColor(BitmapFactory.ConvertToPbgra32Format((BitmapSource)colorSource.Source), color);
+    }
+
+    #endregion
+
+    #region Map Navigation & Utility
+
+    private void Map_MouseWheel(object sender, MouseWheelEventArgs e)
     {
         foreach (Image image in MapModes.Values)
         {
-            Point p = e.MouseDevice.GetPosition(image);
+            Point position = e.MouseDevice.GetPosition(image);
             Matrix matrix = image.RenderTransform.Value;
 
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) ||
+                Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                switch (e.Delta)
-                {
-                    case > 0:
-                        matrix.Translate(Math.Abs(e.Delta), 0);
-                        break;
-                    default:
-                        matrix.Translate(-Math.Abs(e.Delta), 0);
-                        break;
-                }
-
-                image.RenderTransform = new MatrixTransform(matrix);
+                TranslateHorizontal(ref matrix, e.Delta);
             }
-            else if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            else if (Keyboard.IsKeyDown(Key.LeftShift) ||
+                     Keyboard.IsKeyDown(Key.RightShift))
             {
-                if (IsImageFlipped)
-                {
-                    switch (e.Delta)
-                    {
-                        case > 0:
-                            matrix.Translate(0, -Math.Abs(e.Delta));
-                            break;
-                        default:
-                            matrix.Translate(0, Math.Abs(e.Delta));
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (e.Delta)
-                    {
-                        case > 0:
-                            matrix.Translate(0, Math.Abs(e.Delta));
-                            break;
-                        default:
-                            matrix.Translate(0, -Math.Abs(e.Delta));
-                            break;
-                    }
-                }
-
-                image.RenderTransform = new MatrixTransform(matrix);
+                TranslateVertical(ref matrix, e.Delta);
             }
             else
             {
-                if (e.Delta > 0) //adjusting scaling factor
-                {
-                    matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
-                }
-                else
-                {
-                    matrix.ScaleAtPrepend(0.9, 0.9, p.X, p.Y); //m.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
-                }
-
-                image.RenderTransform = new MatrixTransform(matrix);
+                Scale(ref matrix, e.Delta, position);
             }
 
-            flashingSelection.RenderTransform = image.RenderTransform;
+            SetTransform(image, matrix);
         }
     }
 
     public void Map_MouseMove(object sender, MouseEventArgs e)
     {
-        if (!mapCanvas.IsMouseCaptured) return;
+        if (!mapCanvas.IsMouseCaptured)
+            return;
 
-        Point end = e.MouseDevice.GetPosition(mapCanvas);
+        Point currentPosition = e.MouseDevice.GetPosition(mapCanvas);
+
+        var deltaX = _dragStart.X - currentPosition.X;
+        var deltaY = _dragStart.Y - currentPosition.Y;
+
         foreach (Image image in MapModes.Values)
         {
-            Matrix m = image.RenderTransform.Value;
-            m.OffsetX -= (start.X - end.X);
-            m.OffsetY -= (start.Y - end.Y);
-            image.RenderTransform = new MatrixTransform(m);
-            flashingSelection.RenderTransform = image.RenderTransform;
+            Matrix matrix = image.RenderTransform.Value;
+
+            matrix.OffsetX -= deltaX;
+            matrix.OffsetY -= deltaY;
+
+            SetTransform(image, matrix);
         }
 
-        start = e.MouseDevice.GetPosition(mapCanvas);
+        _dragStart = currentPosition;
     }
 
-    #endregion
-
-    public void MoveTimerTick() //Add compatibility for alternate control mode
+    public void MoveTimerTick()
     {
-        var velocity = /*(speed: pixels per second)*/ 2000 * /*(timer tick time in seconds)*/ 0.003;
-        var flipCheck = 1;
-        if (IsImageFlipped == true)
+        const double pixelsPerSecond = 2000;
+        const double tickSeconds = 0.003;
+        const double velocity = pixelsPerSecond * tickSeconds;
+
+        if (!scrollViewer.IsFocused ||
+            !_mainWindow.ControlMode.SelectedItem.Equals(
+                _mainWindow.Mode_Modern))
         {
-            flipCheck = -1;
+            return;
         }
 
-        if (scrollViewer.IsFocused && MainWindow.ControlMode.SelectedItem.Equals(MainWindow.Mode_Modern))
+        var verticalDirection = IsImageFlipped ? -1 : 1;
+
+        foreach (Image image in MapModes.Values)
         {
-            foreach ((Image image, Matrix matrix) in from image in MapModes.Values
-                     let matrix = image.RenderTransform.Value
-                     select (image, matrix))
+            Matrix matrix = image.RenderTransform.Value;
+
+            if (Keyboard.IsKeyDown(Key.W) ||
+                Keyboard.IsKeyDown(Key.Up))
             {
-                if (Keyboard.IsKeyDown(Key.W) || Keyboard.IsKeyDown(Key.Up)) //UP
-                {
-                    matrix.Translate(0, flipCheck * Math.Abs(velocity));
-                }
-
-                if (Keyboard.IsKeyDown(Key.A) || Keyboard.IsKeyDown(Key.Left)) //LEFT
-                {
-                    matrix.Translate(Math.Abs(velocity), 0);
-                }
-
-                if (Keyboard.IsKeyDown(Key.S) || Keyboard.IsKeyDown(Key.Down)) //DOWN
-                {
-                    matrix.Translate(0, -flipCheck * Math.Abs(velocity));
-                }
-
-                if (Keyboard.IsKeyDown(Key.D) || Keyboard.IsKeyDown(Key.Right)) //RIGHT
-                {
-                    matrix.Translate(-Math.Abs(velocity), 0);
-                }
-
-                image.RenderTransform = new MatrixTransform(matrix);
-                flashingSelection.RenderTransform = new MatrixTransform(matrix);
+                matrix.Translate(0, verticalDirection * velocity);
             }
+
+            if (Keyboard.IsKeyDown(Key.A) ||
+                Keyboard.IsKeyDown(Key.Left))
+            {
+                matrix.Translate(velocity, 0);
+            }
+
+            if (Keyboard.IsKeyDown(Key.S) ||
+                Keyboard.IsKeyDown(Key.Down))
+            {
+                matrix.Translate(0, -verticalDirection * velocity);
+            }
+
+            if (Keyboard.IsKeyDown(Key.D) ||
+                Keyboard.IsKeyDown(Key.Right))
+            {
+                matrix.Translate(-velocity, 0);
+            }
+
+            SetTransform(image, matrix);
         }
     }
 
-    #endregion
+    private void TranslateHorizontal(ref Matrix matrix, int delta)
+        => matrix.Translate(Math.Abs(delta), 0);
+
+    private void TranslateVertical(ref Matrix matrix, int delta)
+    {
+        var direction = IsImageFlipped ? -1 : 1;
+        matrix.Translate(0, direction * Math.Abs(delta));
+    }
+
+    private static void Scale(ref Matrix matrix, int delta, Point origin)
+    {
+        var factor = delta > 0 ? 1.1 : 0.9;
+        matrix.ScaleAtPrepend(factor, factor, origin.X, origin.Y);
+    }
+
+    private void SetTransform(Image image, Matrix matrix)
+    {
+        var transform = new MatrixTransform(matrix);
+        image.RenderTransform = transform;
+        flashingSelection.RenderTransform = transform;
+    }
 
     private static void InvertCanvas(Canvas canvas)
     {
-        var flipTrans = new ScaleTransform(); //creates instance for scale
-        canvas.RenderTransformOrigin = new Point(0.5, 0.5); //Sets the origin/middle point of the new image
-        flipTrans.ScaleY = -1; //flip the scale of the Y (horizontal) so it is the right side up
-        canvas.RenderTransform = flipTrans; //Actually render the changes
+        canvas.RenderTransformOrigin = new Point(0.5, 0.5);
+        canvas.RenderTransform = new ScaleTransform { ScaleY = -1 };
         IsImageFlipped = true;
     }
+
+    #endregion
 }

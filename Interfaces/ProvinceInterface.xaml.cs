@@ -24,11 +24,11 @@ public partial class ProvinceInterface
     private uint CurrentProvince { get; set; }
     public ObservableCollection<StateBuilding> StateBuildings { get; set; } = [];
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void NotifyPropertyChange(string propertyName)
     {
-        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public ObservableCollection<Tag> Cores
@@ -107,8 +107,8 @@ public partial class ProvinceInterface
             var currentColor = ModData.Instance.DatabaseProvinces.GetIDFromColor(CurrentProvince);
             MapViewer.SetMap(0, new MapRenderer()
                 .RefreshProvincePolitical(
-                    MapViewer.GetMap(MapViewer.MapMode.PROVENCIAL),
-                    MapViewer.GetMap(MapViewer.MapMode.POLITICAL),
+                    MapViewer.GetMap(MapViewer.MapMode.Provincial),
+                    MapViewer.GetMap(MapViewer.MapMode.Political),
                     currentColor)
             );
 
