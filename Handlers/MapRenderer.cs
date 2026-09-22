@@ -1,38 +1,188 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Paradox_Editor.Types;
 using Paradox_Editor.Types.Data;
 
 // ReSharper disable MemberCanBeMadeStatic.Global
 
 namespace Paradox_Editor.Handlers;
 
-public class MapRenderer
+public static class MapRenderer
 {
-    public static uint GetRawColor(Color color) => 0xFFu << 24 | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
-
-    #region Drawing Navigatable Maps
-
-    public void DrawStateMap()
+    public static void CreateStateMap()
     {
         // States, aka "regions" are found in ...mod/map/region.txt whilst continent provinces are located in continent.txt
         throw new NotImplementedException();
     }
 
-    public void DrawCultureMap()
+    public static void CreateCultureMap()
     {
         throw new NotImplementedException();
     }
 
-    public void DrawPopulationMap()
+    public static void CreatePopulationMap()
     {
         throw new NotImplementedException();
     }
 
-    #endregion
+    public static unsafe WriteableBitmap CreatePoliticalMap(WriteableBitmap provinceMap)
+    {
+        var politicalMap = new WriteableBitmap(
+            provinceMap.PixelWidth,
+            provinceMap.PixelHeight,
+            provinceMap.DpiX,
+            provinceMap.DpiY,
+            PixelFormats.Pbgra32,
+            null);
+
+        provinceMap.Lock();
+        politicalMap.Lock();
+
+        try
+        {
+            var sourcePixels = (uint*)provinceMap.BackBuffer;
+            var resultPixels = (uint*)politicalMap.BackBuffer;
+            int pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
+
+            Parallel.For(0, pixelCount, index => resultPixels[index] = GetPoliticalColor(sourcePixels[index]));
+
+            politicalMap.AddDirtyRect(new Int32Rect(0, 0, politicalMap.PixelWidth, politicalMap.PixelHeight));
+        }
+        finally
+        {
+            politicalMap.Unlock();
+            provinceMap.Unlock();
+        }
+
+        return politicalMap;
+    }
+
+    /// <summary>
+    /// Refreshes all pixels belonging to a single province in the political map.
+    /// </summary>
+    public static unsafe WriteableBitmap RefreshProvincePolitical(
+        WriteableBitmap provinceMap,
+        WriteableBitmap overWrittenMap,
+        uint provinceColor)
+    {
+        provinceMap.Lock();
+        overWrittenMap.Lock();
+
+        try
+        {
+            var sourcePixels = (uint*)provinceMap.BackBuffer;
+            var resultPixels = (uint*)overWrittenMap.BackBuffer;
+            int pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
+            uint politicalColor = GetPoliticalColor(provinceColor);
+
+            Parallel.For(0, pixelCount, index =>
+            {
+                if (sourcePixels[index] == provinceColor)
+                    resultPixels[index] = politicalColor;
+            });
+
+            overWrittenMap.AddDirtyRect(new Int32Rect(0, 0, overWrittenMap.PixelWidth, overWrittenMap.PixelHeight));
+        }
+        finally
+        {
+            overWrittenMap.Unlock();
+            provinceMap.Unlock();
+        }
+
+        return overWrittenMap;
+    }
+
+    public static unsafe WriteableBitmap DrawOwnedProvinces(WriteableBitmap provinceMap, string countryId)
+    {
+        var result = new WriteableBitmap(
+            provinceMap.PixelWidth,
+            provinceMap.PixelHeight,
+            provinceMap.DpiX,
+            provinceMap.DpiY,
+            PixelFormats.Pbgra32,
+            null);
+
+        DatabaseProvinces provinces = ModData.Instance.DatabaseProvinces;
+        DatabaseCountries countries = ModData.Instance.DatabaseCountries;
+
+        provinceMap.Lock();
+        result.Lock();
+
+        try
+        {
+            var sourcePixels = (uint*)provinceMap.BackBuffer;
+            var resultPixels = (uint*)result.BackBuffer;
+            int pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
+            Parallel.For((long)0, pixelCount, index =>
+            {
+                uint provinceColor = sourcePixels[index];
+                if (!provinces.ColorsToProvinceIDs.TryGetValue(provinceColor, out uint provinceId))
+                {
+                    resultPixels[index] = GetRawColor(Colors.Transparent);
+                    return;
+                }
+
+                if (!provinces.TryGetOwner(provinceId, out var owner))
+                {
+                    resultPixels[index] = GetRawColor(Colors.Transparent);
+                    return;
+                }
+
+                if (!owner.Equals(countryId))
+                {
+                    resultPixels[index] = GetRawColor(Colors.Transparent);
+                    return;
+                }
+
+                resultPixels[index] = GetRawColor(Colors.White);
+            });
+
+            result.AddDirtyRect(new Int32Rect(0, 0, result.PixelWidth, result.PixelHeight));
+        }
+        finally
+        {
+            result.Unlock();
+            provinceMap.Unlock();
+        }
+
+        return result;
+    }
+
+    #region Utility
+
+    /// <summary>
+    /// Converts a province-map color into its political-map color.
+    /// </summary>
+    private static uint GetPoliticalColor(uint provinceColor)
+    {
+        DatabaseProvinces provinces = ModData.Instance.DatabaseProvinces;
+        DatabaseCountries countries = ModData.Instance.DatabaseCountries;
+
+        // Unknown province.
+        if (!provinces.ColorsToProvinceIDs.TryGetValue(provinceColor, out var provinceId))
+            return GetRawColor(Colors.Black);
+
+        // Ocean is deliberately white.
+        if (provinces.IsOceanProvince(provinceId))
+            return GetRawColor(Colors.White);
+
+        // Land without an owner.
+        if (!provinces.TryGetOwner(provinceId, out var owner))
+            return GetRawColor(Colors.DarkGray);
+
+        // Owner exists, but isn't present in the country database.
+        // ReSharper disable once ConvertIfStatementToReturnStatement
+        if (!countries.Contains(owner))
+            return GetRawColor(Colors.Black);
+
+        return countries.GetColor(owner);
+    }
+
+    public static uint GetRawColor(Color color) => 0xFFu << 24 | (uint)color.R << 16 | (uint)color.G << 8 | color.B;
 
     /// <summary>
     /// Redraws the given province that has been selected.
@@ -75,58 +225,6 @@ public class MapRenderer
         return result;
     }
 
-    /// <summary>
-    /// Refreshes a single province in the political map. Could be rewritten in the future to accomodate for other
-    /// map types.
-    /// </summary>
-    /// <param name="provinceMap"></param>
-    /// <param name="overWrittenMap"></param>
-    /// <param name="provinceColor"></param>
-    /// <returns></returns>
-    public unsafe WriteableBitmap RefreshProvincePolitical(
-        WriteableBitmap provinceMap,
-        WriteableBitmap overWrittenMap,
-        uint provinceColor)
-    {
-        provinceMap.Lock();
-        overWrittenMap.Lock();
-        var givenPixels = (uint*)provinceMap.BackBuffer;
-        var overWrittenPixels = (uint*)overWrittenMap.BackBuffer;
-        var pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
-
-        DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
-        var provinceID = databaseProvinces.GetIDFromColor(provinceColor);
-
-        Color countryColor = Colors.Black;
-
-        DatabaseCountries database = ModData.Instance.DatabaseCountries;
-        if (databaseProvinces.TryGetOwner(provinceID, out var owner))
-        {
-            if (database.Contains(owner))
-                countryColor = database.GetColor(owner);
-        }
-
-        var newColor = GetRawColor(countryColor);
-
-        Parallel.For(0, pixelCount, (index) =>
-        {
-            if (givenPixels == null)
-                return;
-
-            var rawPixel = givenPixels[index];
-            if (rawPixel != provinceColor)
-                return;
-
-            if (overWrittenPixels != null)
-                overWrittenPixels[index] = newColor;
-        });
-
-        provinceMap.Unlock();
-        overWrittenMap.Unlock();
-
-        return overWrittenMap;
-    }
-
     public static Color GetProvinceColorAt(WriteableBitmap provinceMap, Point position, Size displaySize)
     {
         int x = Math.Clamp((int)(position.X * provinceMap.PixelWidth / displaySize.Width), 0,
@@ -158,7 +256,9 @@ public class MapRenderer
             (byte)color);
     }
 
-    public unsafe WriteableBitmap DrawPoliticalMap(WriteableBitmap provinceMap)
+    #endregion
+
+    public static unsafe WriteableBitmap DrawProvinces(WriteableBitmap provinceMap, IEnumerable<uint> provinceIds)
     {
         var result = new WriteableBitmap(
             provinceMap.PixelWidth,
@@ -169,7 +269,7 @@ public class MapRenderer
             null);
 
         DatabaseProvinces provinces = ModData.Instance.DatabaseProvinces;
-        DatabaseCountries countries = ModData.Instance.DatabaseCountries;
+        var selectedProvinceIds = provinceIds.ToHashSet();
 
         provinceMap.Lock();
         result.Lock();
@@ -179,36 +279,38 @@ public class MapRenderer
             var sourcePixels = (uint*)provinceMap.BackBuffer;
             var resultPixels = (uint*)result.BackBuffer;
 
-            int pixelCount = provinceMap.PixelWidth * provinceMap.PixelHeight;
+            int pixelCount =
+                provinceMap.PixelWidth *
+                provinceMap.PixelHeight;
+
+            uint highlightColor =
+                GetRawColor(Colors.White);
+
             Parallel.For(0, pixelCount, index =>
             {
                 uint provinceColor = sourcePixels[index];
 
-                // Default to black.
-                if (!provinces.ColorsToProvinceIDs.TryGetValue(provinceColor, out var provinceId))
+                // Only draw pixels belonging to the selected provinces.
+                if (provinces.ColorsToProvinceIDs.TryGetValue(
+                        provinceColor,
+                        out uint provinceId) &&
+                    selectedProvinceIds.Contains(provinceId))
                 {
-                    resultPixels[index] = GetRawColor(Colors.Black);
-                    return;
+                    resultPixels[index] = highlightColor;
                 }
-
-                // Ocean is deliberately white.
-                if (provinces.IsOceanProvince(provinceId))
+                else
                 {
-                    resultPixels[index] = GetRawColor(Colors.White);
-                    return;
+                    // Completely transparent.
+                    resultPixels[index] = 0;
                 }
-
-                // Land without an owner is cleaned.
-                if (!provinces.TryGetOwner(provinceId, out var owner))
-                {
-                    resultPixels[index] = GetRawColor(Colors.DarkGray);
-                    return;
-                }
-
-                resultPixels[index] = GetRawColor(countries.GetColor(owner));
             });
 
-            result.AddDirtyRect(new Int32Rect(0, 0, result.PixelWidth, result.PixelHeight));
+            result.AddDirtyRect(
+                new Int32Rect(
+                    0,
+                    0,
+                    result.PixelWidth,
+                    result.PixelHeight));
         }
         finally
         {
