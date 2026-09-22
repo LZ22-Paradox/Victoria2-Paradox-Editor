@@ -1,10 +1,10 @@
 namespace Paradox_Editor.Types.Data;
 
-public readonly struct ProvinceWrapper
+public struct ProvinceWrapper
 {
-    public readonly string ProvinceID;
-    public readonly string ProvinceName;
-    public readonly string File;
+    public string ProvinceID { get; set; }
+    public string ProvinceName { get; set; }
+    public string File { get; set; }
 
     public ProvinceWrapper(string provinceId, string name, string file)
     {

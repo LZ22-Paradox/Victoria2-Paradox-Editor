@@ -127,9 +127,9 @@
                   AutoGenerateColumns="False" CanUserAddRows="False" Visibility="Visible"
                   Grid.Column="0" Grid.ColumnSpan="1"  Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="Column1" Header="ID" Width="40" Binding="{Binding ProvinceID, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn x:Name="Column2" Header="Name" Width="120" Binding="{Binding ProvinceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTemplateColumn x:Name="Column3" Header="Open File" Width="*">
+                <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ProvinceID, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Name" Width="120" Binding="{Binding ProvinceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTemplateColumn Header="Open File" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="Open" Height="18" Width="55" Click="OpenFileFromList"/>
