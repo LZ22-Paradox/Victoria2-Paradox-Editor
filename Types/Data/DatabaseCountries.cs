@@ -20,7 +20,7 @@ public class DatabaseCountries
     // COMMON DATA
     public string[] Tags = [];
     public string[] Name = [];
-    public Color[] CountryColor = [];
+    public uint[] CountryColor = [];
     private string[] GraphicalCulture = [];
 
     // HISTORY DATA
@@ -43,15 +43,18 @@ public class DatabaseCountries
     private string[] RulingParty = []; // Ruling Party & Upper House
     private string[] LastElection = []; // TODO: May need to have a custom type as a Date.
     private string[] TechSchools = [];
-    public List<Party>[] Parties = []; // mark starting upper house. // Common
-    public Dictionary<string, List<string>>[] UnitNames = []; // mark starting upper house.
-    public Dictionary<string, int>[] UpperHouse = [];
-    public Dictionary<string, bool>[] Inventions = [];
-    public Dictionary<string, bool>[] Technologies = [];
+    private List<Party>[] Parties = []; // mark starting upper house. // Common
+    private Dictionary<string, List<string>>[] UnitNames = []; // mark starting upper house.
+    private Dictionary<string, int>[] UpperHouse = [];
+    private Dictionary<string, bool>[] Inventions = [];
+    private Dictionary<string, bool>[] Technologies = [];
 
+    // Tracing to Provinces
+    public Dictionary<Tag, HashSet<uint>> ProvincesByOwnedCountry = [];
+    
     #region Get Methods
 
-    public Color GetColor(Tag owner) => CountryColor[TagToIndex[owner]];
+    public uint GetColor(Tag owner) => CountryColor[TagToIndex[owner]];
 
     public string GetCommonFile(string tag) => CommonFile[TagToIndex[tag]];
 
@@ -61,7 +64,7 @@ public class DatabaseCountries
 
     #region Set Methods
 
-    public void SetColor(string tag, Color color) => CountryColor[TagToIndex[tag]] = color;
+    public void SetColor(string tag, uint color) => CountryColor[TagToIndex[tag]] = color;
 
     public void SetCapital(Tag tag, int capitalId) => Capital[TagToIndex[tag]] = capitalId;
 

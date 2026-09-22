@@ -51,9 +51,7 @@ public class HistoryFiller
                 if (value != "{")
                     continue;
 
-                ProvinceHistoryEvent historyEvent =
-                    ParseHistoryEvent(reader, date);
-
+                ProvinceHistoryEvent historyEvent = ParseHistoryEvent(reader, date);
                 provinceDatabase.AddHistoryEvent(provinceId, historyEvent);
 
                 continue;
@@ -137,8 +135,7 @@ public class HistoryFiller
 
             if (key.Equals("state_building", StringComparison.Ordinal))
             {
-                StateBuilding? stateBuilding =
-                    ParseStateBuilding(reader, value);
+                StateBuilding? stateBuilding = ParseStateBuilding(reader, value);
 
                 if (stateBuilding != null)
                     historyEvent.StateBuildings.Add(stateBuilding);
@@ -339,9 +336,8 @@ public class HistoryFiller
     // STATE BUILDINGS
     // ====================================================================
 
-    private static StateBuilding? ParseStateBuilding(
-        StreamReader reader,
-        string value)
+    // ReSharper disable once ReturnTypeCanBeNotNullable
+    private static StateBuilding? ParseStateBuilding(StreamReader reader, string value)
     {
         value = value.Trim();
 
@@ -363,9 +359,7 @@ public class HistoryFiller
                 if (line == "}")
                     break;
 
-                ParseStateBuildingLine(
-                    line,
-                    stateBuilding);
+                ParseStateBuildingLine(line, stateBuilding);
             }
 
             return stateBuilding;

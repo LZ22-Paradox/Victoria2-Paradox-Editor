@@ -8,8 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Paradox_Editor.ColorPickerControls;
 using Paradox_Editor.DataAcquisition;
+using Paradox_Editor.Extensions;
 using Paradox_Editor.Handlers;
+using Paradox_Editor.Types.Data;
 
 namespace Paradox_Editor.Interfaces;
 
@@ -26,7 +29,7 @@ public partial class MapViewer
 
     public static bool IsMapLoaded { get; private set; }
 
-    public static bool IsImageFlipped { get; private set; }
+    private static bool _isImageFlipped;
 
     public MapViewer()
     {
@@ -45,19 +48,16 @@ public partial class MapViewer
     {
         Political,
         Provincial,
-        Terrain
+        Terrain,
+        Population, // TODO: ADD POPULATION MAP MODE
+        Culture, // TODO: ADD CULTURE MAP MODE
+        Religion, // TODO: ADD RELIGION MAP MODE
     }
 
     public static WriteableBitmap GetMap(MapMode mode)
-    {
-        return BitmapFactory.ConvertToPbgra32Format(
-            (BitmapSource)MapModes[mode].Source);
-    }
+        => BitmapFactory.ConvertToPbgra32Format((BitmapSource)MapModes[mode].Source);
 
-    public static void SetMap(MapMode mode, WriteableBitmap image)
-    {
-        MapModes[mode].Source = image;
-    }
+    public static void SetMap(MapMode mode, WriteableBitmap image) => MapModes[mode].Source = image;
 
     public void LoadMaps()
     {
@@ -65,15 +65,8 @@ public partial class MapViewer
 
         ModInfoAcquisition modData = ModData.Instance.MOD_DATA;
         var provinceMapPath = Path.Combine("map", "provinces.bmp");
-
-        var modPath = Path.Combine(
-            modData.GetModFolder(),
-            provinceMapPath);
-
-        var vanillaPath = Path.Combine(
-            modData.GetGameDirectory(),
-            provinceMapPath);
-
+        var modPath = Path.Combine(modData.GetModFolder(), provinceMapPath);
+        var vanillaPath = Path.Combine(modData.GetGameDirectory(), provinceMapPath);
         var path = File.Exists(modPath) ? modPath : vanillaPath;
 
         // Load the original province map.
@@ -83,15 +76,14 @@ public partial class MapViewer
         _provinceMap = GetMap(MapMode.Provincial);
 
         // Generate the visible political map from the province map.
-        mapPolitical.Source =
-            new MapRenderer().DrawPoliticalMap(_provinceMap);
+        mapPolitical.Source = MapRenderer.CreatePoliticalMap(_provinceMap);
 
         IsMapLoaded = true;
     }
 
     #region Mouse Input
 
-    public void Map_MouseDown(object sender, MouseButtonEventArgs e)
+    private void Map_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
@@ -103,19 +95,13 @@ public partial class MapViewer
             HandleLeftClick();
     }
 
-    public void Map_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        ReleaseMouseCapture();
-    }
+    public void Map_MouseUp(object sender, MouseButtonEventArgs e) => ReleaseMouseCapture();
 
-    public void Map_MouseLeave(object sender, MouseEventArgs e)
-    {
-        ReleaseMouseCapture();
-    }
+    public void Map_MouseLeave(object sender, MouseEventArgs e) => ReleaseMouseCapture();
 
     private void BeginPan(MouseButtonEventArgs e)
     {
-        if (mapCanvas.IsMouseCaptured)
+        if (scrollViewer.IsMouseCaptured)
             return;
 
         mapCanvas.Cursor = Cursors.ScrollAll;
@@ -135,73 +121,100 @@ public partial class MapViewer
         MapMode mode = _mainWindow.mapModeButtons.GetMapMode();
         switch (mode)
         {
+            /*
+             * CLICK:       Country
+             * CTRL-CLICK:  Province
+             */
             case MapMode.Political:
-                HandlePoliticalClick();
+                // CTRL-CLICK
+                if (Keyboard.IsKeyDown(Key.LeftCtrl))
+                {
+                    HandleProvincialClick(mapPolitical);
+                }
+                // CLICK
+                else HandlePoliticalClick();
+
                 break;
 
+            /*
+             * CLICK:       Province
+             */
             case MapMode.Provincial:
-                HandleProvincialClick();
+                HandleProvincialClick(mapProvinces);
                 break;
 
+            /*
+             * CLICK:       Not Functional Yet
+             */
+            case MapMode.Population:
+            /*
+             * CLICK:       Not Functional Yet -> Population
+             */
+            case MapMode.Culture:
+            /*
+             * CLICK:       Not Functional Yet -> Population
+             */
+            case MapMode.Religion:
+            /*
+             * CLICK:       Not Functional Yet -> Provincial
+             */
             case MapMode.Terrain:
-            default:
-                throw new NotImplementedException($"Map mode '{mode}' is not implemented.");
+            default: throw new NotImplementedException($"Map mode '{mode}' is not implemented.");
+            // TODO: Handle pop edit.
         }
 
         SoundHandler.PlayClick();
     }
 
-    private void HandleProvincialClick()
+    private void HandleProvincialClick(ImageColorPicker referenceImage)
     {
-        if (Keyboard.IsKeyDown(Key.LeftCtrl))
-        {
-            _mainWindow.provinceInterface.Visibility = Visibility.Hidden;
-            HandlePoliticalClick(); // TODO: Handle pop edit.
-            return;
-        }
-
         Color provinceColor = MapRenderer.GetProvinceColorAt(
-            _provinceMap,
-            mapPolitical.Position,
-            new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
+            _provinceMap, referenceImage.Position, new Size(referenceImage.ActualWidth, referenceImage.ActualHeight)
         );
 
-        _mainWindow.provinceInterface.PopulateInterface(provinceColor);
+        ModData.Instance.DatabaseProvinces.ColorsToProvinceIDs.TryGetValue(
+            provinceColor.ToPackedColor(),
+            out var provinceId
+        );
 
-        SelectColor(_provinceMap, mapProvinces.SelectedColor);
+        HighlightProvinces([provinceId]);
+
+        _mainWindow.provinceInterface.PopulateInterface(provinceColor);
+        _mainWindow.provinceInterface.Show();
+
+        //Highlight(_provinceMap, provinceColor);
     }
 
     private void HandlePoliticalClick()
     {
-        if (Keyboard.IsKeyDown(Key.LeftCtrl))
-        {
-            SelectProvinceFromPoliticalMap();
+        DatabaseProvinces provinces = ModData.Instance.DatabaseProvinces;
+        DatabaseCountries countries = ModData.Instance.DatabaseCountries;
+
+        Color selectedProvinceColor = MapRenderer.GetProvinceColorAt(
+            _provinceMap, mapPolitical.Position, new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
+        );
+
+        uint rawColor = MapRenderer.GetRawColor(selectedProvinceColor);
+        if (!provinces.ColorsToProvinceIDs.TryGetValue(rawColor, out uint provinceId))
             return;
-        }
 
-        SelectCountryFromPoliticalMap();
+        if (!provinces.TryGetOwner(provinceId, out var countryId))
+            return;
 
-        _mainWindow.provinceInterface.Visibility = Visibility.Hidden;
+        var ownedProvinces = countries.ProvincesByOwnedCountry[countryId];
+        HighlightProvinces(ownedProvinces);
+
+        /*
+        // Highlight country.
+        Highlight(GetMap(MapMode.Political), mapPolitical.SelectedColor);*/
+
+        _mainWindow.provinceInterface.Hide();
 
         Debug.WriteLine("COUNTRY EDITING NOT YET IMPLEMENTED");
     }
 
-    private void SelectCountryFromPoliticalMap()
-    {
-        SelectColor(GetMap(MapMode.Political), mapPolitical.SelectedColor);
-    }
-
-    private void SelectProvinceFromPoliticalMap()
-    {
-        SelectColor(_provinceMap, MapRenderer.GetProvinceColorAt(
-            _provinceMap,
-            mapPolitical.Position,
-            new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
-        ));
-    }
-
-    private void SelectColor(WriteableBitmap source, Color selectedColor)
-        => flashingSelection.Source = MapRenderer.DrawConnectedColors(source, MapRenderer.GetRawColor(selectedColor));
+    private void HighlightProvinces(IEnumerable<uint> provinceIds)
+        => flashingSelection.Source = MapRenderer.DrawProvinces(_provinceMap, provinceIds);
 
     #endregion
 
@@ -269,7 +282,7 @@ public partial class MapViewer
             return;
         }
 
-        var verticalDirection = IsImageFlipped ? -1 : 1;
+        var verticalDirection = _isImageFlipped ? -1 : 1;
 
         foreach (Image image in MapModes.Values)
         {
@@ -303,14 +316,11 @@ public partial class MapViewer
         }
     }
 
-    private void TranslateHorizontal(ref Matrix matrix, int delta)
+    private static void TranslateHorizontal(ref Matrix matrix, int delta)
         => matrix.Translate(Math.Abs(delta), 0);
 
-    private void TranslateVertical(ref Matrix matrix, int delta)
-    {
-        var direction = IsImageFlipped ? -1 : 1;
-        matrix.Translate(0, direction * Math.Abs(delta));
-    }
+    private static void TranslateVertical(ref Matrix matrix, int delta)
+        => matrix.Translate(0, _isImageFlipped ? -1 : 1 /*Direction*/ * Math.Abs(delta));
 
     private static void Scale(ref Matrix matrix, int delta, Point origin)
     {
@@ -329,7 +339,7 @@ public partial class MapViewer
     {
         canvas.RenderTransformOrigin = new Point(0.5, 0.5);
         canvas.RenderTransform = new ScaleTransform { ScaleY = -1 };
-        IsImageFlipped = true;
+        _isImageFlipped = true;
     }
 
     #endregion

@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Paradox_Editor.Extensions;
 using Paradox_Editor.Handlers;
@@ -19,7 +20,13 @@ namespace Paradox_Editor.Interfaces;
 [ToolboxItem(true)]
 public partial class ProvinceInterface
 {
+    private const string _saveConfirmGif = @"/Assets/save_confirm_button.gif";
+    private const string _saveWarningButton = @"/Assets/save_warning_button.gif";
+    private readonly BitmapImage _saveWarnGif = new(new Uri(_saveWarningButton, UriKind.Relative));
+    private readonly ImageSource _savedIconGif = new BitmapImage(new Uri(_saveConfirmGif, UriKind.Relative));
+
     private ObservableCollection<Tag> _cores = [];
+
 
     //private MainWindow MainWindow { get; set; } = (MainWindow)Application.Current.MainWindow;
     private uint CurrentProvince { get; set; }
@@ -45,6 +52,15 @@ public partial class ProvinceInterface
         InitializeComponent();
         DataContext = this;
         SetSaveIconToSaved();
+    }
+
+    public void Hide() => Visibility = Visibility.Hidden;
+    public void Show() => Visibility = Visibility.Visible;
+
+    public void CloseInterface(object sender, EventArgs e)
+    {
+        Hide();
+        SoundHandler.PlayClick();
     }
 
     public void UpdateUI()
@@ -82,12 +98,6 @@ public partial class ProvinceInterface
         CoresText.Foreground = VisualHandler.InterfaceAssetSet.TextColor;
     }
 
-    public void CloseInterface(object sender, EventArgs e)
-    {
-        Visibility = Visibility.Hidden;
-        SoundHandler.PlayClick();
-    }
-
     public void SaveButtonPressed(object sender, RoutedEventArgs e) => Save();
 
     private void Save()
@@ -98,17 +108,15 @@ public partial class ProvinceInterface
             if (File.Exists(historyFile))
                 File.Delete(historyFile);
 
-            StreamWriter file = File.CreateText(historyFile);
-
-            PopulateSaveFile(file);
+            Serialize(historyFile);
 
             // IMPL: Currently only refreshes political map
             var currentColor = ModData.Instance.DatabaseProvinces.GetIDFromColor(CurrentProvince);
-            MapViewer.SetMap(0, new MapRenderer()
-                .RefreshProvincePolitical(
-                    MapViewer.GetMap(MapViewer.MapMode.Provincial),
-                    MapViewer.GetMap(MapViewer.MapMode.Political),
-                    currentColor)
+
+            MapViewer.SetMap(0, MapRenderer.RefreshProvincePolitical(
+                MapViewer.GetMap(MapViewer.MapMode.Provincial),
+                MapViewer.GetMap(MapViewer.MapMode.Political),
+                currentColor)
             );
 
             SetSaveIconToSaved();
@@ -120,15 +128,17 @@ public partial class ProvinceInterface
         }
     }
 
-    private void PopulateSaveFile(StreamWriter file)
+    private void Serialize(string file)
     {
-        var provinceID = Convert.ToUInt32(PROVIDBOX.Text);
+        StreamWriter fileStream = File.CreateText(file);
+
         DatabaseProvinces databaseProvinces = ModData.Instance.DatabaseProvinces;
 
         bool hasCountry = ModData.Instance.DatabaseCountries.Contains(OWNERBOX.Text);
+        var provinceID = Convert.ToUInt32(PROVIDBOX.Text);
         if (hasCountry)
         {
-            file.WriteLine("owner = " + OWNERBOX.Text);
+            fileStream.WriteLine("owner = " + OWNERBOX.Text);
             databaseProvinces.SetOwner(provinceID, OWNERBOX.Text);
         }
         else
@@ -140,7 +150,7 @@ public partial class ProvinceInterface
         hasCountry = ModData.Instance.DatabaseCountries.Contains(CONTROLLERBOX.Text);
         if (hasCountry)
         {
-            file.WriteLine("controller = " + CONTROLLERBOX.Text);
+            fileStream.WriteLine("controller = " + CONTROLLERBOX.Text);
             databaseProvinces.SetController(provinceID, CONTROLLERBOX.Text);
         }
         else
@@ -153,60 +163,56 @@ public partial class ProvinceInterface
             tradeGoodDropdown.SelectedIndex != 0)
         {
             string goodText = tradeGoodDropdown.Text;
-            file.WriteLine("trade_goods = " + goodText);
+            fileStream.WriteLine("trade_goods = " + goodText);
             databaseProvinces.SetTradeGood(provinceID, goodText);
         }
 
         if (!LIFERATINGBOX.Text.Equals("") && !LIFERATINGBOX.Text.Equals("0"))
         {
-            file.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
+            fileStream.WriteLine("life_rating = " + LIFERATINGBOX.Text + "\t");
             databaseProvinces.SetLifeRating(provinceID, Convert.ToInt16(LIFERATINGBOX.Text));
         }
 
         if (!COLONIALBOX.Text.Equals(""))
         {
-            file.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
+            fileStream.WriteLine("colonial = " + COLONIALBOX.Text + "\t");
             databaseProvinces.SetColonial(provinceID, Convert.ToInt16(COLONIALBOX.Text));
         }
 
+        databaseProvinces.ClearCores(provinceID);
         if (COREGRID.HasItems)
         {
-            databaseProvinces.ClearCores(provinceID);
             foreach (Tag item in COREGRID.Items)
             {
                 if (string.IsNullOrEmpty(item.Value))
                     continue;
-                file.WriteLine("add_core = " + item.Value);
+                fileStream.WriteLine("add_core = " + item.Value);
                 databaseProvinces.AddCore(provinceID, item);
             }
-        }
-        else
-        {
-            databaseProvinces.ClearCores(provinceID);
         }
 
         // TODO: Simplify this area.
         if (!TERRAINBOX.Text.Equals(""))
         {
-            file.WriteLine("terrain = " + TERRAINBOX.Text);
+            fileStream.WriteLine("terrain = " + TERRAINBOX.Text);
             databaseProvinces.SetTerrain(provinceID, TERRAINBOX.Text);
         }
 
         if (!NAVALBASEBOX.Text.Equals("") && !NAVALBASEBOX.Text.Equals("0"))
         {
-            file.WriteLine("naval_base = " + NAVALBASEBOX.Text + "\t");
+            fileStream.WriteLine("naval_base = " + NAVALBASEBOX.Text + "\t");
             databaseProvinces.SetNavalBaseLevel(provinceID, Convert.ToInt16(NAVALBASEBOX.Text));
         }
 
         if (!FORTBOX.Text.Equals("") && !FORTBOX.Text.Equals("\t"))
         {
-            file.WriteLine("fort = " + FORTBOX.Text + "\t");
+            fileStream.WriteLine("fort = " + FORTBOX.Text + "\t");
             databaseProvinces.SetFortLevel(provinceID, Convert.ToInt16(FORTBOX.Text));
         }
 
         if (!RAILROADBOX.Text.Equals("") && !RAILROADBOX.Text.Equals("0"))
         {
-            file.WriteLine("railroad = " + RAILROADBOX.Text + "\t");
+            fileStream.WriteLine("railroad = " + RAILROADBOX.Text + "\t");
             databaseProvinces.SetRailroadLevel(provinceID, Convert.ToInt16(RAILROADBOX.Text));
         }
 
@@ -219,11 +225,11 @@ public partial class ProvinceInterface
                     string.IsNullOrEmpty(building.Level) &&
                     string.IsNullOrEmpty(building.Upgrade))
                 {
-                    file.WriteLine("state_building = {");
-                    file.WriteLine("\tlevel = " + building.Level);
-                    file.WriteLine("\tbuilding = " + building.Building);
-                    file.WriteLine("\tupgrade = " + building.Upgrade);
-                    file.WriteLine("}");
+                    fileStream.WriteLine("state_building = {");
+                    fileStream.WriteLine("\tlevel = " + building.Level);
+                    fileStream.WriteLine("\tbuilding = " + building.Building);
+                    fileStream.WriteLine("\tupgrade = " + building.Upgrade);
+                    fileStream.WriteLine("}");
                 }
 
                 databaseProvinces.ClearBuildings(provinceID);
@@ -231,7 +237,7 @@ public partial class ProvinceInterface
             }
         }
 
-        file.Close();
+        fileStream.Close();
         SoundHandler.PlayConnecting(); //Perhaps change to success sound or change connecting sound to something else?
     }
 
@@ -242,17 +248,17 @@ public partial class ProvinceInterface
     /// <param name="e"></param>
     public void Interface_Changed(object sender, RoutedEventArgs e)
     {
-        var newGif = new BitmapImage(new Uri(@"/Assets/save_warning_button.gif", UriKind.Relative));
-        ImageBehavior.SetAnimatedSource(Save_Button, newGif);
+        // Highlight the fact something needs saving.
+        ImageBehavior.SetAnimatedSource(Save_Button, _saveWarnGif);
     }
+
 
     /// <summary>
     /// Changes the Save Icon to Confirmed Gif
     /// </summary>
     public void SetSaveIconToSaved()
     {
-        var newGif = new BitmapImage(new Uri(@"/Assets/save_confirm_button.gif", UriKind.Relative));
-        ImageBehavior.SetAnimatedSource(Save_Button, newGif);
+        ImageBehavior.SetAnimatedSource(Save_Button, _savedIconGif);
     }
 
     #region Core and State-Building Button Events
@@ -313,73 +319,89 @@ public partial class ProvinceInterface
         CurrentProvince = provinceID.Value;
         if (provinceDatabase.IsOceanProvince(CurrentProvince))
         {
-            PROVIDBOX.Text = Convert.ToString(provinceID);
+            Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
+            Hide();
+            return;
+        }
 
-            // Set name.
-            NAMEBOX.Text = provinceDatabase.GetName(CurrentProvince);
+        // PROVINCE ID
+        PROVIDBOX.Text = Convert.ToString(provinceID);
 
-            // Set owner.
-            provinceDatabase.TryGetOwner(CurrentProvince, out var owner);
-            OWNERBOX.Text = owner ?? "";
+        // NAME
+        NAMEBOX.Text = provinceDatabase.GetName(CurrentProvince);
 
-            // Set controller.
-            provinceDatabase.TryGetController(CurrentProvince, out var controller);
-            CONTROLLERBOX.Text = controller ?? "";
+        // OWNER
+        provinceDatabase.TryGetOwner(CurrentProvince, out var owner);
+        OWNERBOX.Text = owner ?? "";
 
-            // Set Color display.
-            COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
+        // CONTROLLER
+        provinceDatabase.TryGetController(CurrentProvince, out var controller);
+        CONTROLLERBOX.Text = controller ?? "";
 
-            string loggedTradeGood = provinceDatabase.GetTradeGood(CurrentProvince);
-            bool breakLoop = false;
-            for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
+        // COLOR DISPLAY
+        COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
+
+        // TRADE GOOD
+        string loggedTradeGood = provinceDatabase.GetTradeGood(CurrentProvince);
+        bool breakLoop = false;
+        for (int i = 1; i < TRADEGOODBOX.Items.Count; i++) //"Foreach TradeGood Group"
+        {
+            for (int k = 1; k < TRADEGOODBOX.Items.Count; k++)
             {
-                for (int k = 1; k < TRADEGOODBOX.Items.Count; k++)
-                {
-                    // Wipe selections.
-                    (TRADEGOODBOX.Items.GetItemAt(k) as ComboBox)!.SelectedIndex = 0;
-                }
-
-                if (TRADEGOODBOX.Items.GetItemAt(i) is ComboBox goodGroup)
-                    for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
-                    {
-                        var goodGroupItem = goodGroup.Items[j];
-                        if (goodGroupItem != null && !goodGroupItem.Equals(loggedTradeGood))
-                            continue;
-
-                        TRADEGOODBOX.SelectedIndex = i;
-                        (TRADEGOODBOX.Items.GetItemAt(i) as ComboBox)!.SelectedIndex = j;
-                        breakLoop = true;
-                        break;
-                    }
-
-                if (breakLoop)
-                    break;
+                // Wipe selections.
+                (TRADEGOODBOX.Items.GetItemAt(k) as ComboBox)!.SelectedIndex = 0;
             }
 
-            LIFERATINGBOX.Text = Convert.ToString(provinceDatabase.GetLifeRating(CurrentProvince));
-            COLONIALBOX.Text = Convert.ToString(provinceDatabase.GetColonial(CurrentProvince));
-            NAVALBASEBOX.Text = Convert.ToString(provinceDatabase.GetNavalBaseLevel(CurrentProvince));
-            TERRAINBOX.Text = Convert.ToString(provinceDatabase.GetTerrain(CurrentProvince));
-            FORTBOX.Text = Convert.ToString(provinceDatabase.GetFortLevel(CurrentProvince));
-            RAILROADBOX.Text = Convert.ToString(provinceDatabase.GetRailroadLevel(CurrentProvince));
+            if (TRADEGOODBOX.Items.GetItemAt(i) is ComboBox goodGroup)
+                for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
+                {
+                    var goodGroupItem = goodGroup.Items[j];
+                    if (goodGroupItem != null && !goodGroupItem.Equals(loggedTradeGood))
+                        continue;
 
-            object sender = this;
-            RoutedEventArgs e = new();
+                    TRADEGOODBOX.SelectedIndex = i;
+                    (TRADEGOODBOX.Items.GetItemAt(i) as ComboBox)!.SelectedIndex = j;
+                    breakLoop = true;
+                    break;
+                }
 
-            ResetCores(sender, e);
-            foreach (Tag core in provinceDatabase.GetCores(CurrentProvince)) //Populates Core List
-                Cores.Add(core);
-            ResetBuildings(sender, e);
-            foreach (StateBuilding stateBuilding in provinceDatabase.GetStateBuildings(CurrentProvince))
-                StateBuildings.Add(stateBuilding); // WARN: Does not work!
-
-            Visibility = Visibility.Visible;
+            if (breakLoop)
+                break;
         }
-        else
-        {
-            Debug.WriteLine("Ocean/Water province clicked. Hiding interface! ");
-            Visibility = Visibility.Hidden;
-        }
+
+        // LIFE RATING
+        LIFERATINGBOX.Text = Convert.ToString(provinceDatabase.GetLifeRating(CurrentProvince));
+
+        // COLONIAL
+        COLONIALBOX.Text = Convert.ToString(provinceDatabase.GetColonial(CurrentProvince));
+
+        // NAVAL BASE
+        NAVALBASEBOX.Text = Convert.ToString(provinceDatabase.GetNavalBaseLevel(CurrentProvince));
+
+        // TERRAIN
+        TERRAINBOX.Text = Convert.ToString(provinceDatabase.GetTerrain(CurrentProvince));
+
+        // FORT
+        FORTBOX.Text = Convert.ToString(provinceDatabase.GetFortLevel(CurrentProvince));
+
+        // RAILROAD
+        RAILROADBOX.Text = Convert.ToString(provinceDatabase.GetRailroadLevel(CurrentProvince));
+
+        object sender = this;
+        RoutedEventArgs e = new();
+
+        // CORES
+        ResetCores(sender, e);
+        var tags = provinceDatabase.GetCores(CurrentProvince);
+        foreach (Tag core in tags)
+            Cores.Add(core);
+
+        // STATE BUILDINGS
+        ResetBuildings(sender, e);
+        foreach (StateBuilding stateBuilding in provinceDatabase.GetStateBuildings(CurrentProvince))
+            StateBuildings.Add(stateBuilding); // WARN: Does not work!
+
+        Show();
 
         SetSaveIconToSaved();
     }
@@ -401,22 +423,27 @@ public partial class ProvinceInterface
 
     internal void Update()
     {
+        ResetGoodsBox();
+    }
+
+    private void ResetGoodsBox()
+    {
         for (int i = 1; i < TRADEGOODBOX.Items.Count; i++)
             TRADEGOODBOX.Items.RemoveAt(i);
 
-        foreach (var group_of_goods in ModData.Instance.COMMON_DATA.Goods)
+        foreach (var goodsGroup in ModData.Instance.COMMON_DATA.Goods)
         {
             // Populate goods groups.
-            var groupComboBox = new ComboBox { Name = group_of_goods.Key };
+            var groupComboBox = new ComboBox { Name = goodsGroup.Key };
             var good_item = new ComboBoxItem() //Blank Option
             {
-                Content = group_of_goods.Key, Focusable = false, IsHitTestVisible = false, IsSelected = true,
+                Content = goodsGroup.Key, Focusable = false, IsHitTestVisible = false, IsSelected = true,
                 HorizontalContentAlignment = HorizontalAlignment.Center, FontWeight = FontWeights.Bold,
             };
 
             // Populate with even more goods.
             groupComboBox.Items.Add(good_item);
-            foreach (var good in group_of_goods.Value.Goods.Keys)
+            foreach (var good in goodsGroup.Value.Goods.Keys)
             {
                 groupComboBox.Items.Add(good);
             }

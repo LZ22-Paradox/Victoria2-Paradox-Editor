@@ -39,15 +39,14 @@ public class DatabaseProvinces
 
     public List<ProvinceHistoryEvent>[] HistoryEvents = [];
 
-    // ReSharper disable once NotAccessedField.Local
-    private readonly int ProvinceCount;
-
     public DatabaseProvinces(int size)
     {
-        ProvinceCount = size;
+        Length = size;
         Expand(size);
         Array.Fill(IsOcean, true); // Empty the world.
     }
+
+    public int Length { get; }
 
     /// <param name="size">Province Maximum Size obtained by the default.map</param>
     private void Expand(int size)
@@ -132,7 +131,7 @@ public class DatabaseProvinces
     public IEnumerable<ProvinceWrapper> GetLandProvinceWrappers()
     {
         // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
-        for (uint id = 1; id < ProvinceCount; id++)
+        for (uint id = 1; id < Length; id++)
         {
             // Ignore Ocean provinces.
             if (IsOceanProvince(id))
@@ -154,7 +153,16 @@ public class DatabaseProvinces
 
     public void SetHistoryFilePath(uint provinceId, string file) => HistoryFilePath[provinceId] = file;
 
-    public void SetOwner(uint provinceId, string tag = "") => Owner[provinceId] = tag;
+    public void SetOwner(uint provinceId, string tag = "")
+    {
+        Owner[provinceId] = tag;
+
+        // Populate Country ownerships.
+        ref var countryProvinces = ref ModData.Instance.DatabaseCountries.ProvincesByOwnedCountry;
+        if (!countryProvinces.ContainsKey(tag))
+            countryProvinces.Add(tag, []);
+        countryProvinces[tag].Add(provinceId);
+    }
 
     public void SetController(uint provinceId, string tag = "") => Controller[provinceId] = tag;
 
@@ -191,9 +199,9 @@ public class DatabaseProvinces
             State_Buildings[provinceId].Add(building);
     }
 
-    public void AddHistoryEvent(uint provinceId, ProvinceHistoryEvent historyEvent) 
+    public void AddHistoryEvent(uint provinceId, ProvinceHistoryEvent historyEvent)
         => HistoryEvents[provinceId].Add(historyEvent);
-    
+
     public void ClearHistoryEvents(uint provinceId) => HistoryEvents[provinceId].Clear();
 
     /// Populate province data with CSV Info

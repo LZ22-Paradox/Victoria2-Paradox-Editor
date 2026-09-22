@@ -27,7 +27,7 @@ public sealed class CountryParserCommon(DatabaseCountries database, string Direc
                 case "color":
                     reader.SkipUntil('=');
                     Color color = ColorParser.Parse(reader);
-                    database.SetColor(tag, color);
+                    database.SetColor(tag, color.ToPackedColor());
                     break;
                 case "graphical_culture":
                     database.SetGraphicalCulture(tag, reader.ReadAssignmentValue());

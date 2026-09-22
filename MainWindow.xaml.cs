@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using Paradox_Editor.Interfaces;
-using Paradox_Editor.Types;
 using Paradox_Editor.Types.Data;
 
 //F1 to see WIKI detail on part
@@ -24,11 +23,10 @@ public partial class MainWindow : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void NotifyPropertyChange(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    protected void NotifyPropertyChange(string propertyName) 
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+    // ReSharper disable once ReplaceWithFieldKeyword
     private ObservableCollection<ProvinceWrapper> _provinceData = [];
 
     public ObservableCollection<ProvinceWrapper> ProvinceData
@@ -53,7 +51,7 @@ public partial class MainWindow : INotifyPropertyChanged
         mapModeButtons.UpdateMapModeVisibility(MapViewer.MapMode.Provincial, VisualHandler.MapModeIconSet);
     }
 
-    private ModData _modData;
+    private ModData _modData = null!;
 
     public void SelectMasterFolder_Click(object sender, EventArgs e)
     {
@@ -75,12 +73,10 @@ public partial class MainWindow : INotifyPropertyChanged
         provinceInterface.Update();
     }
 
-    public void OpenFileFromList(object sender, RoutedEventArgs e)
-    {
-        Explorer.OpenFile(SelectedItem.File);
-    }
-
+    // ReSharper disable once UnusedParameter.Global
     public static explicit operator MainWindow(WindowCollection v) => throw new NotImplementedException();
+    
+    public void OpenFileFromList(object sender, RoutedEventArgs e) => Explorer.OpenFile(SelectedItem.File);
 
     public void SelectGame(object sender, RoutedEventArgs e)
     {
@@ -109,7 +105,6 @@ public partial class MainWindow : INotifyPropertyChanged
     private void ChangeControlScheme(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         => CurrentControlMode = ControlMode.SelectedIndex;
 
-    // Hide the province interface on boot.
-    private void provinceInterface_Loaded(object sender, RoutedEventArgs e)
-        => provinceInterface.Visibility = Visibility.Hidden;
+    /// Hide the province interface on boot.
+    private void provinceInterface_Loaded(object sender, RoutedEventArgs e) => provinceInterface.Hide();
 }
