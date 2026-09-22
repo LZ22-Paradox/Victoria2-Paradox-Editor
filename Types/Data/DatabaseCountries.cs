@@ -100,7 +100,7 @@ public class DatabaseCountries
         ref var flags = ref CountryFlags[TagToIndex[tag]];
         if (!flags.Contains(flag))
             flags.Add(flag);
-        else MessageBox.Show($"Duplicate country flag \'{flag}\' found for \'{tag}\'!");
+        else Console.WriteLine($@"Duplicate country flag \'{flag}\' found for \'{tag}\'!");
     }
 
     public void AddParty(Tag tag, Party readParty)
@@ -111,7 +111,7 @@ public class DatabaseCountries
         
         if (!parties.Any(p => p.Name.Equals(readParty.Name)))
             Parties[TagToIndex[tag]].Add(readParty);
-        else MessageBox.Show($"Duplicate party \'{readParty.Name}\' found for \'{tag}\'!");
+        else Console.WriteLine($@"Duplicate party '{readParty.Name}' found for '{tag}'!");
     }
 
     public void SetUnitNames(Tag tag, UnitNames readUnitNames) => UnitNames[TagToIndex[tag]] = readUnitNames;
