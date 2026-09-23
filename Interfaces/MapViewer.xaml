@@ -1,47 +1,47 @@
-﻿<UserControl x:Class="Paradox_Editor.MapViewer"
+﻿<UserControl x:Class="Paradox_Editor.Interfaces.MapViewer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:colorpickercontrols="clr-namespace:ColorPickerControls"
+             xmlns:colorPickerControls="clr-namespace:Paradox_Editor.ColorPickerControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <colorpickercontrols:ColorToBrushConverter x:Key="colorToBrushConverter"/>
+        <colorPickerControls:ColorToBrushConverter x:Key="colorToBrushConverter"/>
     </UserControl.Resources>
 
-    <Grid x:Name="mapGrid" Margin="0,0,0,0" Background="Transparent" Grid.Column="1"
-              Panel.ZIndex="1" Grid.Row="1" Focusable="True" Height="auto" Width="auto">
+    <Grid Margin="0,0,0,0" Background="Transparent"
+          Panel.ZIndex="1" Focusable="True" Height="auto" Width="auto">
 
         <Border Grid.Row="1" Height="30" Width="50"
-					HorizontalAlignment="Center" VerticalAlignment="Top"
-					BorderBrush="Black" BorderThickness="1" Margin="5" Panel.ZIndex="2">
+                HorizontalAlignment="Center" VerticalAlignment="Top"
+                BorderBrush="Black" BorderThickness="1" Margin="5" Panel.ZIndex="2">
             <Rectangle Fill="{Binding ElementName=mapProvinces, Path=SelectedColor,
 					Converter={StaticResource colorToBrushConverter}}"/>
         </Border>
         
-        <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
-                          HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="0" x:Name="scrollViewer" VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollBarVisibility="Auto">
             <Canvas x:Name="mapCanvas" RenderTransformOrigin="0.5,0.5"
                            MouseMove="Map_MouseMove" MouseWheel="Map_MouseWheel" MouseUp="Map_MouseUp" MouseLeave="Map_MouseLeave"
                            Background="Transparent">
-                <colorpickercontrols:ImageColorPicker x:Name="mapProvinces" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
+                <colorPickerControls:ImageColorPicker x:Name="mapProvinces" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
                            ClipToBounds="True" StretchDirection="Both"   
                            MouseDown="Map_MouseDown">
-                </colorpickercontrols:ImageColorPicker>
+                </colorPickerControls:ImageColorPicker>
 
 
-                <colorpickercontrols:ImageColorPicker x:Name="mapPolitical" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
+                <colorPickerControls:ImageColorPicker x:Name="mapPolitical" Height="700" Width="1446" Source="/Assets/blank_world_map.png"
                            Margin="-250,0,0,0" Stretch="Uniform"
                            RenderOptions.BitmapScalingMode="NearestNeighbor"
                            RenderTransformOrigin="0,0" OverridesDefaultStyle="True"
                            ClipToBounds="True" StretchDirection="Both"
                            MouseDown="Map_MouseDown">
-                </colorpickercontrols:ImageColorPicker>
+                </colorPickerControls:ImageColorPicker>
 
                 <Image x:Name="mapTerrain" Height="700" Width="1446" 
                         Margin="-250,0,0,0" Stretch="Uniform"

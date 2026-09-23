@@ -1,54 +1,33 @@
 using Paradox_Editor.Extensions;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using Paradox_Editor.Types;
 
 namespace Paradox_Editor.Parsers;
 
-public sealed class ContinentParser
+public sealed class ContinentParser(string Directory) : ParserCommon(Directory)
 {
-    public static bool isIncludedInMod = true;
-    public static Dictionary<string, Continent> Parse(string directory)
+    public override T Parse<T>(params string[] fileParts)
     {
         Dictionary<string, Continent> continents = new();
-        string continentFilePath = Path.Combine(directory, "map", "continent.txt"); //Find if overwritten
-
-        if (!Utilities.CheckIfInMod(continentFilePath))
-        {
-            isIncludedInMod = false;
-            continentFilePath = Path.Combine(ModData.MOD_DATA.GetGameDirectory(), "map", "continent.txt"); //Find if overwritten
-        }
-
+        var continentFilePath = GetGameFilePath(Path.Combine(fileParts));
         using StreamReader reader = new(File.OpenRead(continentFilePath));
         while (true)
         {
-            int c = reader.Peek();
-            if (c == -1)
-            {
-                break;
-            }
+            int nextCharacter = reader.Peek();
+            if (nextCharacter == -1) break;
+
             reader.SkipWhitespace();
             string name = reader.ReadUntil(' ');
             if (!string.IsNullOrWhiteSpace(name))
-            {
-                continents[name] = Continent.Parse(reader);
-            }
+                continents[name] = ReadContinent(reader);
         }
-        return continents;
+
+        return (T)(object)continents;
     }
-}
 
-public sealed class Continent
-{
-    public List<string> Provinces { get; set; } = new();
-    public string assimilation_rate;
-    public string farm_rgo_size;
-    public string mine_rgo_size;
-
-    public static Continent Parse(StreamReader reader)
+    private static Continent ReadContinent(StreamReader reader)
     {
         Continent continent = new();
         reader.SkipUntil('{');
@@ -56,55 +35,35 @@ public sealed class Continent
         while (reader.Peek() is not -1 and not '}')
         {
             string item = reader.ReadUntilWhitespace();
+            reader.SkipUntil('=');
+            reader.SkipWhitespace();
             switch (item)
             {
                 case "assimilation_rate":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    continent.assimilation_rate = reader.ReadUntilWhitespace();
+                    continent.AssimilationRate = reader.ReadUntilWhitespace();
                     break;
                 case "farm_rgo_size":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    continent.farm_rgo_size = reader.ReadUntilWhitespace();
+                    continent.RGOSizeFarm = reader.ReadUntilWhitespace();
                     break;
                 case "mine_rgo_size":
-                    reader.SkipUntil('=');
-                    reader.SkipWhitespace();
-                    continent.mine_rgo_size = reader.ReadUntilWhitespace();
+                    continent.RGOSizeMine = reader.ReadUntilWhitespace();
                     break;
-                default:
-                    continent.Provinces = ParseProvinces(reader);
+                default: // Defaults to "provinces"
+                    var provinces = reader.ReadList(ParseUInt).Cast<uint>().ToList();
+                    continent.Provinces = provinces;
                     break;
             }
+
             reader.SkipWhitespace();
         }
+
         reader.Read();
         return continent;
     }
 
-    private static List<string> ParseProvinces(StreamReader reader)
+    private static uint? ParseUInt(string value)
     {
-        List<string> provIDs = new();
-
-        reader.SkipUntil('{');
-        reader.SkipWhitespace();
-        while (reader.Peek() is not -1 and not '}')
-        {
-            if (reader.Peek() == '\"')
-            {
-                reader.Read();
-                provIDs.Add(reader.ReadUntil('\"'));
-            }
-            else
-            {
-                provIDs.Add(reader.ReadUntilWhitespace());
-            }
-            reader.SkipWhitespace();
-        }
-        reader.Read();
-        return provIDs; //test*/
+        if (!uint.TryParse(value, out uint result)) return null;
+        return result;
     }
-
 }
-

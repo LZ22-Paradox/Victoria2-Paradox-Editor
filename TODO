@@ -1,0 +1,13 @@
+- There are errors in the debug console. It's pretty bad.
+- Add the ability to pan using the large canvas, rather than rely on the canvas being on-screen.
+
+# Add Later
+- Multi-province select.
+- Add "Open File" button for province.
+- Diplomacy editor + vassals
+- Make files list filtered based on currently-selected country
+- Read Pop Details
+- Province Specifics such as Unit & Building locations
+
+# Way later
+- Test w. some other mods

@@ -1,82 +1,21 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Windows.Media;
 
-namespace Paradox_Editor.Extensions
+namespace Paradox_Editor.Extensions;
+
+public static class Utilities
 {
-    public class Building
-    {
+    public static string ModDirectory = "";
 
-    }
+    public static string RemoveWhitespace(this string input)
+        => new(input.ToCharArray().Where(c => !char.IsWhiteSpace(c)).ToArray());
 
-    public class StateBuilding : Building
-    {
-        public StateBuilding()
-        {
-            Level = level;
-            Building = building;
-            Upgrade = upgrade;
-        }
+    public static bool FileIsInMod(string file) => File.Exists(Path.Combine(ModDirectory, file));
 
-        private string level { get; set; }
-        private string upgrade { get; set; }
-        private string building { get; set; }
+    public static uint ToPackedColor(this Color color)
+        => (0xFFu << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
 
-        public string Level
-        {
-            get => level;
-            set => level = value;
-        }
-        public string Upgrade
-        {
-            get => upgrade;
-            set => upgrade = value;
-        }
-        public string Building
-        {
-            get => building;
-            set => building = value;
-        }
-    }
-
-    public struct ProvinceCSVDefinition
-    {
-        public string province { get; set; }
-        public string red { get; set; }
-        public string green { get; set; }
-        public string blue { get; set; }
-        public string name { get; set; }
-        public string color { get; set; }
-
-    }
-
-    public struct DirectoryStructure
-    {
-        public string[] PrimaryDirectories { get; set; }
-        public string[] HistoryProvincePaths { get; set; }
-        public string DefinitionCSVPath { get; set; }
-    }
-
-    public class Pop
-    {
-        public string culture { get; set; }
-        public string religion { get; set; }
-        public string size { get; set; }
-    }
-
-    public static class Utilities
-    {
-        public static string RemoveWhitespace(this string input)
-        {
-            return new string(input.ToCharArray()
-                .Where(c => !System.Char.IsWhiteSpace(c))
-                .ToArray());
-        }
-
-        public static bool CheckIfInMod(string directory)
-        {
-            if (File.Exists(directory))
-                return true;
-            return false;
-        }
-    }
+    public static Color UnpackAsArgbColor(this uint color)
+        => Color.FromArgb((byte)(color >> 24), (byte)(color >> 16), (byte)(color >> 8), (byte)color);
 }

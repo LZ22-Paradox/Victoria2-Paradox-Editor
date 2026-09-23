@@ -1,83 +1,172 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Paradox_Editor.Extensions
+namespace Paradox_Editor.Extensions;
+
+public static class ReaderExtensions
 {
-    public static class ReaderExtensions
+    public static string ReadUntil(this StreamReader reader, char end)
     {
-        public static string ReadUntil(this StreamReader reader, char end)
+        StringBuilder builder = new();
+        int c;
+        while ((c = reader.Read()) != -1 && (char)c != end)
+            builder.Append((char)c);
+        return builder.ToString();
+    }
+
+    public static string ReadUntil(this StreamReader reader, params char[] end)
+    {
+        StringBuilder builder = new();
+        int c;
+        while ((c = reader.Read()) != -1 && !end.Contains((char)c))
+            builder.Append((char)c);
+        return builder.ToString();
+    }
+
+    public static string ReadUntilWhitespace(this StreamReader reader)
+    {
+        StringBuilder builder = new();
+        while (true)
         {
-            StringBuilder builder = new();
-            int c;
-            while ((c = reader.Read()) != -1 && (char)c != end)
+            int c = reader.Read();
+            switch (c)
             {
-                builder.Append((char)c);
+                case -1: return builder.ToString();
+                case '#': reader.SkipUntil('\n'); break;
+                case ' ' or '\n' or '\t' or '\r': return builder.ToString();
             }
-            return builder.ToString();
+
+            builder.Append((char)c);
         }
-        public static string ReadUntil(this StreamReader reader, params char[] end)
+    }
+
+    public static void SkipUntil(this StreamReader reader, char end)
+    {
+        while (true)
         {
-            StringBuilder builder = new();
-            int c;
-            while ((c = reader.Read()) != -1 && !end.Contains((char)c))
-            {
-                builder.Append((char)c);
-            }
-            return builder.ToString();
+            int c = reader.Read();
+            if (c == -1 || (char)c == end) return;
         }
-        public static string ReadUntilWhitespace(this StreamReader reader)
+    }
+
+    public static void SkipWhitespace(this StreamReader reader)
+    {
+        while (true)
         {
-            StringBuilder builder = new();
-            while (true)
+            int c = reader.Peek();
+            switch (c)
             {
-                int c = reader.Read();
-                if (c == -1)
-                {
-                    return builder.ToString();
-                }
-                if (c == '#')
-                {
-                    reader.SkipUntil('\n');
-                }
-                if (c is ' ' or '\n' or '\t' or '\r')
-                {
-                    return builder.ToString();
-                }
-                builder.Append((char)c);
-            }
-        }
-        public static void SkipUntil(this StreamReader reader, char end)
-        {
-            while (true)
-            {
-                int c = reader.Read();
-                if (c == -1 || (char)c == end) return;
-            }
-        }
-        public static void SkipWhitespace(this StreamReader reader)
-        {
-            while (true)
-            {
-                int c = reader.Peek();
-                if (c == -1)
-                {
-                    return;
-                }
-                if (c == '#')
-                {
-                    reader.SkipUntil('\n');
-                }
-                else if (c is ' ' or '\n' or '\t' or '\r')
-                {
-                    reader.Read();
-                }
-                else
-                {
-                    return;
-                }
+                case -1: return;
+                case '#': reader.SkipUntil('\n'); break;
+                case ' ' or '\n' or '\t' or '\r': reader.Read(); break;
+                default: return;
             }
         }
+    }
+
+    public static string ReadAssignmentValue(this StreamReader reader)
+    {
+        reader.SkipUntil('=');
+        reader.SkipWhitespace();
+        return ReadValue(reader);
+    }
+
+    internal static string ReadValue(this StreamReader reader)
+    {
+        reader.SkipWhitespace();
+        if (reader.Peek() == '"')
+        {
+            reader.Read();
+            return reader.ReadUntil('"');
+        }
+
+        return reader.ReadUntilWhitespace();
+    }
+
+    public static Dictionary<string, int> ReadStringIntDictionary(this StreamReader reader)
+    {
+        var result = new Dictionary<string, int>();
+        reader.SkipUntil('{');
+
+        while (!reader.EndOfStream)
+        {
+            reader.SkipWhitespace();
+            if (reader.Peek() == '}')
+            {
+                reader.Read();
+                break;
+            }
+
+            string key = reader.ReadUntil('=').Trim();
+            reader.SkipWhitespace();
+
+            string value = reader.ReadUntil('\n', '}').Trim();
+            if (int.TryParse(value, out int number))
+                result[key] = number;
+        }
+
+        return result;
+    }
+
+    public static List<T> ReadList<T>(this StreamReader reader, Func<string, T?> uInt)
+    {
+        var result = new List<T>();
+
+        reader.SkipWhitespace();
+
+        if (reader.Read() != '{')
+            throw new FormatException("Expected '{'.");
+
+        while (!reader.EndOfStream)
+        {
+            reader.SkipWhitespace();
+
+            if (reader.Peek() == '}')
+            {
+                reader.Read();
+                break;
+            }
+
+            string value = reader.ReadUntilWhitespace();
+            T? entry = uInt.Invoke(value);
+            if (entry != null)
+                result.Add(entry);
+            else throw new FormatException($"Invalid integer: '{value}'.");
+        }
+
+        return result;
+    }
+
+    public static List<int> ReadIntList(this StreamReader reader)
+    {
+        var result = new List<int>();
+
+        reader.SkipWhitespace();
+
+        if (reader.Read() != '{')
+            throw new FormatException("Expected '{'.");
+
+        while (!reader.EndOfStream)
+        {
+            reader.SkipWhitespace();
+
+            if (reader.Peek() == '}')
+            {
+                reader.Read();
+                break;
+            }
+
+            string value = reader.ReadUntilWhitespace();
+
+            if (int.TryParse(value, out int number))
+                result.Add(number);
+            else
+                throw new FormatException($"Invalid integer: '{value}'.");
+        }
+
+        return result;
     }
 }
