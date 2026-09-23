@@ -304,11 +304,10 @@ public partial class MapViewer
         }
     }
 
-    private static void TranslateHorizontal(ref Matrix matrix, int delta)
-        => matrix.Translate(Math.Abs(delta), 0);
+    private static void TranslateHorizontal(ref Matrix matrix, int delta) => matrix.Translate(delta, 0);
 
-    private static void TranslateVertical(ref Matrix matrix, int delta)
-        => matrix.Translate(0, _isImageFlipped ? -1 : 1 /*Direction*/ * Math.Abs(delta));
+    private static void TranslateVertical(ref Matrix matrix, int delta) 
+        => matrix.Translate(0, (_isImageFlipped ? -1 : 1) * delta);
 
     private static void Scale(ref Matrix matrix, int delta, Point origin)
     {
