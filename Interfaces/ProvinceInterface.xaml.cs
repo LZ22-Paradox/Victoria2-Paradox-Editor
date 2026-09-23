@@ -247,19 +247,13 @@ public partial class ProvinceInterface
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public void Interface_Changed(object sender, RoutedEventArgs e)
-    {
-        // Highlight the fact something needs saving.
-        ImageBehavior.SetAnimatedSource(Save_Button, _saveWarnGif);
-    }
-
+        => ImageBehavior.SetAnimatedSource(Save_Button, _saveWarnGif);
 
     /// <summary>
     /// Changes the Save Icon to Confirmed Gif
     /// </summary>
-    public void SetSaveIconToSaved()
-    {
-        ImageBehavior.SetAnimatedSource(Save_Button, _savedIconGif);
-    }
+    public void SetSaveIconToSaved() 
+        => ImageBehavior.SetAnimatedSource(Save_Button, _savedIconGif);
 
     #region Core and State-Building Button Events
 
@@ -304,14 +298,14 @@ public partial class ProvinceInterface
     /// <summary>
     /// Extrapolates province data from a given colour and fills the province interface with the said-data.
     /// </summary>
-    /// <param name="color"></param>
-    public void PopulateInterface(Color color)
+    /// <param name="packedColor"></param>
+    public void PopulateInterface(uint packedColor)
     {
         DatabaseProvinces provinceDatabase = ModData.Instance.DatabaseProvinces;
-        if (!provinceDatabase.TryGetIDFromColor(color, out var provinceID))
+        if (!provinceDatabase.TryGetIDFromColor(packedColor, out var provinceID))
         {
 #if DEBUG
-            Debug.WriteLine($"Failed to get ID from province color {color.ToPackedColor()}");
+            Debug.WriteLine($"Failed to get ID from province color {packedColor}");
 #endif
             return;
         }
@@ -339,7 +333,8 @@ public partial class ProvinceInterface
         CONTROLLERBOX.Text = controller ?? "";
 
         // COLOR DISPLAY
-        COLORRGB.Text = Convert.ToString(color.R + "," + color.G + "," + color.B);
+        Color unpackedColor = packedColor.UnpackAsArgbColor();
+        COLORRGB.Text = Convert.ToString(unpackedColor.R + "," + unpackedColor.G + "," + unpackedColor.B);
 
         // TRADE GOOD
         string loggedTradeGood = provinceDatabase.GetTradeGood(CurrentProvince);
@@ -353,6 +348,7 @@ public partial class ProvinceInterface
             }
 
             if (TRADEGOODBOX.Items.GetItemAt(i) is ComboBox goodGroup)
+            {
                 for (int j = 1; j < goodGroup.Items.Count; j++) //"Foreach Good in Group"
                 {
                     var goodGroupItem = goodGroup.Items[j];
@@ -364,6 +360,7 @@ public partial class ProvinceInterface
                     breakLoop = true;
                     break;
                 }
+            }
 
             if (breakLoop)
                 break;

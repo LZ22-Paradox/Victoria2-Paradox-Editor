@@ -168,12 +168,10 @@ public partial class MapViewer
 
     private void HandleProvincialClick(ImageColorPicker referenceImage)
     {
-        Color provinceColor = MapRenderer.GetProvinceColorAt(
-            _provinceMap, referenceImage.Position, new Size(referenceImage.ActualWidth, referenceImage.ActualHeight)
-        );
+        var provinceColor = MapRenderer.GetColorAt(_provinceMap, referenceImage);
 
         ModData.Instance.DatabaseProvinces.ColorsToProvinceIDs.TryGetValue(
-            provinceColor.ToPackedColor(),
+            provinceColor,
             out var provinceId
         );
 
@@ -181,8 +179,6 @@ public partial class MapViewer
 
         _mainWindow.provinceInterface.PopulateInterface(provinceColor);
         _mainWindow.provinceInterface.Show();
-
-        //Highlight(_provinceMap, provinceColor);
     }
 
     private void HandlePoliticalClick()
@@ -190,11 +186,7 @@ public partial class MapViewer
         DatabaseProvinces provinces = ModData.Instance.DatabaseProvinces;
         DatabaseCountries countries = ModData.Instance.DatabaseCountries;
 
-        Color selectedProvinceColor = MapRenderer.GetProvinceColorAt(
-            _provinceMap, mapPolitical.Position, new Size(mapPolitical.ActualWidth, mapPolitical.ActualHeight)
-        );
-
-        uint rawColor = MapRenderer.GetRawColor(selectedProvinceColor);
+        var rawColor = MapRenderer.GetColorAt(_provinceMap, mapPolitical);
         if (!provinces.ColorsToProvinceIDs.TryGetValue(rawColor, out uint provinceId))
             return;
 
@@ -203,10 +195,6 @@ public partial class MapViewer
 
         var ownedProvinces = countries.ProvincesByOwnedCountry[countryId];
         HighlightProvinces(ownedProvinces);
-
-        /*
-        // Highlight country.
-        Highlight(GetMap(MapMode.Political), mapPolitical.SelectedColor);*/
 
         _mainWindow.provinceInterface.Hide();
 

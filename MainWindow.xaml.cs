@@ -7,9 +7,9 @@ using System.Windows;
 using Paradox_Editor.Interfaces;
 using Paradox_Editor.Types.Data;
 
-//F1 to see WIKI detail on part
-//F12 to see usage in VS
-//CTRL +press+ K, D sorts all tabs
+// F1 to see WIKI detail on part
+// F12 to see usage in VS
+// CTRL +press+ K, D sorts all tabs
 
 namespace Paradox_Editor;
 
@@ -23,7 +23,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void NotifyPropertyChange(string propertyName) 
+    protected void NotifyPropertyChange(string propertyName)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     // ReSharper disable once ReplaceWithFieldKeyword
@@ -65,7 +65,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
         // For the History File Lister. Ignores ocean provinces.
         ProvinceData = new ObservableCollection<ProvinceWrapper>(_modData.DatabaseProvinces.GetLandProvinceWrappers());
-        
+
         fileListView.ItemsSource = ProvinceData;
 
         mapViewer.LoadMaps();
@@ -75,7 +75,7 @@ public partial class MainWindow : INotifyPropertyChanged
 
     // ReSharper disable once UnusedParameter.Global
     public static explicit operator MainWindow(WindowCollection v) => throw new NotImplementedException();
-    
+
     public void OpenFileFromList(object sender, RoutedEventArgs e) => Explorer.OpenFile(SelectedItem.File);
 
     public void SelectGame(object sender, RoutedEventArgs e)
